@@ -3,21 +3,21 @@
     <head>
         <meta charset="utf-8">
         <title>Reselect</title>
-
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-sanitize.js"></script>
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css">
         <!-- ui-select files -->
         <script src="../dist/reselect.js"></script>
         <link rel="stylesheet" href="../dist/reselect.css">
-        <style>
-        body {
-        padding: 15px;
-        }
-        </style>
+        <link rel="stylesheet" href="example.css">
         <script src="simple.js"></script>
     </head>
     <body>
-        
+        <h2>Angular Reselect</h2>
+        <div ng-controller="SimpleCtrl">
+            <reselect
+            ng-model="simple.value">
+            </reselect>
+        </div>
     </body>
 </html>

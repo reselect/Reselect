@@ -5,6 +5,7 @@ var jshint = require('gulp-jshint');
 var header = require('gulp-header');
 var footer = require('gulp-footer');
 var rename = require('gulp-rename');
+var livereload = require('gulp-livereload');
 var es = require('event-stream');
 var del = require('del');
 var uglify = require('gulp-uglify');
@@ -12,6 +13,7 @@ var minifyHtml = require('gulp-minify-html');
 var minifyCSS = require('gulp-minify-css');
 var templateCache = require('gulp-angular-templatecache');
 var gutil = require('gulp-util');
+var connect = require('gulp-connect');
 var plumber = require('gulp-plumber'); //To prevent pipe breaking caused by errors at 'watch'
 
 var config = {
@@ -25,19 +27,33 @@ var config = {
 };
 
 gulp.task('default', ['build', 'test']);
+
+gulp.task('clean-build', ['clean'], function(){
+    return gulp.start(['build']);
+});
+
 gulp.task('build', ['scripts', 'styles'], function(){
     gutil.log('Reselect Built');
 });
 
-gulp.task('watch', ['build'], function() {
-    gulp.watch(['src/**/*.{js,html}'], ['build']);
+gulp.task('dev', ['watch'], function(){
+    connect.server();
+});
+
+gulp.task('watch', function() {
+    livereload.listen();
+    
+    gulp.watch(['src/**/*.{js,html}'], ['scripts']);
+    gulp.watch(['src/**/*.css'], ['styles']);
+
+    gulp.watch(['dist/**/*.min.{css,js}']).on('change', livereload.changed);
 });
 
 gulp.task('clean', function(cb) {
     return del(['dist'], cb);
 });
 
-gulp.task('scripts', ['clean'], function() {
+gulp.task('scripts', function() {
 
     var buildTemplates = function() {
         return gulp.src('src/**/*.html')
@@ -50,7 +66,8 @@ gulp.task('scripts', ['clean'], function() {
                 quotes: true
             }))
             .pipe(templateCache({
-                module: 'reselect'
+                module: 'reselect.templates',
+                standalone:true
             }));
     };
 
@@ -59,8 +76,6 @@ gulp.task('scripts', ['clean'], function() {
             .pipe(plumber({
                 errorHandler: handleError
             }))
-            .pipe(header('(function () { \n\'use strict\';\n'))
-            .pipe(footer('\n}());'))
             .pipe(jshint())
             .pipe(jshint.reporter('jshint-stylish'))
             .pipe(jshint.reporter('fail'));
@@ -71,10 +86,12 @@ gulp.task('scripts', ['clean'], function() {
             errorHandler: handleError
         }))
         .pipe(concat('reselect.js'))
+        .pipe(header('(function () { \n\'use strict\';\n'))
         .pipe(header(config.banner, {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
         }))
+        .pipe(footer('\n}());'))
         .pipe(gulp.dest('dist'))
         .pipe(uglify({
             preserveComments: 'some'
@@ -86,7 +103,7 @@ gulp.task('scripts', ['clean'], function() {
 
 });
 
-gulp.task('styles', ['clean'], function() {
+gulp.task('styles', function() {
 
     return gulp.src('src/css/reselect.css')
         .pipe(header(config.banner, {

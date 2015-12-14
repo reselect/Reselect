@@ -1,8 +1,40 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2015-12-14T02:48:37.950Z
+ * Version: 0.0.1 - 2015-12-14T10:33:14.482Z
  * License: MIT
  */
 
 
+.reselect-container{
+	display:inline-block;
+}
+
+.reselect-selection{
+	position: relative;
+
+	min-height: 36px;
+	min-width: 120px;
+
+	border:1px solid #ccc;
+
+	padding-right: 18px;
+}
+
+.reselect-rendered{
+	min-height: 36px;
+
+	padding: 6px;
+}
+
+.reselect-arrow-container{
+	position: absolute;
+
+	right  : 0;
+	top    : 0;
+	bottom : 0;
+
+	width: 18px;
+
+	background: #eee;
+}
