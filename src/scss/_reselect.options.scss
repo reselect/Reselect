@@ -1,0 +1,7 @@
+.reselect-options-container{
+	@include reselect-border();
+
+	// min-width: $reselect-width;
+	width: $reselect-width;
+}
+

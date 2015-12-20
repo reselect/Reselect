@@ -15,9 +15,20 @@
     <body>
         <h2>Angular Reselect</h2>
         <div ng-controller="SimpleCtrl">
-            <reselect
-            ng-model="simple.value">
-            </reselect>
+
+            <div style="padding-bottom: 20px">
+                <reselect
+                    ng-model="simple.value">
+                    <reselect-option></reselect-option>
+                    <reselect-placeholder></reselect-placeholder>
+                    <reselect-selection></reselect-selection>
+                </reselect>
+            </div>
+
+            <div style="padding-bottom: 20px">
+                <reselect-options></reselect-options>
+            </div>
+
         </div>
     </body>
 </html>

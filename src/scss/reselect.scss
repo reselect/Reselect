@@ -1,0 +1,82 @@
+$reselect-height: 30px;
+$reselect-width: 200px;
+
+$reselect-border-color: #ccc;
+$reselect-border-radius: 3px;
+
+$reselect-text-size: 12px;
+
+$reselect-placeholder-color: #999;
+
+@mixin reselect-border(){
+	border:1px solid $reselect-border-color;
+}
+
+.reselect-container{
+	display:inline-block;
+}
+
+.reselect-rendered{
+	min-height: $reselect-height;
+
+	padding: 6px;
+	font-size: $reselect-text-size;
+
+	box-shadow: inset 0px 0px 5px rgba(0,0,0, 0.1);
+}
+
+.reselect-selection{
+	position: relative;
+
+	line-height: $reselect-height - 12px;
+	min-height: $reselect-height;
+	min-width: $reselect-width;
+
+	border-radius: $reselect-border-radius;
+
+	padding-right: 18px;
+
+	@include reselect-border();
+}
+
+.reselect-rendered-placeholder{
+	color: $reselect-placeholder-color;
+
+	font-style: italic;
+}
+
+.reselect-input-container{
+	z-index: 10;
+	position: absolute;
+
+	top:0;
+	left:0;
+	right: 18px;
+}
+
+.reselect-text-input{
+	font-size: $reselect-text-size;
+
+	height: $reselect-height;
+	width: 100%;
+
+	padding: 6px;
+
+	border:none;
+	background: none;
+}
+
+.reselect-arrow-container{
+	position: absolute;
+
+	right  : 0;
+	top    : 0;
+	bottom : 0;
+
+	width: 18px;
+
+	background: #eee;
+	border-left: 1px solid $reselect-border-color;
+}
+
+@import 'reselect.options';

@@ -1,20 +1,21 @@
-var fs = require('fs');
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var jshint = require('gulp-jshint');
-var header = require('gulp-header');
-var footer = require('gulp-footer');
-var rename = require('gulp-rename');
-var livereload = require('gulp-livereload');
-var es = require('event-stream');
-var del = require('del');
-var uglify = require('gulp-uglify');
-var minifyHtml = require('gulp-minify-html');
-var minifyCSS = require('gulp-minify-css');
+var fs            = require('fs');
+var gulp          = require('gulp');
+var concat        = require('gulp-concat');
+var jshint        = require('gulp-jshint');
+var header        = require('gulp-header');
+var footer        = require('gulp-footer');
+var rename        = require('gulp-rename');
+var livereload    = require('gulp-livereload');
+var es            = require('event-stream');
+var del           = require('del');
+var uglify        = require('gulp-uglify');
+var minifyHtml    = require('gulp-minify-html');
+var minifyCSS     = require('gulp-minify-css');
 var templateCache = require('gulp-angular-templatecache');
-var gutil = require('gulp-util');
-var connect = require('gulp-connect');
-var plumber = require('gulp-plumber'); //To prevent pipe breaking caused by errors at 'watch'
+var gutil         = require('gulp-util');
+var connect       = require('gulp-connect');
+var plumber       = require('gulp-plumber');
+var sass          = require('gulp-sass');
 
 var config = {
     pkg: JSON.parse(fs.readFileSync('./package.json')),
@@ -44,7 +45,7 @@ gulp.task('watch', function() {
     livereload.listen();
     
     gulp.watch(['src/**/*.{js,html}'], ['scripts']);
-    gulp.watch(['src/**/*.css'], ['styles']);
+    gulp.watch(['src/**/*.scss'], ['styles']);
 
     gulp.watch(['dist/**/*.min.{css,js}']).on('change', livereload.changed);
 });
@@ -105,7 +106,8 @@ gulp.task('scripts', function() {
 
 gulp.task('styles', function() {
 
-    return gulp.src('src/css/reselect.css')
+    return gulp.src('src/scss/reselect.scss')
+        .pipe(sass())
         .pipe(header(config.banner, {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
