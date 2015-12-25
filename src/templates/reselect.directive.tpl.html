@@ -1,13 +1,16 @@
 <div class="reselect-container">
+
+	<input type="hidden" value="{{ngModel}}"/>
+
 	<div class="reselect-selection">
 
 		<div class="reselect-rendered reselect-rendered-selection"
 			ng-if="false"
-			ng-bind-html="reselect.rendered_selection"></div>
+			ng-bind="reselect.rendered_selection"></div>
 
 		<div class="reselect-rendered reselect-rendered-placeholder"
 			ng-if="true"
-			ng-bind-html="reselect.rendered_placeholder"></div>
+			ng-bind="reselect.rendered_placeholder"></div>
 
 		<div class="reselect-input-container">
 			<input class="reselect-text-input"

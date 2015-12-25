@@ -16,6 +16,11 @@ var gutil         = require('gulp-util');
 var connect       = require('gulp-connect');
 var plumber       = require('gulp-plumber');
 var sass          = require('gulp-sass');
+var notify        = require('gulp-notify');
+var map           = require('map-stream');
+var events        = require('events');
+var emmitter      = new events.EventEmitter();
+var path          = require('path');
 
 var config = {
     pkg: JSON.parse(fs.readFileSync('./package.json')),
@@ -29,21 +34,25 @@ var config = {
 
 gulp.task('default', ['build', 'test']);
 
-gulp.task('clean-build', ['clean'], function(){
+gulp.task('clean-build', ['clean'], function() {
     return gulp.start(['build']);
 });
 
-gulp.task('build', ['scripts', 'styles'], function(){
+gulp.task('build', ['scripts', 'styles'], function() {
     gutil.log('Reselect Built');
 });
 
-gulp.task('dev', ['watch'], function(){
+gulp.task('dev', ['watch', 'dev-watch'], function() {
     connect.server();
+});
+
+gulp.task('dev-watch', function() {
+    gulp.watch(['examples/**/*.{js,html}']).on('change', livereload.changed);
 });
 
 gulp.task('watch', function() {
     livereload.listen();
-    
+
     gulp.watch(['src/**/*.{js,html}'], ['scripts']);
     gulp.watch(['src/**/*.scss'], ['styles']);
 
@@ -68,18 +77,45 @@ gulp.task('scripts', function() {
             }))
             .pipe(templateCache({
                 module: 'reselect.templates',
-                standalone:true
+                standalone: true
             }));
     };
 
     var buildLib = function() {
-        return gulp.src(['src/common.js', 'src/*.js'])
+        // Custom linting reporter used for error notify
+        var jsHintErrorReporter = map(function(file, cb) {
+            if (!file.jshint.success) {
+                file.jshint.results.forEach(function(err) {
+                    if (err) {
+                        //console.log(err);
+
+                        // Error message
+                        var msg = [
+                            path.basename(file.path),
+                            'Line: ' + err.error.line,
+                            'Reason: ' + err.error.reason
+                        ];
+
+                        // Emit this error event
+                        emmitter.emit('error', new Error(msg.join('\n')));
+
+                    }
+                });
+
+            }
+            cb(null, file);
+        });
+
+        return gulp.src(['src/common.js', 'src/reselect.js', 'src/*.js'])
             .pipe(plumber({
                 errorHandler: handleError
             }))
             .pipe(jshint())
             .pipe(jshint.reporter('jshint-stylish'))
-            .pipe(jshint.reporter('fail'));
+            .pipe(jsHintErrorReporter) // If error pop up a notify alert
+            .on('error', notify.onError(function(error) {
+                return error.message;
+            }));
     };
 
     return es.merge(buildLib(), buildTemplates())
@@ -107,6 +143,9 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
 
     return gulp.src('src/scss/reselect.scss')
+        .pipe(plumber({
+            errorHandler: handleError
+        }))
         .pipe(sass())
         .pipe(header(config.banner, {
             timestamp: (new Date()).toISOString(),

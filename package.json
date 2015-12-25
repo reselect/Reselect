@@ -10,6 +10,7 @@
   "devDependencies": {
     "del": "^2.2.0",
     "event-stream": "^3.3.2",
+    "events": "^1.1.0",
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
     "gulp-concat": "~2.1.7",
@@ -34,7 +35,8 @@
     "karma-firefox-launcher": "~0.1",
     "karma-jasmine": "~0.2",
     "karma-ng-html2js-preprocessor": "^0.1.0",
-    "karma-phantomjs-launcher": "~0.1.4"
+    "karma-phantomjs-launcher": "~0.1.4",
+    "map-stream": "0.0.6"
   },
   "scripts": {
     "test": "gulp test"

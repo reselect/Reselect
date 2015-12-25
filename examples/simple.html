@@ -17,16 +17,17 @@
         <div ng-controller="SimpleCtrl">
 
             <div style="padding-bottom: 20px">
-                <reselect
-                    ng-model="simple.value">
-                    <reselect-option></reselect-option>
-                    <reselect-placeholder></reselect-placeholder>
-                    <reselect-selection></reselect-selection>
-                </reselect>
+                Model Value: <span ng-bind="simple.value"></span>
             </div>
 
             <div style="padding-bottom: 20px">
-                <reselect-options></reselect-options>
+                <reselect
+                    ng-model="simple.value">
+                    <reselect-choices
+                        options="option in simple.choices">
+                        <span ng-bind="$choice.text"></span> <span ng-bind="$index"></span>
+                    </reselect-options>
+                </reselect>
             </div>
 
         </div>

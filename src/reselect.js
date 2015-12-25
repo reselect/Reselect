@@ -1,2 +1,5 @@
+/**
+ * Reselect base
+ */
 
-angular.module('reselect', ['reselect.directive', 'reselect.templates']);
+var Reselect = angular.module('Reselect', ['reselect.templates']);

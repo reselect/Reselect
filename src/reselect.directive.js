@@ -1,7 +1,5 @@
 
-angular.module('reselect.directive', ['reselect.controller', 'reselect.options.directive', 'ngSanitize'])
-
-.value('reselectDefaultOptions', {
+Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
 	}
@@ -18,13 +16,28 @@ angular.module('reselect.directive', ['reselect.controller', 'reselect.options.d
 			reselectOptions : '='
 		},
 		compile: function($element, $attrs, transcludeFn){
-			transcludeFn($element, function(clone){
-				console.log(clone[1].tagName);
-			});
+
+			return function($scope, $element, $attrs, ctrls){
+				transcludeFn($scope, function(clone){
+					$element.append(clone[1]);
+				});
+			};
+			
 		},
-		link: function($scope, $element){
-			console.log($element.html());
-		},
-		controller: 'reselect.directive.ctrl'
+		controllerAs: 'reselect',
+		controller: ['$scope', 'reselectDefaultOptions', function($scope, reselectDefaultOptions){
+			var ctrl = this;
+
+			// Options
+			ctrl.options = angular.extend({}, $scope.reselectOptions, reselectDefaultOptions);
+
+			ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
+
+			ctrl.selectValue = function(value){
+				$scope.ngModel = value;
+			};
+
+			return ctrl;
+		}]
 	};
 }]);
