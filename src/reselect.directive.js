@@ -9,7 +9,7 @@ Reselect.value('reselectDefaultOptions', {
 	return {
 		restrict    : 'AE',
 		templateUrl : 'templates/reselect.directive.tpl.html',
-		require     : ['^ngModel'],
+		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
 		scope: {
 			ngModel         : '=',
@@ -24,8 +24,9 @@ Reselect.value('reselectDefaultOptions', {
 			};
 			
 		},
-		controllerAs: 'reselect',
+		controllerAs: '$reselect',
 		controller: ['$scope', 'reselectDefaultOptions', function($scope, reselectDefaultOptions){
+			
 			var ctrl = this;
 
 			// Options

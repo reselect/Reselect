@@ -16,14 +16,15 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 			}
 
 			return function($scope, $element, $attrs, $Reselect, transcludeFn){
-				var self = $scope.choices;
+				var self = $scope.choices = {};
 
-				var choiceTpl;
+				
+				self.CHOICE_TEMPLATE = null;
+
 				transcludeFn(function(clone){
-					choiceTpl = angular.element('<div></div>').append(clone).html();
+					self.CHOICE_TEMPLATE = angular.element('<li class="reselect-option reselect-option-choice" ng-click="choices.selectChoice($containerId)"></li>');
+					self.CHOICE_TEMPLATE.append(clone);
 				});
-
-				self.ReselectCtrl = $Reselect;
 
 				self.parsedOptions = ChoiceParser.parse($attrs.options);
 				self.choices       = self.parsedOptions.source($scope.$parent);
@@ -34,9 +35,13 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 
 				self.choiceHeight = 32;
 				self.listHeight = 300;
-				var numLazyContainers = Math.ceil((self.listHeight + self.choiceHeight)/ self.choiceHeight);
+				var numLazyContainers = Math.ceil((self.listHeight)/ self.choiceHeight) + 2;
 
-				self.CHOICE_TEMPLATE = '<li class="reselect-option reselect-option-choice"></li>';
+				self.selectChoice = function(containerId){
+					var value = angular.copy(self.lazyContainers[containerId].scope.$eval($attrs.value));
+
+					$Reselect.selectValue(value);
+				};
 
 				// Debug
 
@@ -49,20 +54,17 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 
 					for(var i = 0; i < numLazyContainers; i++){
 
-						var $choice = angular.element(self.CHOICE_TEMPLATE);
-							$choice.append(choiceTpl);
+						var $choice = self.CHOICE_TEMPLATE.clone();
 
 						var lazyScope = $scope.$new();
-							// lazyScope.$choice = {
-							// 	$index : i,
-							// 	text   : 'Option'
-							// };
+							lazyScope.$choice = {};
 
 						$compile($choice)(lazyScope);
 
 						self.lazyContainers.push({
-							element : $choice,
-							scope   : lazyScope
+							containerId : i,
+							element     : $choice,
+							scope       : lazyScope
 						});
 
 						$list.append($choice);
@@ -72,30 +74,42 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 				// Lazy Load
 
 				var lastCheck = null;
+				var lastScrollTop;
+				var scrollDirection = null;
 
 				self._calculateLazyRender = function(){
 					var scrollTop = $container[0].scrollTop;
+
+					if(scrollTop > lastScrollTop){
+						scrollDirection = 'down';
+					}else if(scrollTop < lastScrollTop){
+						scrollDirection = 'up';
+					}
+
+					lastScrollTop = scrollTop;
 
 					if(typeof lastCheck === 'number' && (scrollTop <= lastCheck + self.choiceHeight && scrollTop >= lastCheck - self.choiceHeight)){
 						return;
 					}
 
-					console.clear();
-					
-					console.log('render');
+					// console.clear();
 
+					// console.debug('lastCheck: ' + lastCheck);
+					
 					var activeContainers = [];
 					var inactiveContainers = [];
 
 
 					angular.forEach(self.lazyContainers, function(lazyContainer, index){
 						// Check if element is visible
-						var choiceTop = (lazyContainer.index + 1) * self.choiceHeight || 0;
-						console.debug('Container #' + (index + 1) + ': ', choiceTop);
+						var choiceTop = (lazyContainer.index) * self.choiceHeight || 0;
+						// console.debug('Container #' + (index + 1) + ': ', choiceTop);
 
-						if(angular.isUndefined(lazyContainer.index) || (choiceTop < scrollTop - self.choiceHeight || choiceTop > scrollTop + self.listHeight + self.choiceHeight)){
+						if(angular.isUndefined(lazyContainer.index) || choiceTop < scrollTop - self.choiceHeight || choiceTop > scrollTop + self.listHeight + self.choiceHeight){
+							lazyContainer.element.addClass('inactive').removeClass('active');
 							inactiveContainers.push(lazyContainer);
 						}else{
+							lazyContainer.element.addClass('active').removeClass('inactive');
 							activeContainers.push(lazyContainer);
 						}
 					});
@@ -104,8 +118,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 						return container.index;
 					});
 
-					var indexToRenderStart = Math.abs(Math.floor((scrollTop - self.choiceHeight) / self.choiceHeight)) - 1;
-					var indexToRenderEnd = (indexToRenderStart <= 0 ? 0 : indexToRenderStart) + numLazyContainers;
+					var indexToRenderStart = Math.floor(scrollTop / self.choiceHeight);
+						indexToRenderStart = indexToRenderStart < 0 ? 0 : indexToRenderStart;
+					// var indexToRenderEnd = indexToRenderStart + numLazyContainers;
+					var indexToRenderEnd = Math.ceil((scrollTop + self.listHeight) / self.choiceHeight);
+						indexToRenderEnd = indexToRenderEnd >= self.choices.length ? self.choices.length : indexToRenderEnd;
+
+					// console.log('Index Start', indexToRenderStart);
+					// console.log('Index End', indexToRenderEnd);
 
 					for(var i = indexToRenderStart; i < indexToRenderEnd; i++){
 						if(indexInDisplay.indexOf(i) >= 0){
@@ -114,15 +134,19 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 							var container = inactiveContainers.shift();
 
 							if(container){
+								container.element.addClass('active').removeClass('inactive');
+
 								container.element.css('top', ((i) * self.choiceHeight) + 'px');
 
 								container.index = i;
 
-								container.scope.$choice = {
-									text : 'Option ' + i
-								};
+								container.scope.$containerId = container.containerId;
+								container.scope.$index = i;
+								angular.extend(container.scope.$choice, self.choices[i]);
 
 								container.scope.$evalAsync();
+							}else{
+								// console.error('not enough');
 							}							
 						}
 					}
@@ -138,12 +162,10 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 
 				// Init
 				
+				window.up = self._calculateLazyRender;
 				self._calculate();
 				self._calculateLazyRender();
 			};
-		},
-		controller  : ['$scope', '$timeout', function($scope, $timeout, $attrs){
-			var self = $scope.choices = this;
-		}]
+		}
 	};
 }]);

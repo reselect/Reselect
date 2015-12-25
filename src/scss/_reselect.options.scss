@@ -15,6 +15,7 @@
 	list-style: none;
 
 	position: relative;
+
 }
 
 .reselect-search-input{
@@ -37,13 +38,14 @@
 
 	position: absolute;
 
-
-	& + .reselect-option-choice{
-		border-top: 1px solid #ccc;
-	}
+	border-top: 1px solid #ccc;
 
 	&:hover, &.reslect-option-choice--highlight{
 		background: #09c;
 		color:#fff;
+	}
+
+	&.inactive{
+		display: none;
 	}
 }

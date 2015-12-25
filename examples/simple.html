@@ -17,19 +17,25 @@
         <div ng-controller="SimpleCtrl">
 
             <div style="padding-bottom: 20px">
-                Model Value: <span ng-bind="simple.value"></span>
+                Model Value: <span ng-bind="simple.value|json"></span>
             </div>
 
             <div style="padding-bottom: 20px">
                 <reselect
                     ng-model="simple.value">
                     <reselect-choices
-                        options="option in simple.choices">
-                        <span ng-bind="$choice.text"></span> <span ng-bind="$index"></span>
+                        options="option in simple.choices"
+                        value="$choice">
+                            <span ng-bind="$choice.text"></span> - Choice
                     </reselect-options>
                 </reselect>
             </div>
 
+            <div style="padding-bottom: 20px">
+                <!-- <select>
+                    <option ng-repeat="option in simple.choices track by $index">{{$index}}</option>
+                </select> -->
+            </div>
         </div>
     </body>
 </html>

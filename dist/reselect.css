@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2015-12-25T00:15:18.629Z
+ * Version: 0.0.1 - 2015-12-25T01:34:39.553Z
  * License: MIT
  */
 
@@ -77,9 +77,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  position: absolute; }
-  .reselect-option-choice + .reselect-option-choice {
-    border-top: 1px solid #ccc; }
+  position: absolute;
+  border-top: 1px solid #ccc; }
   .reselect-option-choice:hover, .reselect-option-choice.reslect-option-choice--highlight {
     background: #09c;
     color: #fff; }
+  .reselect-option-choice.inactive {
+    display: none; }
