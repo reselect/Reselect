@@ -161,6 +161,10 @@ gulp.task('styles', function() {
 
 });
 
+gulp.task('test', function(){
+    console.log('Needs Tests');
+});
+
 var handleError = function(err) {
     console.log(err.toString());
     this.emit('end');

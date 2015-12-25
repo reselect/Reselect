@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2015-12-25T05:27:21.744Z
+ * Version: 0.0.1 - 2015-12-25T12:09:40.072Z
  * License: MIT
  */
 
@@ -204,8 +204,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 					var indexToRenderEnd = Math.ceil((scrollTop + self.listHeight) / self.choiceHeight);
 						indexToRenderEnd = indexToRenderEnd >= self.choices.length ? self.choices.length : indexToRenderEnd;
 
-					// console.log('Index Start', indexToRenderStart);
-					// console.log('Index End', indexToRenderEnd);
+					console.log('Index Start', indexToRenderStart);
+					console.log('Index End', indexToRenderEnd);
 
 					for(var i = indexToRenderStart; i < indexToRenderEnd; i++){
 						if(indexInDisplay.indexOf(i) >= 0){
@@ -231,7 +231,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 						}
 					}
 					
-					lastCheck = scrollTop;
+					lastCheck = Math.floor(scrollTop/self.choiceHeight) * self.choiceHeight;
 				};
 
 				$container.on('scroll', function(){

@@ -12,7 +12,7 @@
 		var num = 0;
 		self.choices = Array.apply(null, Array(1000)).map(function(){
 			return {
-				text: 'Option ' + (num++ * 2)
+				text: 'Option ' + (num++)
 			};
 		});
 	}]);
