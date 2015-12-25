@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2015-12-25T22:16:40.824Z
+ * Version: 0.0.1 - 2015-12-25T22:32:47.691Z
  * License: MIT
  */
 
@@ -29,6 +29,7 @@ Reselect.value('reselectDefaultOptions', {
 		templateUrl : 'templates/reselect.directive.tpl.html',
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
+		replace     : true,
 		scope: {
 			ngModel         : '=',
 			reselectOptions : '='
@@ -233,7 +234,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 }]);
 
 angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/reselect.choice.tpl.html","");
-$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-if=\"false\" ng-bind=\"reselect.rendered_selection\"></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-if=\"true\" ng-bind=\"reselect.rendered_placeholder\"></div><div class=\"reselect-input-container\"><input class=\"reselect-text-input\" readonly=\"readonly\" ng-if=\"true\"></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div></div>");
+$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-if=\"false\" ng-bind=\"reselect.rendered_selection\"></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-if=\"true\" ng-bind=\"reselect.rendered_placeholder\"></div><div class=\"reselect-input-container\"><input class=\"reselect-text-input\" readonly=\"readonly\" ng-if=\"true\"></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div></div>");
 $templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-options-container\"><ul class=\"reselect-options-list\"></ul></div>");}]);
 /**
  * Service to parse choice "options" attribute
