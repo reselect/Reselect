@@ -1,26 +1,15 @@
-var fs            = require('fs');
-var gulp          = require('gulp');
-var concat        = require('gulp-concat');
-var jshint        = require('gulp-jshint');
-var header        = require('gulp-header');
-var footer        = require('gulp-footer');
-var rename        = require('gulp-rename');
-var livereload    = require('gulp-livereload');
-var es            = require('event-stream');
-var del           = require('del');
-var uglify        = require('gulp-uglify');
-var minifyHtml    = require('gulp-minify-html');
-var minifyCSS     = require('gulp-minify-css');
-var templateCache = require('gulp-angular-templatecache');
-var gutil         = require('gulp-util');
-var connect       = require('gulp-connect');
-var plumber       = require('gulp-plumber');
-var sass          = require('gulp-sass');
-var notify        = require('gulp-notify');
-var map           = require('map-stream');
-var events        = require('events');
-var emmitter      = new events.EventEmitter();
-var path          = require('path');
+var fs       = require('fs');
+var gulp     = require('gulp');
+var es       = require('event-stream');
+var del      = require('del');
+var map      = require('map-stream');
+var events   = require('events');
+var emmitter = new events.EventEmitter();
+var path     = require('path');
+var karma    = require('karma').server;
+var notifier = require('node-notifier');
+var $        = require('gulp-load-plugins')();
+var connect  = require('gulp-connect');
 
 var config = {
     pkg: JSON.parse(fs.readFileSync('./package.json')),
@@ -33,30 +22,31 @@ var config = {
 };
 
 gulp.task('default', ['build', 'test']);
+gulp.task('test', ['karma']);
 
 gulp.task('clean-build', ['clean'], function() {
     return gulp.start(['build']);
 });
 
 gulp.task('build', ['scripts', 'styles'], function() {
-    gutil.log('Reselect Built');
+    $.util.log('Reselect Built');
 });
 
-gulp.task('dev', ['watch', 'dev-watch'], function() {
+gulp.task('dev', ['watch', 'dev-watch', 'dev-karma'], function() {
     connect.server();
 });
 
 gulp.task('dev-watch', function() {
-    gulp.watch(['examples/**/*.{js,html}']).on('change', livereload.changed);
+    gulp.watch(['examples/**/*.{js,html}']).on('change', $.livereload.changed);
 });
 
 gulp.task('watch', function() {
-    livereload.listen();
+    $.livereload.listen();
 
     gulp.watch(['src/**/*.{js,html}'], ['scripts']);
     gulp.watch(['src/**/*.scss'], ['styles']);
 
-    gulp.watch(['dist/**/*.min.{css,js}']).on('change', livereload.changed);
+    gulp.watch(['dist/**/*.min.{css,js}']).on('change', $.livereload.changed);
 });
 
 gulp.task('clean', function(cb) {
@@ -67,15 +57,15 @@ gulp.task('scripts', function() {
 
     var buildTemplates = function() {
         return gulp.src('src/**/*.html')
-            .pipe(plumber({
+            .pipe($.plumber({
                 errorHandler: handleError
             }))
-            .pipe(minifyHtml({
+            .pipe($.minifyHtml({
                 empty: true,
                 spare: true,
                 quotes: true
             }))
-            .pipe(templateCache({
+            .pipe($.angularTemplatecache({
                 module: 'reselect.templates',
                 standalone: true
             }));
@@ -107,33 +97,33 @@ gulp.task('scripts', function() {
         });
 
         return gulp.src(['src/common.js', 'src/reselect.js', 'src/*.js'])
-            .pipe(plumber({
+            .pipe($.plumber({
                 errorHandler: handleError
             }))
-            .pipe(jshint())
-            .pipe(jshint.reporter('jshint-stylish'))
+            .pipe($.jshint())
+            .pipe($.jshint.reporter('jshint-stylish'))
             .pipe(jsHintErrorReporter) // If error pop up a notify alert
-            .on('error', notify.onError(function(error) {
+            .on('error', $.notify.onError(function(error) {
                 return error.message;
             }));
     };
 
     return es.merge(buildLib(), buildTemplates())
-        .pipe(plumber({
+        .pipe($.plumber({
             errorHandler: handleError
         }))
-        .pipe(concat('reselect.js'))
-        .pipe(header('(function () { \n\'use strict\';\n'))
-        .pipe(header(config.banner, {
+        .pipe($.concat('reselect.js'))
+        .pipe($.header('(function () { \n\'use strict\';\n'))
+        .pipe($.header(config.banner, {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
         }))
-        .pipe(footer('\n}());'))
+        .pipe($.footer('\n}());'))
         .pipe(gulp.dest('dist'))
-        .pipe(uglify({
+        .pipe($.uglify({
             preserveComments: 'some'
         }))
-        .pipe(rename({
+        .pipe($.rename({
             ext: '.min.js'
         }))
         .pipe(gulp.dest('dist'));
@@ -143,26 +133,36 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
 
     return gulp.src('src/scss/reselect.scss')
-        .pipe(plumber({
+        .pipe($.plumber({
             errorHandler: handleError
         }))
-        .pipe(sass())
-        .pipe(header(config.banner, {
+        .pipe($.sass())
+        .pipe($.header(config.banner, {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
         }))
-        .pipe(rename('reselect.css'))
+        .pipe($.rename('reselect.css'))
         .pipe(gulp.dest('dist'))
-        .pipe(minifyCSS())
-        .pipe(rename({
+        .pipe($.minifyCss())
+        .pipe($.rename({
             ext: '.min.css'
         }))
         .pipe(gulp.dest('dist'));
 
 });
 
-gulp.task('test', function(){
-    console.log('Needs Tests');
+gulp.task('karma', ['build'], function() {
+    karma.start({
+        configFile: __dirname + '/test/karma.conf.js',
+        singleRun: true
+    });
+});
+
+gulp.task('dev-karma', ['build'], function() {
+    karma.start({
+        configFile: __dirname + '/test/karma.conf.js',
+        singleRun: false
+    });
 });
 
 var handleError = function(err) {

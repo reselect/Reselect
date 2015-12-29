@@ -3,12 +3,40 @@ Reselect.value('reselectChoicesOptions', {
 
 });
 
-Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(ChoiceParser, $compile){
+Reselect.service('LazyContainer', [function(){
+
+	var LazyContainer = function(options){
+		var self = this;
+
+		self.containerId = null;
+		self.element     = null;
+		self.index       = null;
+		self.scope       = null;
+
+		angular.extend(self, options);
+	};
+
+	LazyContainer.prototype.render = function(containerHeight){
+		var self = this;
+
+		if(!self.element && self.index === null){
+			return;
+		}
+
+		self.element.css('top', (self.index * containerHeight) + 'px');
+	};
+
+	return LazyContainer;
+
+}]);
+
+Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContainer', function(ChoiceParser, $compile, LazyContainer){
 	return {
 		restrict    : 'AE',
 		templateUrl : 'templates/reselect.options.directive.tpl.html',
 		require     : '^reselect',
 		transclude  : true,
+		replace     : true,
 		compile: function(element, attrs){
 
 			if(!attrs.options){
@@ -16,43 +44,60 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 			}
 
 			return function($scope, $element, $attrs, $Reselect, transcludeFn){
-				var self = $scope.choices = {};
 
+				var self = $scope.$options = {};
+
+				/**
+				 * Manipulating the transluded html template taht is used to display
+				 * each choice in the options list
+				 */
 				
 				self.CHOICE_TEMPLATE = null;
 
 				transcludeFn(function(clone){
-					self.CHOICE_TEMPLATE = angular.element('<li class="reselect-option reselect-option-choice" ng-click="choices.selectChoice($containerId)"></li>');
+					self.CHOICE_TEMPLATE = angular.element('<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($containerId)"></li>');
+					self.CHOICE_TEMPLATE.attr('ng-class', '{\'reselect-option-choice--highlight\' : $options.activeIndex === $index }');
+					self.CHOICE_TEMPLATE.attr('ng-mouseenter', '$options.activeIndex = $index');
+					self.CHOICE_TEMPLATE.attr('ng-mouseleave', '$options.activeIndex = null');
 					self.CHOICE_TEMPLATE.append(clone);
 				});
 
-				self.parsedOptions = ChoiceParser.parse($attrs.options);
-				self.choices       = self.parsedOptions.source($scope.$parent);
-
-				var element    = $element[0];
-				var $container = angular.element(element.querySelectorAll('.reselect-options-container'));
-				var $list      = angular.element(element.querySelectorAll('.reselect-options-list'));
-
-				self.choiceHeight = 32;
-				self.listHeight = 300;
-				var numLazyContainers = Math.ceil((self.listHeight)/ self.choiceHeight) + 2;
-
-				self.selectChoice = function(containerId){
-					var value = angular.copy(self.lazyContainers[containerId].scope.$eval($attrs.value));
-
-					$Reselect.selectValue(value);
-				};
-
-				// Debug
-
-				$container.css('height', self.listHeight + 'px');
-				$list.css('height', (self.choiceHeight * self.choices.length) + 'px');
-
-				self.lazyContainers = [];
+				self.element           = $element[0];
+				self.$container        = angular.element(self.element.querySelectorAll('.reselect-options-container'));
+				self.$list             = angular.element(self.element.querySelectorAll('.reselect-options-list'));
 				
-				self._calculate = function(){
+				self.choiceHeight      = 32;
+				self.listHeight        = 300;
 
-					for(var i = 0; i < numLazyContainers; i++){
+				/**
+				 *
+				 * 
+				 */
+
+				$Reselect.parsedOptions = ChoiceParser.parse($attrs.options);
+				$Reselect.choices       = $Reselect.parsedOptions.source($scope.$parent);
+
+				/**
+				 * Lazy Containers
+				 * 
+				 * The goal is to used the minimum amount of DOM elements (containers)
+				 * to display large amounts of data. Containers are shuffled and repositioned
+				 * whenever the options list is scrolled.
+				 */
+				
+				self.lazyContainers = [];
+
+				self.numLazyContainers = Math.ceil((self.listHeight)/ self.choiceHeight) + 2;
+
+				// Set the max height of the dropdown container
+				self.$container.css('height', self.listHeight + 'px');
+
+				// Simulate the scrollbar with the estimated height for the number of choices
+				self.$list.css('height', (self.choiceHeight * $Reselect.choices.length) + 'px');
+
+				self._initLazyContainers = function(){
+
+					for(var i = 0; i < self.numLazyContainers; i++){
 
 						var $choice = self.CHOICE_TEMPLATE.clone();
 
@@ -61,24 +106,30 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 
 						$compile($choice)(lazyScope);
 
-						self.lazyContainers.push({
+						self.lazyContainers.push(new LazyContainer({
 							containerId : i,
 							element     : $choice,
 							scope       : lazyScope
-						});
+						}));
 
-						$list.append($choice);
+						self.$list.append($choice);
 					}
 				};
 
-				// Lazy Load
+				self._initLazyContainers();
 
-				var lastCheck = null;
-				var lastScrollTop;
+				/**
+				 * Lazy Load Rendering
+				 *
+				 * 
+				 */
+
+				var lastCheck       = null; // Stores the scroll position from the last render calculation
 				var scrollDirection = null;
+				var lastScrollTop;
 
 				self._calculateLazyRender = function(){
-					var scrollTop = $container[0].scrollTop;
+					var scrollTop = self.$container[0].scrollTop;
 
 					if(scrollTop > lastScrollTop){
 						scrollDirection = 'down';
@@ -88,24 +139,20 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 
 					lastScrollTop = scrollTop;
 
+					// A Check to throttle amounts of calculation by setting a threshold
+					// The list is due to recalculation only if the differences of scrollTop and lastCheck is greater than a choiceHeight
 					if(typeof lastCheck === 'number' && (scrollTop <= lastCheck + self.choiceHeight && scrollTop >= lastCheck - self.choiceHeight)){
 						return;
 					}
-
-					// console.clear();
-
-					// console.debug('lastCheck: ' + lastCheck);
-					
-					var activeContainers = [];
+			
+					var activeContainers   = [];
 					var inactiveContainers = [];
 
-
 					angular.forEach(self.lazyContainers, function(lazyContainer, index){
-						// Check if element is visible
 						var choiceTop = (lazyContainer.index) * self.choiceHeight || 0;
-						// console.debug('Container #' + (index + 1) + ': ', choiceTop);
 
-						if(angular.isUndefined(lazyContainer.index) || choiceTop < scrollTop - self.choiceHeight || choiceTop > scrollTop + self.listHeight + self.choiceHeight){
+						// Check if the container is visible
+						if(lazyContainer.index === null || choiceTop < scrollTop - self.choiceHeight || choiceTop > scrollTop + self.listHeight + self.choiceHeight){
 							lazyContainer.element.addClass('inactive').removeClass('active');
 							inactiveContainers.push(lazyContainer);
 						}else{
@@ -118,53 +165,94 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', function(Choi
 						return container.index;
 					});
 
+					// Get the start and end index of all the choices that should be in the viewport at the current scroll position
 					var indexToRenderStart = Math.floor(scrollTop / self.choiceHeight);
 						indexToRenderStart = indexToRenderStart < 0 ? 0 : indexToRenderStart;
-					// var indexToRenderEnd = indexToRenderStart + numLazyContainers;
+
 					var indexToRenderEnd = Math.ceil((scrollTop + self.listHeight) / self.choiceHeight);
-						indexToRenderEnd = indexToRenderEnd >= self.choices.length ? self.choices.length : indexToRenderEnd;
+						indexToRenderEnd = indexToRenderEnd >= $Reselect.choices.length ? $Reselect.choices.length : indexToRenderEnd;
 
-					console.log('Index Start', indexToRenderStart);
-					console.log('Index End', indexToRenderEnd);
-
+					// Start rendering all missing indexs that is not in the viewport
 					for(var i = indexToRenderStart; i < indexToRenderEnd; i++){
 						if(indexInDisplay.indexOf(i) >= 0){
 							continue;
 						}else{
+							// Get the next available lazy container
 							var container = inactiveContainers.shift();
 
 							if(container){
 								container.element.addClass('active').removeClass('inactive');
 
-								container.element.css('top', ((i) * self.choiceHeight) + 'px');
-
 								container.index = i;
+								container.render(self.choiceHeight);
 
-								container.scope.$containerId = container.containerId;
-								container.scope.$index = i;
-								angular.extend(container.scope.$choice, self.choices[i]);
+								angular.extend(container.scope, {
+									$containerId : container.containerId,
+									$index       : i
+								});
 
-								container.scope.$evalAsync();
-							}else{
-								// console.error('not enough');
-							}							
+								angular.extend(container.scope.$choice, $Reselect.choices[i]);
+							}						
 						}
 					}
+
+					$scope.$evalAsync();
 					
 					lastCheck = Math.floor(scrollTop/self.choiceHeight) * self.choiceHeight;
 				};
 
-				$container.on('scroll', function(){
+				self.$container.on('scroll', function(){
 					window.requestAnimationFrame(function(){
 						self._calculateLazyRender();
 					});
 				});
 
-				// Init
-				
-				window.up = self._calculateLazyRender;
-				self._calculate();
 				self._calculateLazyRender();
+
+				/**
+				 * An index to simply track the highlighted or selected option
+				 */
+				
+				self.activeIndex  = null;
+
+				self._setActiveIndex = function(index){
+					self.activeIndex = index;
+				};
+
+				/**
+				 * Using the container id that is passed in, find the actual value by $eval the [value=""]
+				 * from the directive with the scope of the lazy container
+				 */
+
+				self._selectChoice = function(containerId){
+					var value = angular.copy(self.lazyContainers[containerId].scope.$eval($attrs.value));
+
+					$Reselect.selectValue(value);
+				};
+
+				
+
+				// Init				
+
+				var $parent = $element.parent();
+
+				// $element.detach();
+
+				$scope.$on('reselect.options.show', function(){
+					self.show();
+				});
+
+				$scope.$on('reselect.options.hide', function(){
+					self.hide();
+				});
+
+				self.show = function(){
+					$parent.append($element);
+				};
+
+				self.hide = function(){
+					$element.detach();
+				};
 			};
 		}
 	};

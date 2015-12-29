@@ -20,6 +20,7 @@
     "gulp-header": "~1.0.2",
     "gulp-jshint": "^2.0.0",
     "gulp-livereload": "^3.8.1",
+    "gulp-load-plugins": "^1.1.0",
     "gulp-minify-css": "~0.3.6",
     "gulp-minify-html": "~0.1.0",
     "gulp-notify": "^2.2.0",
@@ -35,9 +36,13 @@
     "karma-coverage": "~0.2",
     "karma-firefox-launcher": "~0.1",
     "karma-jasmine": "~0.2",
+    "karma-jasmine-html-reporter-livereload": "^1.0.0",
     "karma-ng-html2js-preprocessor": "^0.1.0",
+    "karma-notify-reporter": "^0.1.1",
     "karma-phantomjs-launcher": "~0.1.4",
-    "map-stream": "0.0.6"
+    "karma-spec-reporter": "0.0.23",
+    "map-stream": "0.0.6",
+    "node-notifier": "^4.4.0"
   },
   "scripts": {
     "test": "gulp test"

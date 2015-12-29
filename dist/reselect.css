@@ -1,10 +1,17 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2015-12-25T01:34:39.553Z
+ * Version: 0.0.1 - 2015-12-29T04:32:27.007Z
  * License: MIT
  */
 
+
+.reselect {
+  font-family: Arial, sans-serif;
+  font-size: 12px; }
+
+.reselect * {
+  box-sizing: border-box; }
 
 .reselect-container {
   display: inline-block; }
@@ -17,10 +24,11 @@
 
 .reselect-selection {
   position: relative;
+  background: #fff;
   line-height: 18px;
   min-height: 30px;
   min-width: 200px;
-  border-radius: 3px;
+  border-radius: 0px;
   padding-right: 18px;
   border: 1px solid #ccc; }
 
@@ -57,6 +65,8 @@
   width: 200px;
   background: white;
   overflow: auto; }
+  .reselect-options-container.disable-hover .reselect-option-choice {
+    pointer-events: none; }
 
 .reselect-options-list {
   margin: 0;
@@ -78,8 +88,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   position: absolute;
-  border-top: 1px solid #ccc; }
-  .reselect-option-choice:hover, .reselect-option-choice.reslect-option-choice--highlight {
+  border-bottom: 1px solid #ccc;
+  cursor: pointer; }
+  .reselect-option-choice.reselect-option-choice--highlight {
     background: #09c;
     color: #fff; }
   .reselect-option-choice.inactive {

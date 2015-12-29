@@ -2,7 +2,7 @@ $reselect-height: 30px;
 $reselect-width: 200px;
 
 $reselect-border-color: #ccc;
-$reselect-border-radius: 3px;
+$reselect-border-radius: 0px;
 
 $reselect-text-size: 12px;
 
@@ -10,6 +10,15 @@ $reselect-placeholder-color: #999;
 
 @mixin reselect-border(){
 	border:1px solid $reselect-border-color;
+}
+
+.reselect{
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+}
+
+.reselect *{
+	box-sizing: border-box;
 }
 
 .reselect-container{
@@ -27,6 +36,8 @@ $reselect-placeholder-color: #999;
 
 .reselect-selection{
 	position: relative;
+
+	background:#fff;
 
 	line-height: $reselect-height - 12px;
 	min-height: $reselect-height;

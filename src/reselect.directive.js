@@ -11,6 +11,7 @@ Reselect.value('reselectDefaultOptions', {
 		templateUrl : 'templates/reselect.directive.tpl.html',
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
+		replace     : true,
 		scope: {
 			ngModel         : '=',
 			reselectOptions : '='
@@ -25,17 +26,32 @@ Reselect.value('reselectDefaultOptions', {
 			
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', 'reselectDefaultOptions', function($scope, reselectDefaultOptions){
+		controller: ['$scope', 'reselectDefaultOptions', '$timeout', function($scope, reselectDefaultOptions, $timeout){
 			
 			var ctrl = this;
 
 			// Options
 			ctrl.options = angular.extend({}, $scope.reselectOptions, reselectDefaultOptions);
 
+			ctrl.opened = false;
+
 			ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
 
+			ctrl.value = null;
+
 			ctrl.selectValue = function(value){
+				ctrl.value = value;
 				$scope.ngModel = value;
+			};
+
+			// Options Directive
+			ctrl.parsedOptions = null;
+			ctrl.choices = [];
+
+			ctrl.toggleDropdown = function(){
+				$scope.$broadcast('reselect.options.' + (!ctrl.opened ? 'show' : 'hide'));
+
+				ctrl.opened = !ctrl.opened;
 			};
 
 			return ctrl;
