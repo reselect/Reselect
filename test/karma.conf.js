@@ -48,7 +48,7 @@ module.exports = function(config) {
 
         colors: true,
 
-        reporters: ['spec', 'notify'],
+        reporters: ['spec'],
 
         notifyReporter: {
             reportEachFailure: true, // Default: false, Will notify on every failed sepc 

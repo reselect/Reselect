@@ -75,7 +75,15 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				 */
 
 				$Reselect.parsedOptions = ChoiceParser.parse($attrs.options);
-				$Reselect.choices       = $Reselect.parsedOptions.source($scope.$parent);
+				$Reselect.choices       = $Reselect.parsedOptions.source($scope.$parent) || [];	
+
+				$scope.$watchCollection(function(){
+					return $Reselect.parsedOptions.source($scope.$parent);
+				}, function(newChoices){
+					$Reselect.choices = newChoices || [];
+
+					self.render();
+				});
 
 				/**
 				 * Lazy Containers
@@ -89,11 +97,16 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 
 				self.numLazyContainers = Math.ceil((self.listHeight)/ self.choiceHeight) + 2;
 
-				// Set the max height of the dropdown container
-				self.$container.css('height', self.listHeight + 'px');
+				self._renderDropdown = function(){
+					// Set the max height of the dropdown container
+					var optionsHeight = $Reselect.choices.length * self.choiceHeight;
+					var containerHeight = (optionsHeight > self.listHeight) ? self.listHeight : optionsHeight;
 
-				// Simulate the scrollbar with the estimated height for the number of choices
-				self.$list.css('height', (self.choiceHeight * $Reselect.choices.length) + 'px');
+					self.$container.css('height', containerHeight || 32 + 'px');
+
+					// Simulate the scrollbar with the estimated height for the number of choices
+					self.$list.css('height', optionsHeight + 'px');
+				};
 
 				self._initLazyContainers = function(){
 
@@ -230,11 +243,20 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 					$Reselect.selectValue(value);
 				};
 
+				/**
+				 * Rendering
+				 */
 				
+				self.$parent = $element.parent();
+				// $element.detach();
+
+				self.render = function(){
+					self._renderDropdown();
+				};
 
 				// Init				
 
-				var $parent = $element.parent();
+				
 
 				// $element.detach();
 
@@ -247,7 +269,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				});
 
 				self.show = function(){
-					$parent.append($element);
+					self.$parent.append($element);
 				};
 
 				self.hide = function(){

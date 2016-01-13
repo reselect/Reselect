@@ -7,6 +7,8 @@
 	background: white;
 	overflow: auto;
 
+	position: relative;
+
 	&.disable-hover .reselect-option-choice{
 		pointer-events:none;
 	}
