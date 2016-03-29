@@ -51,7 +51,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				 * Manipulating the transluded html template taht is used to display
 				 * each choice in the options list
 				 */
-				
+
 				self.CHOICE_TEMPLATE = null;
 
 				transcludeFn(function(clone){
@@ -65,17 +65,17 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				self.element           = $element[0];
 				self.$container        = angular.element(self.element.querySelectorAll('.reselect-options-container'));
 				self.$list             = angular.element(self.element.querySelectorAll('.reselect-options-list'));
-				
+
 				self.choiceHeight      = 32;
 				self.listHeight        = 300;
 
 				/**
 				 *
-				 * 
+				 *
 				 */
 
 				$Reselect.parsedOptions = ChoiceParser.parse($attrs.options);
-				$Reselect.choices       = $Reselect.parsedOptions.source($scope.$parent) || [];	
+				$Reselect.choices       = $Reselect.parsedOptions.source($scope.$parent) || [];
 
 				$scope.$watchCollection(function(){
 					return $Reselect.parsedOptions.source($scope.$parent);
@@ -83,16 +83,17 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 					$Reselect.choices = newChoices || [];
 
 					self.render();
+                    self._calculateLazyRender(true);
 				});
 
 				/**
 				 * Lazy Containers
-				 * 
+				 *
 				 * The goal is to used the minimum amount of DOM elements (containers)
 				 * to display large amounts of data. Containers are shuffled and repositioned
 				 * whenever the options list is scrolled.
 				 */
-				
+
 				self.lazyContainers = [];
 
 				self.numLazyContainers = Math.ceil((self.listHeight)/ self.choiceHeight) + 2;
@@ -102,7 +103,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 					var optionsHeight = $Reselect.choices.length * self.choiceHeight;
 					var containerHeight = (optionsHeight > self.listHeight) ? self.listHeight : optionsHeight;
 
-					self.$container.css('height', containerHeight || 32 + 'px');
+					self.$container.css('height', (containerHeight || 32) + 'px');
 
 					// Simulate the scrollbar with the estimated height for the number of choices
 					self.$list.css('height', optionsHeight + 'px');
@@ -134,14 +135,22 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				/**
 				 * Lazy Load Rendering
 				 *
-				 * 
+				 *
 				 */
 
 				var lastCheck       = null; // Stores the scroll position from the last render calculation
 				var scrollDirection = null;
 				var lastScrollTop;
 
-				self._calculateLazyRender = function(){
+                self._shouldRender = function(scrollTop){
+                    return typeof lastCheck === 'number' &&
+                        (
+                            scrollTop <= lastCheck + (self.choiceHeight - (lastCheck % self.choiceHeight) ) && //
+                            scrollTop >= lastCheck - (lastCheck % self.choiceHeight) //
+                        );
+                };
+
+				self._calculateLazyRender = function(force){
 					var scrollTop = self.$container[0].scrollTop;
 
 					if(scrollTop > lastScrollTop){
@@ -154,10 +163,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 
 					// A Check to throttle amounts of calculation by setting a threshold
 					// The list is due to recalculation only if the differences of scrollTop and lastCheck is greater than a choiceHeight
-					if(typeof lastCheck === 'number' && (scrollTop <= lastCheck + self.choiceHeight && scrollTop >= lastCheck - self.choiceHeight)){
-						return;
-					}
-			
+                    if(force !== true){
+                        if(self._shouldRender()){
+                            return;
+                        }
+                    }
+
 					var activeContainers   = [];
 					var inactiveContainers = [];
 
@@ -205,12 +216,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 								});
 
 								angular.extend(container.scope.$choice, $Reselect.choices[i]);
-							}						
+							}
 						}
 					}
 
 					$scope.$evalAsync();
-					
+
 					lastCheck = Math.floor(scrollTop/self.choiceHeight) * self.choiceHeight;
 				};
 
@@ -225,7 +236,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				/**
 				 * An index to simply track the highlighted or selected option
 				 */
-				
+
 				self.activeIndex  = null;
 
 				self._setActiveIndex = function(index){
@@ -246,20 +257,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				/**
 				 * Rendering
 				 */
-				
+
 				self.$parent = $element.parent();
-				// $element.detach();
 
 				self.render = function(){
 					self._renderDropdown();
 				};
 
-				// Init				
-
-				
-
-				// $element.detach();
-
+				// Init
 				$scope.$on('reselect.options.show', function(){
 					self.show();
 				});
@@ -270,6 +275,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 
 				self.show = function(){
 					self.$parent.append($element);
+                    if(lastScrollTop){
+                        self.$container[0].scrollTop = lastScrollTop;
+                    }
 				};
 
 				self.hide = function(){

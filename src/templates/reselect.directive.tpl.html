@@ -5,18 +5,18 @@
 	<div class="reselect-selection">
 
 		<div class="reselect-rendered reselect-rendered-selection"
-			ng-if="false"
-			ng-bind="reselect.rendered_selection"></div>
+			ng-if="$reselect.value"
+			ng-bind="$reselect.rendered_selection"></div>
 
 		<div class="reselect-rendered reselect-rendered-placeholder"
-			ng-if="true"
-			ng-bind="reselect.rendered_placeholder"></div>
+			ng-if="!$reselect.value"
+			ng-bind="$reselect.rendered_placeholder"></div>
 
-		<div class="reselect-input-container">
+		<!-- <div class="reselect-input-container">
 			<input class="reselect-text-input"
-				readonly="readonly" 
+				readonly="readonly"
 				ng-if="true"/>
-		</div>
+		</div> -->
 
 		<div class="reselect-arrow-container">
 			<div class="reselect-arrow"></div>

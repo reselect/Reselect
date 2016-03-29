@@ -2,6 +2,9 @@
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
+	},
+	selectionTemplate: function(state){
+		return state.text;
 	}
 })
 
@@ -23,11 +26,11 @@ Reselect.value('reselectDefaultOptions', {
 					$element.append(clone[1]);
 				});
 			};
-			
+
 		},
 		controllerAs: '$reselect',
 		controller: ['$scope', 'reselectDefaultOptions', '$timeout', function($scope, reselectDefaultOptions, $timeout){
-			
+
 			var ctrl = this;
 
 			// Options
@@ -36,11 +39,13 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.opened = false;
 
 			ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
+			ctrl.rendered_selection = null;
 
 			ctrl.value = null;
 
 			ctrl.selectValue = function(value){
 				ctrl.value = value;
+				ctrl.rendered_selection = ctrl.options.selectionTemplate(ctrl.value);
 				$scope.ngModel = value;
 			};
 
