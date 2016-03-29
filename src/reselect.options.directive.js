@@ -66,7 +66,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				self.$container        = angular.element(self.element.querySelectorAll('.reselect-options-container'));
 				self.$list             = angular.element(self.element.querySelectorAll('.reselect-options-list'));
 
-				self.choiceHeight      = 32;
+				self.choiceHeight      = 36;
 				self.listHeight        = 300;
 
 				/**

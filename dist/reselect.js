@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-03-29T04:28:20.218Z
+ * Version: 0.0.1 - 2016-03-29T06:35:48.334Z
  * License: MIT
  */
 
@@ -166,7 +166,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyContaine
 				self.$container        = angular.element(self.element.querySelectorAll('.reselect-options-container'));
 				self.$list             = angular.element(self.element.querySelectorAll('.reselect-options-list'));
 
-				self.choiceHeight      = 32;
+				self.choiceHeight      = 36;
 				self.listHeight        = 300;
 
 				/**

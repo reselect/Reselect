@@ -1,8 +1,9 @@
-$reselect-height: 30px;
+$reselect-height: 38px;
 $reselect-width: 200px;
 
 $reselect-border-color: #ccc;
-$reselect-border-radius: 0px;
+$reselect-border-color-active: #09c;
+$reselect-border-radius: 3px;
 
 $reselect-text-size: 12px;
 
@@ -22,20 +23,22 @@ $reselect-placeholder-color: #999;
 }
 
 .reselect-container{
+	position: relative;
 	display:inline-block;
 }
 
 .reselect-rendered{
 	min-height: $reselect-height;
 
-	padding: 6px;
+	padding: 6px 14px;
 	font-size: $reselect-text-size;
 
-	box-shadow: inset 0px 0px 5px rgba(0,0,0, 0.1);
+	// box-shadow: inset 0px 0px 5px rgba(0,0,0, 0.1);
 }
 
 .reselect-selection{
 	position: relative;
+	cursor: pointer;
 
 	background:#fff;
 
@@ -48,6 +51,10 @@ $reselect-placeholder-color: #999;
 	padding-right: 18px;
 
 	@include reselect-border();
+
+	&:hover{
+		border-color: $reselect-border-color-active;
+	}
 }
 
 .reselect-rendered-placeholder{
@@ -86,8 +93,47 @@ $reselect-placeholder-color: #999;
 
 	width: 18px;
 
-	background: #eee;
+	// background: #eee;
 	border-left: 1px solid $reselect-border-color;
+
+	&::after{
+		content: '';
+
+		position: absolute;
+
+		left: 50%;
+		margin-left: -5px;
+		top: 50%;
+		margin-top:-2.5px;
+
+		width: 0;
+		height: 0;
+		border-left: 4px solid transparent;
+		border-right: 4px solid transparent;
+
+		border-top: 5px solid #ccc;
+	}
+}
+
+.reselect-dropdown{
+	animation: fadeInUpSmall 0.3s;
+	position: absolute;
+
+	top: $reselect-height;
+}
+
+@keyframes fadeInUpSmall {
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(0, -10px, 0);
+        transform: translate3d(0, -10px, 0);
+	}
+
+	100% {
+		opacity: 1;
+		-webkit-transform: none;
+	        transform: none;
+	}
 }
 
 @import 'reselect.options';

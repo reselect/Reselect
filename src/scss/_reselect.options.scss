@@ -1,5 +1,7 @@
 .reselect-options-container{
 	@include reselect-border();
+	border-color: $reselect-border-color-active;
+	border-top-color: #eee;
 
 	// min-width: $reselect-width;
 	width: $reselect-width;
@@ -11,6 +13,18 @@
 
 	&.disable-hover .reselect-option-choice{
 		pointer-events:none;
+	}
+
+	&::-webkit-scrollbar {
+	  width: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+	  background: #ddd;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  background: #666;
 	}
 }
 
@@ -29,14 +43,15 @@
 }
 
 .reselect-option{
-	padding: 8px;
+	padding: 8px 15px;
 
 	font-size: 11px;
+	font-weight: 400;
 }
 
 .reselect-option-choice{
 
-	height: 32px;
+	height: 36px;
 	width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
@@ -44,7 +59,7 @@
 
 	position: absolute;
 
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #eee;
 
 	cursor:pointer;
 
