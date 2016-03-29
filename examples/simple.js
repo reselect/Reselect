@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('simple', ['Reselect'])
+	angular.module('simple', ['Reselect', 'lazycontainer'])
 
 	.controller('SimpleCtrl', ['$scope', '$timeout', function($scope, $timeout){
 
