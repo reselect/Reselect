@@ -29,7 +29,18 @@
                         options="option in simple.choices"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice
-                    </reselect-options>
+                    </reselect-choices>
+                </reselect>
+            </div>
+
+            <div style="padding-bottom: 20px">
+                <reselect
+                    ng-model="simple.value">
+                    <reselect-choices
+                        options="option in simple.choices"
+                        value="$choice">
+                            <span ng-bind="$choice.text"></span> - Choice
+                    </reselect-choices>
                 </reselect>
             </div>
 

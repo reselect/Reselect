@@ -1,14 +1,23 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-03-29T06:45:51.755Z
+ * Version: 0.0.1 - 2016-03-29T22:26:23.725Z
  * License: MIT
  */
 
 
 .reselect {
   font-family: Arial, sans-serif;
-  font-size: 12px; }
+  font-size: 12px;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none; }
 
 .reselect * {
   box-sizing: border-box; }
@@ -32,7 +41,7 @@
   border-radius: 3px;
   padding-right: 18px;
   border: 1px solid #ccc; }
-  .reselect-selection:hover {
+  .reselect-selection:hover, .reselect-selection.reselect-selection--active {
     border-color: #09c; }
 
 .reselect-rendered-placeholder {
@@ -77,7 +86,11 @@
 .reselect-dropdown {
   animation: fadeInUpSmall 0.3s;
   position: absolute;
-  top: 38px; }
+  top: 38px;
+  display: none; }
+  .reselect-dropdown.reselect-dropdown--opened {
+    z-index: 10;
+    display: block; }
 
 @keyframes fadeInUpSmall {
   0% {
@@ -116,7 +129,7 @@
   width: 100%; }
 
 .reselect-option {
-  padding: 8px 15px;
+  padding: 12px 15px;
   font-size: 11px;
   font-weight: 400; }
 

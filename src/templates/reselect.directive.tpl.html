@@ -1,9 +1,10 @@
-<div class="reselect-container reselect" ng-click="$reselect.toggleDropdown()">
+<div class="reselect-container reselect">
 
 	<input type="hidden" value="{{ngModel}}"/>
 
-	<div class="reselect-selection">
-
+	<div class="reselect-selection"
+		ng-class="{'reselect-selection--active' : $reselect.opened }"
+		ng-click="$reselect.toggleDropdown()">
 		<div class="reselect-rendered reselect-rendered-selection"
 			ng-if="$reselect.value"
 			ng-bind="$reselect.rendered_selection"></div>
@@ -22,4 +23,6 @@
 			<div class="reselect-arrow"></div>
 		</div>
 	</div>
+
+	<div class="reselect-dropdown" ng-class="{'reselect-dropdown--opened' : $reselect.opened }"></div>
 </div>

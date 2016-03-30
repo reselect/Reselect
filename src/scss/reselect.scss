@@ -16,6 +16,14 @@ $reselect-placeholder-color: #999;
 .reselect{
 	font-family: Arial, sans-serif;
 	font-size: 12px;
+
+	-webkit-user-select: none; /* Chrome/Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
 }
 
 .reselect *{
@@ -52,7 +60,7 @@ $reselect-placeholder-color: #999;
 
 	@include reselect-border();
 
-	&:hover{
+	&:hover, &.reselect-selection--active{
 		border-color: $reselect-border-color-active;
 	}
 }
@@ -120,6 +128,13 @@ $reselect-placeholder-color: #999;
 	position: absolute;
 
 	top: $reselect-height;
+
+	display:none;
+
+	&.reselect-dropdown--opened{
+		z-index: 10;
+		display:block;
+	}
 }
 
 @keyframes fadeInUpSmall {

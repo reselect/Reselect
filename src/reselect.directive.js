@@ -22,42 +22,96 @@ Reselect.value('reselectDefaultOptions', {
 		compile: function($element, $attrs, transcludeFn){
 
 			return function($scope, $element, $attrs, ctrls){
-				transcludeFn($scope, function(clone){
+				var $choice = transcludeFn($scope, function(clone){
 					$element.append(clone[1]);
-				});
+				}).detach();
+
+				angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
 			};
 
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', 'reselectDefaultOptions', '$timeout', function($scope, reselectDefaultOptions, $timeout){
+		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', function($scope, $element, reselectDefaultOptions, $timeout){
 
 			var ctrl = this;
+			var $ngModel = $element.controller('ngModel');
 
 			// Options
 			ctrl.options = angular.extend({}, $scope.reselectOptions, reselectDefaultOptions);
 
+			// Variables
+			ctrl.value = null;
 			ctrl.opened = false;
 
-			ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
-			ctrl.rendered_selection = null;
+			/**
+			 * Placeholder
+			 */
 
-			ctrl.value = null;
+			ctrl.rendered_placeholder = null;
 
-			ctrl.selectValue = function(value){
-				ctrl.value = value;
-				ctrl.rendered_selection = ctrl.options.selectionTemplate(ctrl.value);
-				$scope.ngModel = value;
+			ctrl.renderPlaceholder = function(){
+				ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
 			};
 
-			// Options Directive
+			/**
+			 * Selection
+			 */
+
+			ctrl.rendered_selection = null;
+
+			ctrl.renderSelection = function(state){
+				ctrl.rendered_selection = ctrl.options.selectionTemplate(state);
+			};
+
+			/**
+			 * Controller Methods
+			 */
+
+			ctrl.selectValue = function(value){
+				$ngModel.$setViewValue(value);
+				ctrl.value = value;
+
+				ctrl.renderSelection(ctrl.value);
+
+				ctrl.hideDropdown();
+			};
+
+			/**
+			 * Choices
+			 */
+
 			ctrl.parsedOptions = null;
 			ctrl.choices = [];
 
-			ctrl.toggleDropdown = function(){
-				$scope.$broadcast('reselect.options.' + (!ctrl.opened ? 'show' : 'hide'));
+			/**
+			 * Dropdown
+			 */
 
-				ctrl.opened = !ctrl.opened;
+			ctrl.toggleDropdown = function(){
+				if(ctrl.opened){
+					ctrl.hideDropdown();
+				}else{
+					ctrl.showDropdown();
+				}
 			};
+
+			ctrl.showDropdown = function(){
+				ctrl.opened = true;
+			};
+
+			ctrl.hideDropdown = function(){
+				ctrl.opened = false;
+			};
+
+			/**
+			 * Initialization
+			 */
+
+			ctrl.initialize = function(){
+				ctrl.renderPlaceholder();
+			};
+
+			ctrl.initialize();
 
 			return ctrl;
 		}]
