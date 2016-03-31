@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-03-31T01:41:43.897Z
+ * Version: 0.0.1 - 2016-03-31T08:10:00.233Z
  * License: MIT
  */
 
@@ -16,6 +16,80 @@
  */
 
 var Reselect = angular.module('Reselect', ['reselect.templates']);
+
+Reselect.service('ReselectDataAdapter', [function(){
+
+    var DataAdapter = function(){
+        this.data = [];
+    };
+
+    DataAdapter.prototype.observe = function(){
+        console.error('Not implemented');
+        return;
+    };
+
+    DataAdapter.prototype.getData = function(){
+        return this.data;
+    };
+
+    DataAdapter.prototype.updateData = function(newData, push){
+        if(push === true){
+            this.data.concat(newData);
+        }else{
+            this.data = newData;
+        }
+
+        return this.data;
+    };
+
+    return DataAdapter;
+}]);
+
+Reselect.service('ReselectAjaxDataAdapter', [function(){
+
+    var DataAdapter = function(){
+        this.data = [];
+
+        this.observe();
+    };
+
+    DataAdapter.prototype.observe = function(){
+        return;
+    };
+
+    DataAdapter.prototype.getData = function(){
+        return this.data;
+    };
+
+    DataAdapter.prototype.updateData = function(newData, push){
+        if(push === true){
+            this.data.concat(newData);
+        }else{
+            this.data = newData;
+        }
+
+        return this.data;
+    };
+
+    return DataAdapter;
+}]);
+
+
+var ReselectDirectiveCtrl = function($scope, reselectDefaultOptions){
+	var ctrl = $scope.reselect = this;
+
+	// Options
+	ctrl.options = angular.extend({}, $scope.reselectOptions, reselectDefaultOptions);
+
+	ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
+};
+
+ReselectDirectiveCtrl.$inject = ['$scope', 'reselectDefaultOptions'];
+
+angular
+	.module('reselect.controller', [])
+	.controller('reselect.directive.ctrl', ReselectDirectiveCtrl);
+
 
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -330,6 +404,10 @@ Reselect.service('LazyContainer', [function(){
 
 }]);
 
+angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
+$templateCache.put("templates/reselect.choice.tpl.html","");
+$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown()\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.value\"></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.value\" ng-bind=\"$reselect.rendered_placeholder\"></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened }\"></div></div>");
+$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");}]);
 
 Reselect.value('reselectChoicesOptions', {
 
@@ -367,7 +445,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyScroller
 			};
 		},
 		controllerAs: '$options',
-		controller: ['$scope', '$element', '$attrs', '$parse', '$http', function($scope, $element, $attrs, $parse, $http){
+		controller: ['$scope', '$element', '$attrs', '$parse', '$http', 'ReselectDataAdapter', 'ReselectAjaxDataAdapter', function($scope, $element, $attrs, $parse, $http, ReselectDataAdapter, ReselectAjaxDataAdapter){
 			var self = this;
 
 			self.element      = $element[0];
@@ -390,18 +468,27 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyScroller
 			 * Choices Functionalities
 			 */
 
+			self.DataAdapter = null;
+
 			if($attrs.options){
 				self.parsedOptions = ChoiceParser.parse($attrs.options);
 
-				$scope.$watchCollection(function(){
-					return self.parsedOptions.source($scope.$parent);
-				}, function(newChoices){
-					self.updateChoices(newChoices);
-					self.render($Reselect.choices);
-				});
+				self.DataAdapter = new ReselectDataAdapter();
+
+				self.DataAdapter.observe = function(){
+					$scope.$watchCollection(function(){
+						return self.parsedOptions.source($scope.$parent);
+					}, function(newChoices){
+						self.updateChoices(newChoices);
+						self.render($Reselect.choices);
+					});
+				};
 
 			}else if($attrs.remote){
 				self.parsedOptions = $parse($attrs.remote)($scope.$parent);
+
+				self.DataAdapter = new ReselectAjaxDataAdapter();
+
 				$http.get(self.parsedOptions.endpoint)
 					.then(function(res){
 						self.updateChoices(res.data.data.children);
@@ -556,8 +643,4 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 
 }]);
 
-angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
-$templateCache.put("templates/reselect.choice.tpl.html","");
-$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown()\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.value\"></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.value\" ng-bind=\"$reselect.rendered_placeholder\"></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened }\"></div></div>");
-$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");}]);
 }());

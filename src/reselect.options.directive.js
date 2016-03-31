@@ -35,7 +35,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyScroller
 			};
 		},
 		controllerAs: '$options',
-		controller: ['$scope', '$element', '$attrs', '$parse', '$http', function($scope, $element, $attrs, $parse, $http){
+		controller: ['$scope', '$element', '$attrs', '$parse', '$http', 'ReselectDataAdapter', 'ReselectAjaxDataAdapter', function($scope, $element, $attrs, $parse, $http, ReselectDataAdapter, ReselectAjaxDataAdapter){
 			var self = this;
 
 			self.element      = $element[0];
@@ -58,18 +58,27 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', 'LazyScroller
 			 * Choices Functionalities
 			 */
 
+			self.DataAdapter = null;
+
 			if($attrs.options){
 				self.parsedOptions = ChoiceParser.parse($attrs.options);
 
-				$scope.$watchCollection(function(){
-					return self.parsedOptions.source($scope.$parent);
-				}, function(newChoices){
-					self.updateChoices(newChoices);
-					self.render($Reselect.choices);
-				});
+				self.DataAdapter = new ReselectDataAdapter();
+
+				self.DataAdapter.observe = function(){
+					$scope.$watchCollection(function(){
+						return self.parsedOptions.source($scope.$parent);
+					}, function(newChoices){
+						self.updateChoices(newChoices);
+						self.render($Reselect.choices);
+					});
+				};
 
 			}else if($attrs.remote){
 				self.parsedOptions = $parse($attrs.remote)($scope.$parent);
+
+				self.DataAdapter = new ReselectAjaxDataAdapter();
+
 				$http.get(self.parsedOptions.endpoint)
 					.then(function(res){
 						self.updateChoices(res.data.data.children);
