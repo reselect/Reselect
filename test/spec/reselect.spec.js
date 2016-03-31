@@ -19,7 +19,7 @@ describe('Reselect Test', function(){
 		$rootScope  = _$rootScope_;
 		$scope      = $rootScope.$new();
 		$compile    = _$compile_;
-		
+
 		$scope.ctrl = {};
 	}));
 
@@ -65,9 +65,9 @@ describe('Reselect Test', function(){
 
 		it('Should have calculated the options list dimensions correctly', function(){
 			expect($reselect.find('.reselect-options-container').height()).toBe(300);
-			expect($reselect.find('.reselect-options-list').height()).toBe($scope.ctrl.choices.length * 32);
+			expect($reselect.find('.reselect-options-list').height()).toBe($scope.ctrl.choices.length * 36);
 		});
 	});
 
-	
+
 });

@@ -3,12 +3,10 @@ Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
 	},
-	selectionTemplate: function(state){
-		return state.text;
-	}
+	selectionTemplate: angular.element('<div><span ng-bind="$selection.text"></span></div>')
 })
 
-.directive('reselect', [function(){
+.directive('reselect', ['$compile', function($compile){
 	return {
 		restrict    : 'AE',
 		templateUrl : 'templates/reselect.directive.tpl.html',
@@ -22,11 +20,24 @@ Reselect.value('reselectDefaultOptions', {
 		compile: function($element, $attrs, transcludeFn){
 
 			return function($scope, $element, $attrs, ctrls){
-				var $choice = transcludeFn($scope, function(clone){
-					$element.append(clone[1]);
+				var $Reselect = ctrls[0];
+				var $transcludeElems = null;
+
+				transcludeFn($scope, function(clone){
+					$transcludeElems = clone;
+					$element.append(clone);
 				}).detach();
 
+				$transcludeElems = angular.element('<div>').append($transcludeElems);
+
+				var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices]');
+				var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection]');
+					$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
+
 				angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
+				angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
+
+				$compile($selection)($Reselect.selection_scope);
 			};
 
 		},
@@ -57,10 +68,13 @@ Reselect.value('reselectDefaultOptions', {
 			 * Selection
 			 */
 
+			ctrl.selection_scope = $scope.$new();
+			ctrl.selection_scope.$selection = null;
+
 			ctrl.rendered_selection = null;
 
 			ctrl.renderSelection = function(state){
-				ctrl.rendered_selection = ctrl.options.selectionTemplate(state);
+				ctrl.selection_scope.$selection = state;
 			};
 
 			/**

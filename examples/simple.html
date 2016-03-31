@@ -8,7 +8,6 @@
         <!-- <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>-->
         <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"> -->
         <!-- ui-select files -->
-        <script src="../src/lazy-container.js"></script>
         <script src="../dist/reselect.js"></script>
         <link rel="stylesheet" href="../dist/reselect.css">
         <link rel="stylesheet" href="example.css">
@@ -26,9 +25,9 @@
                 <reselect
                     ng-model="simple.value">
                     <reselect-choices
-                        options="option in simple.choices"
+                        options="option in simple.choices track by $choice.text"
                         value="$choice">
-                            <span ng-bind="$choice.text"></span> - Choice
+                            <span ng-bind="$choice.text"></span> - Choice {{$index}}
                     </reselect-choices>
                 </reselect>
             </div>
@@ -36,8 +35,37 @@
             <div style="padding-bottom: 20px">
                 <reselect
                     ng-model="simple.value">
+                    <div reselect-selection>
+                        HarHar - <span ng-bind="$selection.text"></span>
+                    </div>
                     <reselect-choices
-                        options="option in simple.choices"
+                        options="option in simple.choices track by $choice.text"
+                        value="$choice">
+                            <span ng-bind="$choice.text"></span> - Choice {{$index}}
+                    </reselect-choices>
+                </reselect>
+            </div>
+
+            <div style="padding-bottom: 20px">
+                <reselect
+                    ng-model="simple.value">
+                    <div reselect-selection>
+                        <span ng-bind="$selection.data.title"></span>
+                    </div>
+                    <div reselect-choices
+                        remote="simple.remoteOptions"
+                        value="$choice">
+                            <span ng-bind="$choice.data.title"></span>
+                    </div>
+                </reselect>
+            </div>
+
+            <div style="padding-bottom: 20px">
+                <h4>No Options</h4>
+                <reselect
+                    ng-model="simple.value">
+                    <reselect-choices
+                        options="option in []"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice
                     </reselect-choices>

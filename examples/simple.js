@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('simple', ['Reselect', 'lazycontainer'])
+	angular.module('simple', ['Reselect'])
 
 	.controller('SimpleCtrl', ['$scope', '$timeout', function($scope, $timeout){
 
@@ -18,6 +18,10 @@
 				};
 			});
 		// }, 5000);
+
+		self.remoteOptions = {
+			endpoint: 'https://www.reddit.com/r/webdev/.json'
+		};
 
 	}]);
 

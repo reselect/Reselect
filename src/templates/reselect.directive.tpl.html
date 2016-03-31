@@ -5,12 +5,13 @@
 	<div class="reselect-selection"
 		ng-class="{'reselect-selection--active' : $reselect.opened }"
 		ng-click="$reselect.toggleDropdown()">
+
 		<div class="reselect-rendered reselect-rendered-selection"
-			ng-if="$reselect.value"
-			ng-bind="$reselect.rendered_selection"></div>
+			ng-show="$reselect.value">
+		</div>
 
 		<div class="reselect-rendered reselect-rendered-placeholder"
-			ng-if="!$reselect.value"
+			ng-show="!$reselect.value"
 			ng-bind="$reselect.rendered_placeholder"></div>
 
 		<!-- <div class="reselect-input-container">
