@@ -21,7 +21,9 @@
 
 		self.remoteOptions = {
 			endpoint: 'https://www.reddit.com/r/webdev/.json',
-			params: function(params){		
+			params: function(params, pagination){
+				params.after = pagination.more;
+				params.limit = 100;
 				return params;
 			},
 			onData: function(data){

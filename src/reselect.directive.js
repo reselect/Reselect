@@ -115,7 +115,7 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
-				ctrl.transcludeCtrls.$ReselectChoice.getData();
+				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
 			};
 
 			ctrl.hideDropdown = function(){

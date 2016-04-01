@@ -153,11 +153,19 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.parsedOptions = $parse($attrs.remote)($scope.$parent);
 
 						self.DataAdapter = new ReselectAjaxDataAdapter(self.parsedOptions);
+
+						self.DataAdapter.prepareGetData = function(){
+							self.choices = self.DataAdapter.updateData(self.choices, []);
+							self.render();
+						};
 					}
 
 					self.DataAdapter.init();
 
-					self.getData = function(loadingMore) {
+					self.getData = function(reset, loadingMore) {
+						if(reset === true){
+							self.DataAdapter.prepareGetData();
+						}
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
 								self.choices = self.DataAdapter.updateData(self.choices, choices.data, loadingMore);
@@ -166,7 +174,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					};
 
 					self.loadMore = function() {
-						self.getData(true);
+						self.getData(false, true);
 					};
 
 					/**
@@ -215,8 +223,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || self.choices;
 
-						self.LazyDropdown.renderContainer();
+						var dimensions = self.LazyDropdown.renderContainer();
 						self.LazyDropdown._calculateLazyRender(true);
+
+						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length && (dimensions.containerHeight >= dimensions.choiceHeight)){
+							self.loadMore();
+						}
 					};
 				}
 			]

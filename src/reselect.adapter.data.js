@@ -10,6 +10,10 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         return;
     };
 
+    DataAdapter.prototype.prepareGetData = function(){
+        return;
+    };
+
     DataAdapter.prototype.getData = function(){
         var defer = $q.defer();
 
@@ -41,6 +45,7 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
     var DataAdapter = function(remoteOptions){
         this.data = [];
         this.page = 1;
+        this.pagination = {};
 
         this.options = remoteOptions;
     };
@@ -49,14 +54,17 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
         return;
     };
 
+    DataAdapter.prototype.prepareGetData = function(){
+        return;
+    };
+
     DataAdapter.prototype.getData = function(search_term){
         var self = this;
 
         var params = this.options.params({
             page       : this.page,
-            search_term: search_term,
-            pagination : self.pagination
-        });
+            search_term: search_term
+        }, self.pagination);
 
         return $http.get(this.options.endpoint, {
             params: params

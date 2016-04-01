@@ -32,7 +32,10 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		// Simulate the scrollbar with the estimated height for the number of choices
 		self.$list.css('height', optionsHeight + 'px');
 
-        self.$container[0].scrollTop = 100;
+        return {
+            choiceHeight: optionsHeight,
+            containerHeight: containerHeight
+        };
 	};
 
 	LazyScroller.prototype.bindScroll = function(){

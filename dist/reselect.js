@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-01T03:11:50.586Z
+ * Version: 0.0.1 - 2016-04-01T20:08:59.065Z
  * License: MIT
  */
 
@@ -25,6 +25,10 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
     DataAdapter.prototype.observe = function(){
         console.error('Not implemented');
+        return;
+    };
+
+    DataAdapter.prototype.prepareGetData = function(){
         return;
     };
 
@@ -59,6 +63,7 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
     var DataAdapter = function(remoteOptions){
         this.data = [];
         this.page = 1;
+        this.pagination = {};
 
         this.options = remoteOptions;
     };
@@ -67,14 +72,17 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
         return;
     };
 
+    DataAdapter.prototype.prepareGetData = function(){
+        return;
+    };
+
     DataAdapter.prototype.getData = function(search_term){
         var self = this;
 
         var params = this.options.params({
             page       : this.page,
-            search_term: search_term,
-            pagination : self.pagination
-        });
+            search_term: search_term
+        }, self.pagination);
 
         return $http.get(this.options.endpoint, {
             params: params
@@ -247,7 +255,7 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
-				ctrl.transcludeCtrls.$ReselectChoice.getData();
+				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
 			};
 
 			ctrl.hideDropdown = function(){
@@ -303,7 +311,10 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		// Simulate the scrollbar with the estimated height for the number of choices
 		self.$list.css('height', optionsHeight + 'px');
 
-        self.$container[0].scrollTop = 100;
+        return {
+            choiceHeight: optionsHeight,
+            containerHeight: containerHeight
+        };
 	};
 
 	LazyScroller.prototype.bindScroll = function(){
@@ -610,11 +621,19 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.parsedOptions = $parse($attrs.remote)($scope.$parent);
 
 						self.DataAdapter = new ReselectAjaxDataAdapter(self.parsedOptions);
+
+						self.DataAdapter.prepareGetData = function(){
+							self.choices = self.DataAdapter.updateData(self.choices, []);
+							self.render();
+						};
 					}
 
 					self.DataAdapter.init();
 
-					self.getData = function(loadingMore) {
+					self.getData = function(reset, loadingMore) {
+						if(reset === true){
+							self.DataAdapter.prepareGetData();
+						}
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
 								self.choices = self.DataAdapter.updateData(self.choices, choices.data, loadingMore);
@@ -623,7 +642,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					};
 
 					self.loadMore = function() {
-						self.getData(true);
+						self.getData(false, true);
 					};
 
 					/**
@@ -672,8 +691,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || self.choices;
 
-						self.LazyDropdown.renderContainer();
+						var dimensions = self.LazyDropdown.renderContainer();
 						self.LazyDropdown._calculateLazyRender(true);
+
+						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length && (dimensions.containerHeight >= dimensions.choiceHeight)){
+							self.loadMore();
+						}
 					};
 				}
 			]
