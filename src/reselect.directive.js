@@ -37,6 +37,8 @@ Reselect.value('reselectDefaultOptions', {
 				angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
 				angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
 
+				$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
+
 				$compile($selection)($Reselect.selection_scope);
 			};
 
@@ -53,6 +55,7 @@ Reselect.value('reselectDefaultOptions', {
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
+			ctrl.transcludeCtrls = {};
 
 			/**
 			 * Placeholder
@@ -111,6 +114,8 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
+
+				ctrl.transcludeCtrls.$ReselectChoice.getData();
 			};
 
 			ctrl.hideDropdown = function(){

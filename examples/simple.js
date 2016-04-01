@@ -20,7 +20,18 @@
 		// }, 5000);
 
 		self.remoteOptions = {
-			endpoint: 'https://www.reddit.com/r/webdev/.json'
+			endpoint: 'https://www.reddit.com/r/webdev/.json',
+			params: function(params){		
+				return params;
+			},
+			onData: function(data){
+				return {
+					data: data.data.children,
+					pagination: {
+						more: data.data.after
+					}
+				};
+			}
 		};
 
 	}]);

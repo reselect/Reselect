@@ -1,5 +1,5 @@
 
-Reselect.service('ReselectDataAdapter', [function(){
+Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
     var DataAdapter = function(){
         this.data = [];
@@ -11,46 +11,86 @@ Reselect.service('ReselectDataAdapter', [function(){
     };
 
     DataAdapter.prototype.getData = function(){
-        return this.data;
+        var defer = $q.defer();
+
+        defer.resolve({
+            data: this.data
+        });
+
+        return defer.promise;
     };
 
     DataAdapter.prototype.updateData = function(newData, push){
         if(push === true){
-            this.data.concat(newData);
+            this.data = this.data.concat(newData);
         }else{
             this.data = newData;
         }
-
         return this.data;
+    };
+
+    DataAdapter.prototype.init = function(){
+        this.observe(this.updateData.bind(this));
     };
 
     return DataAdapter;
 }]);
 
-Reselect.service('ReselectAjaxDataAdapter', [function(){
+Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
 
-    var DataAdapter = function(){
+    var DataAdapter = function(remoteOptions){
         this.data = [];
+        this.page = 1;
 
-        this.observe();
+        this.options = remoteOptions;
     };
 
     DataAdapter.prototype.observe = function(){
         return;
     };
 
-    DataAdapter.prototype.getData = function(){
-        return this.data;
+    DataAdapter.prototype.getData = function(search_term){
+        var self = this;
+
+        var params = this.options.params({
+            page       : this.page,
+            search_term: search_term,
+            pagination : self.pagination
+        });
+
+        return $http.get(this.options.endpoint, {
+            params: params
+        })
+            .then(function(res){
+                return res.data;
+            })
+            .then(this.options.onData)
+            .then(function(choices){
+                if(choices.pagination){
+                    self.pagination = choices.pagination;
+
+                    if(choices.pagination.more){
+                        self.page += 1;
+                    }
+                }else{
+                    self.pagination = null;
+                }
+
+                return choices;
+            });
     };
 
-    DataAdapter.prototype.updateData = function(newData, push){
+    DataAdapter.prototype.updateData = function(existingData, newData, push){
         if(push === true){
-            this.data.concat(newData);
+            existingData = existingData.concat(newData);
         }else{
-            this.data = newData;
+            existingData = newData;
         }
 
-        return this.data;
+        return existingData;
+    };
+
+    DataAdapter.prototype.init = function(){
     };
 
     return DataAdapter;
