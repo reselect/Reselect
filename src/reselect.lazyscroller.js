@@ -51,11 +51,11 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 	LazyScroller.prototype._shouldRender = function(scrollTop){
 		var self = this;
 
-		return typeof self.lastCheck === 'number' &&
+		return !(typeof self.lastCheck === 'number' &&
 			(
 				scrollTop <= self.lastCheck + (self.options.choiceHeight - (self.lastCheck % self.options.choiceHeight) ) && //
 				scrollTop >= self.lastCheck - (self.lastCheck % self.options.choiceHeight) //
-			);
+			));
 	};
 
 	LazyScroller.prototype._calculateLazyRender = function(force){
@@ -68,16 +68,20 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		// A Check to throttle amounts of calculation by setting a threshold
 		// The list is due to recalculation only if the differences of scrollTop and lastCheck is greater than a choiceHeight
 		if(force !== true){
-			if(self._shouldRender()){
+			if(!self._shouldRender(scrollTop)){
 				return;
 			}
 		}
-
+		
 		var activeContainers   = [];
 		var inactiveContainers = [];
 
 		angular.forEach(self.lazyContainers, function(lazyContainer, index){
 			var choiceTop = (lazyContainer.index) * self.options.choiceHeight || 0;
+
+			if(force === true){
+				lazyContainer.index = null;
+			}
 
 			// Check if the container is visible
 			if(lazyContainer.index === null || choiceTop < scrollTop - self.options.choiceHeight || choiceTop > scrollTop + self.options.listHeight + self.options.choiceHeight){

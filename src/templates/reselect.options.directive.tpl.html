@@ -1,10 +1,10 @@
 <div class="reselect-choices">
+	<div class="reselect-search-container">
+		<input class="reselect-search-input" type="text" ng-model="$options.search_term" ng-change="$options.search()"/>
+	</div>
 	<div class="reselect-options-container" trigger-at-bottom="$options.loadMore()">
-		<div class="reselect-option reselect-option-choice" ng-show="!$options.choices.length">No Options</div>
-		<ul class="reselect-options-list" ng-show="$options.choices.length">
-			<!-- <li class="reselect-option reselect-option--search">
-				<input class="reselect-search-input" type="text"/>
-			</li> -->
-		</ul>
+		<ul class="reselect-options-list" ng-show="$options.choices.length"></ul>
+		<div class="reselect-option reselect-option--static reselect-option-choice" ng-show="!$options.choices.length && !$options.is_loading">No Options</div>
+		<div class="reselect-option reselect-option--static reselect-option-loading" ng-show="$options.is_loading">Loading More</div>
 	</div>
 </div>

@@ -47,7 +47,11 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
         this.page = 1;
         this.pagination = {};
 
-        this.options = remoteOptions;
+        this.options = angular.extend({
+            params: function(params){
+                return params;
+            }
+        }, remoteOptions);
     };
 
     DataAdapter.prototype.observe = function(){
@@ -61,12 +65,22 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
     DataAdapter.prototype.getData = function(search_term){
         var self = this;
 
-        var params = this.options.params({
+        var state = {
             page       : this.page,
             search_term: search_term
-        }, self.pagination);
+        };
 
-        return $http.get(this.options.endpoint, {
+        var params = this.options.params(state, self.pagination);
+
+        var endpoint;
+
+        if(typeof this.options.endpoint === 'function'){
+            endpoint = this.options.endpoint(state, self.pagination);
+        }else{
+            endpoint = this.options.endpoint;
+        }
+
+        return $http.get(endpoint, {
             params: params
         })
             .then(function(res){

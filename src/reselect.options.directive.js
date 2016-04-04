@@ -2,7 +2,7 @@ Reselect.value('reselectChoicesOptions', {
 
 });
 
-Reselect.directive('triggerAtBottom', ['$parse', function($parse) {
+Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($parse, ReselectUtils) {
 
 	var height = function(elem) {
 		elem = elem[0] || elem;
@@ -13,30 +13,15 @@ Reselect.directive('triggerAtBottom', ['$parse', function($parse) {
 		}
 	};
 
-	function debounce(func, wait, immediate) {
-		var timeout;
-		return function() {
-			var context = this, args = arguments;
-			var later = function() {
-				timeout = null;
-				if (!immediate) func.apply(context, args);
-			};
-			var callNow = immediate && !timeout;
-			clearTimeout(timeout);
-			timeout = setTimeout(later, wait);
-			if (callNow) func.apply(context, args);
-		};
-	}
-
 	return {
 		restrict: 'A',
 		link: function($scope, $element, $attrs) {
 
 			var scrolling = false;
 
-			var triggerFn = debounce(function(){
+			var triggerFn = ReselectUtils.debounce(function(){
 				$parse($attrs.triggerAtBottom)($scope);
-			}, 300);
+			}, 150);
 
 			function checkScrollbarPosition() {
 				if (height($element) + $element[0].scrollTop === 0 && $element[0].scrollHeight === 0) {
@@ -66,8 +51,8 @@ Reselect.directive('triggerAtBottom', ['$parse', function($parse) {
 }]);
 
 Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
-	'LazyScroller', 'LazyContainer',
-	function(ChoiceParser, $compile, LazyScroller, LazyContainer) {
+	'LazyScroller', 'LazyContainer', 'ReselectUtils',
+	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils) {
 		return {
 			restrict: 'AE',
 			templateUrl: 'templates/reselect.options.directive.tpl.html',
@@ -155,6 +140,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.DataAdapter = new ReselectAjaxDataAdapter(self.parsedOptions);
 
 						self.DataAdapter.prepareGetData = function(){
+							self.DataAdapter.page = 1;
+							self.DataAdapter.pagination = {};
 							self.choices = self.DataAdapter.updateData(self.choices, []);
 							self.render();
 						};
@@ -166,16 +153,28 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						if(reset === true){
 							self.DataAdapter.prepareGetData();
 						}
+
+						self.is_loading = true;
+
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
 								self.choices = self.DataAdapter.updateData(self.choices, choices.data, loadingMore);
 								self.render();
+							})
+							.finally(function(){
+								self.is_loading = false;
 							});
 					};
 
 					self.loadMore = function() {
 						self.getData(false, true);
 					};
+
+					self.search = ReselectUtils.debounce(function(){
+						self.getData(true, false);
+					}, 300, false, function(){
+						self.is_loading = true;
+					});
 
 					/**
 					 * Lazy Containers

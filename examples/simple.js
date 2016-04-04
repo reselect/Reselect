@@ -20,11 +20,24 @@
 		// }, 5000);
 
 		self.remoteOptions = {
-			endpoint: 'https://www.reddit.com/r/webdev/.json',
+			endpoint: function(params, pagination){
+				if(params.search_term){
+					return 'https://www.reddit.com/r/webdev/search/.json';
+				}else{
+					return 'https://www.reddit.com/r/webdev/.json';
+				}
+
+			},
 			params: function(params, pagination){
-				params.after = pagination.more;
-				params.limit = 100;
-				return params;
+				var query = {
+					after: pagination.more,
+					limit: 10,
+					q: params.search_term,
+					t: 'all',
+					sort: 'relevance'
+				};
+
+				return query;
 			},
 			onData: function(data){
 				return {

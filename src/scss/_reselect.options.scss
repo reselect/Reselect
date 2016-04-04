@@ -1,4 +1,4 @@
-.reselect-options-container{
+.reselect-choices{
 	@include reselect-border();
 	border-color: $reselect-border-color-active;
 	border-top-color: #eee;
@@ -7,6 +7,20 @@
 	width: $reselect-width;
 
 	background: white;
+}
+
+.reselect-search-container{
+	padding: 8px 8px;
+
+	background:#f9f9f9;
+	border-bottom:1px solid #eee;
+}
+
+.reselect-search-input{
+	width: 100%;
+}
+
+.reselect-options-container{
 	overflow: auto;
 
 	position: relative;
@@ -70,5 +84,9 @@
 
 	&.inactive{
 		display: none;
+	}
+
+	&.reselect-option--static{
+		position: relative;
 	}
 }
