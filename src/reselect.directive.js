@@ -1,9 +1,15 @@
-
+/*
+TODO:
+	- Static choice search
+	- Choice support native filters
+	- Multi level choices
+	- Dropdown positioning
+*/
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
 	},
-	selectionTemplate: angular.element('<div><span ng-bind="$selection.text"></span></div>')
+	selectionTemplate: angular.element('<div><span ng-bind="$selection"></span></div>')
 })
 
 .directive('reselect', ['$compile', function($compile){
@@ -98,12 +104,23 @@ Reselect.value('reselectDefaultOptions', {
 				var valueSelected = $ngModel.$viewValue;
 				var valueToBeSelected;
 
-				if(!ctrl.options.allowInvalid){
+				if(!ctrl.options.allowInvalid && angular.isDefined(valueSelected)){
 					var choices = ctrl.transcludeCtrls.$ReselectChoice.choices;
 					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
 
+					var choiceMatch, valueSelectedMatch;
+
 					for(var i = 0; i < choices.length; i++){
-						if(choices[i][trackBy] === valueSelected[trackBy]){
+
+						if(trackBy){
+							choiceMatch = choices[i][trackBy];
+							valueSelectedMatch = valueSelected[trackBy];
+						}else{
+							choiceMatch = choices[i];
+							valueSelectedMatch = valueSelected;
+						}
+
+						if(choiceMatch === valueSelectedMatch){
 							valueToBeSelected = choices[i][trackBy];
 							continue;
 						}
@@ -115,18 +132,18 @@ Reselect.value('reselectDefaultOptions', {
 				if(valueToBeSelected){
 					ctrl.selectValue($ngModel.$viewValue);
 				}else{
-					if(ctrl.options.onInvalidOption && typeof ctrl.options.onInvalidOption === 'function'){
+					if(ctrl.options.resolveInvalid && typeof ctrl.options.resolveInvalid === 'function'){
 						var validateDone = function(value){
 							if(value !== undefined){
 								ctrl.selectValue(value);
 							}else{
-								$ngModel.$setViewValue(null);
+								$ngModel.$setViewValue(valueToBeSelected);
 							}
 						};
 
-						ctrl.options.onInvalidOption(valueSelected, validateDone);
+						ctrl.options.resolveInvalid(valueSelected, validateDone);
 					}else{
-						$ngModel.$setViewValue(null);
+						$ngModel.$setViewValue(valueToBeSelected);
 					}
 
 				}

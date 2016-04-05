@@ -28,8 +28,11 @@
                 <reselect
                     reselect-options="simple.options1"
                     ng-model="simple.value">
+                    <div reselect-selection>
+                        <span ng-bind="$selection.text"></span>
+                    </div>
                     <reselect-choices
-                        options="option in simple.choices track by text"
+                        options="option in simple.choices1000 track by text"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice {{$index}}
                     </reselect-choices>
@@ -45,10 +48,22 @@
                         HarHar - <span ng-bind="$selection.text"></span>
                     </div>
                     <div reselect-choices
-                        options="option in simple.choices track by $choice.text"
+                        options="option in simple.choices1000 track by text"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice {{$index}}
                     </div reselect-choices>
+                </reselect>
+            </div>
+
+            <div style="padding-bottom: 20px">
+                <p>Model Value: <span ng-bind="simple.value3|json"></span></p>
+                <reselect
+                    ng-model="simple.value3">
+                    <reselect-choices
+                        options="option in simple.choices"
+                        value="$choice">
+                            Option <span ng-bind="$choice"></span>
+                    </reselect-choices>
                 </reselect>
             </div>
 

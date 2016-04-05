@@ -9,16 +9,18 @@
 
 		var num = 0;
 
-		// $timeout(function(){
-			self.choices = Array.apply(null, Array(1000)).map(function(){
-				return {
-					text: 'Option ' + (num++)
-				};
-			});
-		// }, 5000);
+		self.choices = Array.apply(null, Array(100)).map(function(){
+			return num++;
+		});
+
+		self.choices1000 = Array.apply(null, Array(1000)).map(function(){
+			return {
+				text: 'Option ' + (num++)
+			};
+		});
 
 		self.options1 = {
-			onInvalidOption: function(value, done){
+			resolveInvalid: function(value, done){
 				if(value){
 					done({
 						text: 'HARHARHAR'
@@ -39,6 +41,10 @@
 			self.value2 = {
 				text: 'Option xx20'
 			}
+		}, 2000);
+
+		$timeout(function(){
+			self.value3 = undefined;
 		}, 2000);
 
 		self.remoteOptions = {
