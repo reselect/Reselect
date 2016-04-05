@@ -7,8 +7,6 @@
 
 		var self = $scope.simple = this;
 
-		self.value = 888;
-
 		var num = 0;
 
 		// $timeout(function(){
@@ -18,6 +16,30 @@
 				};
 			});
 		// }, 5000);
+
+		self.options1 = {
+			onInvalidOption: function(value, done){
+				if(value){
+					done({
+						text: 'HARHARHAR'
+					});
+				}else{
+					done(null);
+				}
+			}
+		}
+
+		$timeout(function(){
+			self.value = {
+				text: 'Option 20xx'
+			}
+		}, 2000);
+
+		$timeout(function(){
+			self.value2 = {
+				text: 'Option xx20'
+			}
+		}, 2000);
 
 		self.remoteOptions = {
 			endpoint: function(params, pagination){
@@ -32,9 +54,9 @@
 				var query = {
 					after: pagination.more,
 					limit: 10,
-					q: params.search_term,
-					t: 'all',
-					sort: 'relevance'
+					q    : params.search_term,
+					t    : 'all',
+					sort : 'relevance'
 				};
 
 				return query;

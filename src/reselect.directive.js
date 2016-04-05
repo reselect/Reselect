@@ -50,7 +50,7 @@ Reselect.value('reselectDefaultOptions', {
 			var $ngModel = $element.controller('ngModel');
 
 			// Options
-			ctrl.options = angular.extend({}, $scope.reselectOptions, reselectDefaultOptions);
+			ctrl.options = angular.extend({}, reselectDefaultOptions, $scope.reselectOptions);
 
 			// Variables
 			ctrl.value = null;
@@ -86,11 +86,52 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.selectValue = function(value){
 				$ngModel.$setViewValue(value);
+
 				ctrl.value = value;
 
 				ctrl.renderSelection(ctrl.value);
 
 				ctrl.hideDropdown();
+			};
+
+			$ngModel.$render = function(){
+				var valueSelected = $ngModel.$viewValue;
+				var valueToBeSelected;
+
+				if(!ctrl.options.allowInvalid){
+					var choices = ctrl.transcludeCtrls.$ReselectChoice.choices;
+					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
+
+					for(var i = 0; i < choices.length; i++){
+						if(choices[i][trackBy] === valueSelected[trackBy]){
+							valueToBeSelected = choices[i][trackBy];
+							continue;
+						}
+					}
+				}else{
+					valueToBeSelected = valueSelected;
+				}
+
+				if(valueToBeSelected){
+					ctrl.selectValue($ngModel.$viewValue);
+				}else{
+					if(ctrl.options.onInvalidOption && typeof ctrl.options.onInvalidOption === 'function'){
+						var validateDone = function(value){
+							if(value !== undefined){
+								ctrl.selectValue(value);
+							}else{
+								$ngModel.$setViewValue(null);
+							}
+						};
+
+						ctrl.options.onInvalidOption(valueSelected, validateDone);
+					}else{
+						$ngModel.$setViewValue(null);
+					}
+
+				}
+
+				return;
 			};
 
 			/**

@@ -12,20 +12,24 @@
         <link rel="stylesheet" href="../dist/reselect.css">
         <link rel="stylesheet" href="example.css">
         <script src="simple.js"></script>
+        <style>
+            body{
+                font-family: Arial;
+                font-size: 12px;
+            }
+        </style>
     </head>
     <body>
         <h2>Angular Reselect</h2>
         <div ng-controller="SimpleCtrl">
 
             <div style="padding-bottom: 20px">
-                Model Value: <span ng-bind="simple.value|json"></span>
-            </div>
-
-            <div style="padding-bottom: 20px">
+                <p>Model Value: <span ng-bind="simple.value|json"></span></p>
                 <reselect
+                    reselect-options="simple.options1"
                     ng-model="simple.value">
                     <reselect-choices
-                        options="option in simple.choices track by $choice.text"
+                        options="option in simple.choices track by text"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice {{$index}}
                     </reselect-choices>
@@ -33,23 +37,26 @@
             </div>
 
             <div style="padding-bottom: 20px">
+                <p>Model Value: <span ng-bind="simple.value2|json"></span></p>
                 <reselect
-                    ng-model="simple.value">
+                    reselect-options="{allowInvalid: true}"
+                    ng-model="simple.value2">
                     <div reselect-selection>
                         HarHar - <span ng-bind="$selection.text"></span>
                     </div>
-                    <reselect-choices
+                    <div reselect-choices
                         options="option in simple.choices track by $choice.text"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice {{$index}}
-                    </reselect-choices>
+                    </div reselect-choices>
                 </reselect>
             </div>
 
             <div style="padding-bottom: 20px">
-                <reselect
+                <!-- <reselect
                     ng-model="simple.value">
                     <div reselect-selection>
+                        <span ng-bind="$selection"></span>
                         <span ng-bind="$selection.data.title"></span>
                     </div>
                     <div reselect-choices
@@ -57,19 +64,19 @@
                         value="$choice">
                             <span ng-bind="$choice.data.title"></span>
                     </div>
-                </reselect>
+                </reselect> -->
             </div>
 
             <div style="padding-bottom: 20px">
                 <h4>No Options</h4>
-                <reselect
+                <!-- <reselect
                     ng-model="simple.value">
                     <reselect-choices
                         options="option in []"
                         value="$choice">
                             <span ng-bind="$choice.text"></span> - Choice
                     </reselect-choices>
-                </reselect>
+                </reselect> -->
             </div>
 
             <div style="padding-bottom: 20px">

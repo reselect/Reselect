@@ -126,6 +126,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.DataAdapter = new ReselectDataAdapter();
 
+						self.choices = self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
+
 						self.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
 								return self.parsedOptions.source($scope.$parent);
