@@ -123,7 +123,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 						$index       : i
 					});
 
-					container.scope.$choice = self.choices[i];
+					angular.extend(container.scope.$choice, self.choices[i]);
 				}
 			}
 		}

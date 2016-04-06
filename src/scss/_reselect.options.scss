@@ -10,7 +10,7 @@
 }
 
 .reselect-search-container{
-	padding: 8px 8px;
+	padding: 4px 8px;
 
 	background:#f9f9f9;
 	border-bottom:1px solid #eee;
@@ -18,6 +18,10 @@
 
 .reselect-search-input{
 	width: 100%;
+	height: 26px;
+
+	font-size: 11px;
+	padding: 5px;
 }
 
 .reselect-options-container{

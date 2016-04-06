@@ -108,7 +108,7 @@ gulp.task('scripts', function() {
             }));
     };
 
-    return es.merge(buildLib(), buildTemplates())
+    return es.merge(gulp.src(['src/libs/*.js']), buildLib(), buildTemplates())
         .pipe($.plumber({
             errorHandler: handleError
         }))
@@ -118,7 +118,7 @@ gulp.task('scripts', function() {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
         }))
-        .pipe($.footer('\n}());'))
+        .pipe($.footer('\n}).apply(this);'))
         .pipe(gulp.dest('dist'))
         .pipe($.uglify({
             preserveComments: 'some'

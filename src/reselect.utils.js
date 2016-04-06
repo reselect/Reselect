@@ -20,3 +20,16 @@ Reselect.factory('ReselectUtils', function(){
 
     return ReselectUtils;
 });
+
+Reselect.directive('focusOn', ['$timeout', function($timeout){
+    return {
+        restrict: 'A',
+        link: function($scope, $elem, $attrs){
+            $scope.$on($attrs.focusOn, function(){
+                $timeout(function(){
+                    $elem[0].focus();
+                });
+            });
+        }
+    };
+}]);

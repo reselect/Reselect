@@ -14,11 +14,21 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         return;
     };
 
-    DataAdapter.prototype.getData = function(){
+    DataAdapter.prototype.getData = function(search_term){
         var defer = $q.defer();
+        var choices;
+
+        if(search_term){
+            var fuse = new Fuse(this.data, { keys: ['name'] });
+
+            choices = fuse.search(search_term);
+            console.log(choices);
+        }else{
+            choices = this.data;
+        }
 
         defer.resolve({
-            data: this.data
+            data: choices
         });
 
         return defer.promise;
@@ -102,14 +112,13 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
             });
     };
 
-    DataAdapter.prototype.updateData = function(existingData, newData, push){
+    DataAdapter.prototype.updateData = function(newData, push){
         if(push === true){
-            existingData = existingData.concat(newData);
+            this.data = this.data.concat(newData);
         }else{
-            existingData = newData;
+            this.data = newData;
         }
-
-        return existingData;
+        return this.data;
     };
 
     DataAdapter.prototype.init = function(){

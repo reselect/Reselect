@@ -99,7 +99,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.listHeight = 300;
 
 					self.search_term = '';
-					self.choices = [];
 					self.remotePagination = {};
 
 					self.CHOICE_TEMPLATE = angular.element(
@@ -126,13 +125,13 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.DataAdapter = new ReselectDataAdapter();
 
-						self.choices = self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
+						self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
 
 						self.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
 								return self.parsedOptions.source($scope.$parent);
 							}, function(newChoices) {
-								self.choices = self.DataAdapter.updateData(newChoices);
+								self.DataAdapter.updateData(newChoices);
 							});
 						};
 
@@ -144,7 +143,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.DataAdapter.prepareGetData = function(){
 							self.DataAdapter.page = 1;
 							self.DataAdapter.pagination = {};
-							self.choices = self.DataAdapter.updateData(self.choices, []);
+							self.DataAdapter.updateData([]);
 							self.render();
 						};
 					}
@@ -158,10 +157,15 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.is_loading = true;
 
+						// TODO: For static data, choices cant be replaced.
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
-								self.choices = self.DataAdapter.updateData(self.choices, choices.data, loadingMore);
-								self.render();
+								if(!self.search_term){
+									self.DataAdapter.updateData(choices.data, loadingMore);
+									self.render();
+								}else{
+									self.render(choices.data);
+								}
 							})
 							.finally(function(){
 								self.is_loading = false;
@@ -222,7 +226,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.$parent = $element.parent();
 
 					self.render = function(choices) {
-						self.LazyDropdown.choices = choices || self.choices;
+						self.LazyDropdown.choices = choices || self.DataAdapter.data;
 
 						var dimensions = self.LazyDropdown.renderContainer();
 						self.LazyDropdown._calculateLazyRender(true);

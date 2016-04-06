@@ -9,9 +9,33 @@
 
 		var num = 0;
 
-		self.choices = Array.apply(null, Array(100)).map(function(){
-			return num++;
-		});
+		self.choices = [{"name":"Cardinal Health"},
+		{"name":"Blenheim Pharmacal, Inc."},
+		{"name":"BrandStorm HBC"},
+		{"name":"Mycone Dental Supply Co., Inc DBA Keystone Industries and Deepak Products Inc."},
+		{"name":"Apotheca Company"},
+		{"name":"A-S Medication Solutions LLC"},
+		{"name":"BioActive Nutritional, Inc."},
+		{"name":"REMEDYREPACK INC."},
+		{"name":"Fischer Pharmaceuticals Ltd"},
+		{"name":"DR. BRONNER'S MAGIC SOAPS"},
+		{"name":"Antigen Laboratories, Inc."},
+		{"name":"Colgate Oral Pharmaceuticals, Inc."},
+		{"name":"P and L Development of New York Corporation"},
+		{"name":"Sinsin Pharmaceutical Co., Ltd."},
+		{"name":"Sagent Pharmaceuticals"},
+		{"name":"WOCKHARDT LIMITED"},
+		{"name":"Biofilm, Inc"},
+		{"name":"Phoenix Global Supply Group, Inc."},
+		{"name":"Mylan Pharmaceuticals Inc."},
+		{"name":"Deseret Biologicals"},
+		{"name":"Kroger Company"},
+		{"name":"Hyland's"},
+		{"name":"Mission Pharmacal Company"},
+		{"name":"Bare Escentuals Beauty Inc."},
+		{"name":"Dermalogica, Inc."},
+		{"name":"AvPAK"},
+		{"name":"GlaxoSmithKline LLC"}];
 
 		self.choices1000 = Array.apply(null, Array(1000)).map(function(){
 			return {

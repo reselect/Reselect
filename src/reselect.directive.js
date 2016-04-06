@@ -4,6 +4,8 @@ TODO:
 	- Choice support native filters
 	- Multi level choices
 	- Dropdown positioning
+	- Keyboard selecting
+	- Unfocus of blur
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -100,17 +102,21 @@ Reselect.value('reselectDefaultOptions', {
 				ctrl.hideDropdown();
 			};
 
+			// Override ng-model render function
 			$ngModel.$render = function(){
 				var valueSelected = $ngModel.$viewValue;
 				var valueToBeSelected;
 
 				if(!ctrl.options.allowInvalid && angular.isDefined(valueSelected)){
-					var choices = ctrl.transcludeCtrls.$ReselectChoice.choices;
+					var choices = ctrl.transcludeCtrls.$ReselectChoice.DataAdapter.data;
 					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
 
 					var choiceMatch, valueSelectedMatch;
 
 					for(var i = 0; i < choices.length; i++){
+						if(!angular.isDefined(choices[i])){
+							continue;
+						}
 
 						if(trackBy){
 							choiceMatch = choices[i][trackBy];
@@ -122,7 +128,7 @@ Reselect.value('reselectDefaultOptions', {
 
 						if(choiceMatch === valueSelectedMatch){
 							valueToBeSelected = choices[i][trackBy];
-							continue;
+							break;
 						}
 					}
 				}else{
@@ -174,6 +180,8 @@ Reselect.value('reselectDefaultOptions', {
 				ctrl.opened = true;
 
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
+
+				$scope.$emit('reselect.search.focus');
 			};
 
 			ctrl.hideDropdown = function(){
