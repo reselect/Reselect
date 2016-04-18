@@ -19,10 +19,9 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         var choices;
 
         if(search_term){
-            var fuse = new Fuse(this.data, { keys: ['name'] });
+            var fuse = new Fuse(this.data, { keys: ['name', 'text'] });
 
             choices = fuse.search(search_term);
-            console.log(choices);
         }else{
             choices = this.data;
         }
@@ -34,12 +33,10 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         return defer.promise;
     };
 
-    DataAdapter.prototype.updateData = function(newData, push){
-        if(push === true){
-            this.data = this.data.concat(newData);
-        }else{
-            this.data = newData;
-        }
+    DataAdapter.prototype.updateData = function(newData){
+
+        this.data = newData;
+
         return this.data;
     };
 

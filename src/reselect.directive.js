@@ -5,7 +5,6 @@ TODO:
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
-	- Unfocus of blur
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -176,12 +175,26 @@ Reselect.value('reselectDefaultOptions', {
 				}
 			};
 
+			function hideDropdownOnClick(event){
+				if($element[0].contains(event.target)){
+					return;
+				}
+
+				$scope.$apply(function(){
+					ctrl.hideDropdown();
+				});
+
+				angular.element(document).off('click', hideDropdownOnClick);
+			}
+
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
 
 				$scope.$emit('reselect.search.focus');
+
+				angular.element(document).on('click', hideDropdownOnClick);
 			};
 
 			ctrl.hideDropdown = function(){

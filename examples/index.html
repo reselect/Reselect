@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="simple">
+    <head>
+        <meta charset="UTF-8">
+        <title>Reselect by alexcheuk</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+        <script src="angular.min.js"></script>
+        <script src="angular-sanitize.min.js"></script>
+        <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"> -->
+        <!-- ui-select files -->
+        <script src="../dist/reselect.js"></script>
+        <link rel="stylesheet" href="../dist/reselect.css">
+        <script src="simple.js"></script>
+    </head>
+    <body>
+        <section class="header">
+            <h1 class="project-name">Reselect</h1>
+            <h2 class="project-tagline"></h2>
+            <a href="https://github.com/alexcheuk/Reselect" class="btn">View on GitHub</a>
+            <a href="https://github.com/alexcheuk/Reselect/zipball/master" class="btn">Download .zip</a>
+            <a href="https://github.com/alexcheuk/Reselect/tarball/master" class="btn">Download .tar.gz</a>
+        </section>
+        <section class="main-content">
+            <div ng-controller="SimpleCtrl">
+                <h3>Basic Example</h3>
+                <pre><code>&lt;reselect ng-model=&quot;simple.value&quot;&gt;
+    &lt;div reselect-choices
+        options=&quot;option in simple.choices1000 track by text&quot;&gt;
+            &lt;span ng-bind=&quot;$choice.text&quot;&gt;&lt;/span&gt; - Choice {{$index}}
+    &lt;/div reselect-choices&gt;
+&lt;/reselect&gt;</code></pre>
+
+                <div style="padding-bottom: 20px">
+                    <p>Model Value: <span ng-bind="simple.value|json"></span></p>
+                    <reselect
+                        reselect-options="simple.options1"
+                        ng-model="simple.value">
+                        <div reselect-selection>
+                            HarHar - <span ng-bind="$selection.text"></span>
+                        </div>
+                        <div reselect-choices
+                            options="option in simple.choices1000 track by text"
+                            value="$choice">
+                                <span ng-bind="$choice.text"></span> - Choice {{$index}}
+                        </div reselect-choices>
+                    </reselect>
+                </div>
+
+                <div style="padding-bottom: 20px">
+                    <p>Model Value: <span ng-bind="simple.value2|json"></span></p>
+                    <reselect
+                        reselect-options="{allowInvalid: true}"
+                        ng-model="simple.value2">
+                        <div reselect-selection>
+                            HarHar - <span ng-bind="$selection.text"></span>
+                        </div>
+                        <div reselect-choices
+                            options="option in simple.choices1000 track by text"
+                            value="$choice">
+                                <span ng-bind="$choice.text"></span> - Choice {{$index}}
+                        </div reselect-choices>
+                    </reselect>
+                </div>
+
+                <div style="padding-bottom: 20px">
+                    <p>Model Value: <span ng-bind="simple.value3|json"></span></p>
+                    <reselect
+                        ng-model="simple.value3">
+                        <reselect-choices
+                            options="option in simple.choices"
+                            value="$choice.name">
+                                <span ng-bind="$choice.name"></span>
+                        </reselect-choices>
+                    </reselect>
+                </div>
+
+                <div style="padding-bottom: 20px">
+                    <reselect
+                        ng-model="simple.value4">
+                        <div reselect-selection>
+                            <span ng-bind="$selection"></span>
+                            <span ng-bind="$selection.data.title"></span>
+                        </div>
+                        <div reselect-choices
+                            remote="simple.remoteOptions"
+                            value="$choice">
+                                <span ng-bind="$choice.data.title"></span>
+                        </div>
+                    </reselect>
+                </div>
+
+                <div style="padding-bottom: 20px">
+                    <h4>No Options</h4>
+                    <!-- <reselect
+                        ng-model="simple.value">
+                        <reselect-choices
+                            options="option in []"
+                            value="$choice">
+                                <span ng-bind="$choice.text"></span> - Choice
+                        </reselect-choices>
+                    </reselect> -->
+                </div>
+
+                <div style="padding-bottom: 20px">
+                    <!-- <select>
+                        <option ng-repeat="option in simple.choices track by $index">{{$index}}</option>
+                    </select> -->
+                </div>
+            </div>
+
+            <footer class="site-footer">
+                <span class="site-footer-owner"><a href="https://github.com/alexcheuk/Reselect">Reselect</a> is maintained by <a href="https://github.com/alexcheuk">alexcheuk</a>.</span>
+                <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+            </footer>
+        </section>
+
+    </body>
+</html>

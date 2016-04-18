@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-06T04:53:58.942Z
+ * Version: 0.0.1 - 2016-04-18T07:50:26.723Z
  * License: MIT
  */
 
@@ -818,10 +818,9 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         var choices;
 
         if(search_term){
-            var fuse = new Fuse(this.data, { keys: ['name'] });
+            var fuse = new Fuse(this.data, { keys: ['name', 'text'] });
 
             choices = fuse.search(search_term);
-            console.log(choices);
         }else{
             choices = this.data;
         }
@@ -833,12 +832,10 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         return defer.promise;
     };
 
-    DataAdapter.prototype.updateData = function(newData, push){
-        if(push === true){
-            this.data = this.data.concat(newData);
-        }else{
-            this.data = newData;
-        }
+    DataAdapter.prototype.updateData = function(newData){
+
+        this.data = newData;
+
         return this.data;
     };
 
@@ -949,7 +946,6 @@ TODO:
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
-	- Unfocus of blur
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -1120,12 +1116,26 @@ Reselect.value('reselectDefaultOptions', {
 				}
 			};
 
+			function hideDropdownOnClick(event){
+				if($element[0].contains(event.target)){
+					return;
+				}
+
+				$scope.$apply(function(){
+					ctrl.hideDropdown();
+				});
+
+				angular.element(document).off('click', hideDropdownOnClick);
+			}
+
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
 
 				$scope.$emit('reselect.search.focus');
+
+				angular.element(document).on('click', hideDropdownOnClick);
 			};
 
 			ctrl.hideDropdown = function(){
@@ -1499,7 +1509,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.is_loading = true;
 
-						// TODO: For static data, choices cant be replaced.
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
 								if(!self.search_term){
@@ -1515,6 +1524,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					};
 
 					self.loadMore = function() {
+						if(!self.DataAdapter.pagination || !self.DataAdapter.pagination.more){
+							return;
+						}
 						self.getData(false, true);
 					};
 

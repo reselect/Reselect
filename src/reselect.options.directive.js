@@ -157,7 +157,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.is_loading = true;
 
-						// TODO: For static data, choices cant be replaced.
 						self.DataAdapter.getData(self.search_term)
 							.then(function(choices) {
 								if(!self.search_term){
@@ -173,6 +172,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					};
 
 					self.loadMore = function() {
+						if(!self.DataAdapter.pagination || !self.DataAdapter.pagination.more){
+							return;
+						}
 						self.getData(false, true);
 					};
 
