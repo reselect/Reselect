@@ -27,37 +27,39 @@
         </section>
         <section class="main-content">
             <div ng-controller="SimpleCtrl">
-                <h3>Basic Example</h3>
-                <pre><code>&lt;reselect ng-model=&quot;simple.value&quot;&gt;
-    &lt;div reselect-choices
-        options=&quot;option in simple.choices1000 track by text&quot;&gt;
-            &lt;span ng-bind=&quot;$choice.text&quot;&gt;&lt;/span&gt; - Choice {{$index}}
-    &lt;/div reselect-choices&gt;
-&lt;/reselect&gt;</code></pre>
 
+                <h3>Basic Example</h3>
                 <div style="padding-bottom: 20px">
-                    <p>Model Value: <span ng-bind="simple.value|json"></span></p>
+                    <p>Array of Strings:</p>
                     <reselect
                         reselect-options="simple.options1"
                         ng-model="simple.value">
-                        <div reselect-selection>
-                            HarHar - <span ng-bind="$selection.text"></span>
-                        </div>
                         <div reselect-choices
-                            options="option in simple.choices1000 track by text"
+                            options="option in simple.mocks.single"
                             value="$choice">
-                                <span ng-bind="$choice.text"></span> - Choice {{$index}}
+                                <span ng-bind="$choice"></span>
+                        </div reselect-choices>
+                    </reselect>
+
+                    <p>Array of Objects:</p>
+                    <reselect
+                        reselect-options="simple.options1"
+                        ng-model="simple.value">
+                        <div reselect-choices
+                            options="option in simple.mocks.single"
+                            value="$choice">
+                                <span ng-bind="$choice"></span>
                         </div reselect-choices>
                     </reselect>
                 </div>
 
+                <h3>Allow Invalid</h3>
                 <div style="padding-bottom: 20px">
-                    <p>Model Value: <span ng-bind="simple.value2|json"></span></p>
                     <reselect
                         reselect-options="{allowInvalid: true}"
                         ng-model="simple.value2">
                         <div reselect-selection>
-                            HarHar - <span ng-bind="$selection.text"></span>
+                            <span ng-bind="$selection.text"></span>
                         </div>
                         <div reselect-choices
                             options="option in simple.choices1000 track by text"
@@ -67,18 +69,7 @@
                     </reselect>
                 </div>
 
-                <div style="padding-bottom: 20px">
-                    <p>Model Value: <span ng-bind="simple.value3|json"></span></p>
-                    <reselect
-                        ng-model="simple.value3">
-                        <reselect-choices
-                            options="option in simple.choices"
-                            value="$choice.name">
-                                <span ng-bind="$choice.name"></span>
-                        </reselect-choices>
-                    </reselect>
-                </div>
-
+                <h3>Remote Fetching</h3>
                 <div style="padding-bottom: 20px">
                     <reselect
                         ng-model="simple.value4">
@@ -92,24 +83,6 @@
                                 <span ng-bind="$choice.data.title"></span>
                         </div>
                     </reselect>
-                </div>
-
-                <div style="padding-bottom: 20px">
-                    <h4>No Options</h4>
-                    <!-- <reselect
-                        ng-model="simple.value">
-                        <reselect-choices
-                            options="option in []"
-                            value="$choice">
-                                <span ng-bind="$choice.text"></span> - Choice
-                        </reselect-choices>
-                    </reselect> -->
-                </div>
-
-                <div style="padding-bottom: 20px">
-                    <!-- <select>
-                        <option ng-repeat="option in simple.choices track by $index">{{$index}}</option>
-                    </select> -->
                 </div>
             </div>
 

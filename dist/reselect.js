@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-18T07:50:26.723Z
+ * Version: 0.0.1 - 2016-04-19T07:17:28.763Z
  * License: MIT
  */
 
@@ -814,13 +814,23 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
     };
 
     DataAdapter.prototype.getData = function(search_term){
+        var self = this;
+
         var defer = $q.defer();
         var choices;
 
+        var search_options = {};
+
         if(search_term){
-            var fuse = new Fuse(this.data, { keys: ['name', 'text'] });
+            var fuse = new Fuse(this.data, search_options);
 
             choices = fuse.search(search_term);
+
+            if(angular.isDefined(search_options.keys)){
+                choices = choices.map(function(index){
+                    return self.data[index];
+                });
+            }
         }else{
             choices = this.data;
         }
@@ -941,11 +951,14 @@ angular
 
 /*
 TODO:
-	- Static choice search
 	- Choice support native filters
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
+
+TODO BUGS:
+	- Empty choices error
+	
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -1282,7 +1295,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 						$index       : i
 					});
 
-					angular.extend(container.scope.$choice, self.choices[i]);
+					container.scope.$choice = self.choices[i];
 				}
 			}
 		}

@@ -1,10 +1,13 @@
 /*
 TODO:
-	- Static choice search
 	- Choice support native filters
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
+
+TODO BUGS:
+	- Empty choices error
+	
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){

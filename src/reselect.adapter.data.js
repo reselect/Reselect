@@ -15,13 +15,23 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
     };
 
     DataAdapter.prototype.getData = function(search_term){
+        var self = this;
+
         var defer = $q.defer();
         var choices;
 
+        var search_options = {};
+
         if(search_term){
-            var fuse = new Fuse(this.data, { keys: ['name', 'text'] });
+            var fuse = new Fuse(this.data, search_options);
 
             choices = fuse.search(search_term);
+
+            if(angular.isDefined(search_options.keys)){
+                choices = choices.map(function(index){
+                    return self.data[index];
+                });
+            }
         }else{
             choices = this.data;
         }

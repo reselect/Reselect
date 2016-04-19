@@ -3,73 +3,34 @@
 
 	angular.module('simple', ['Reselect'])
 
-	.controller('SimpleCtrl', ['$scope', '$timeout', function($scope, $timeout){
+	.service('MOCK_DATA', function($q, $http){
+		var defer = $q.defer();
+
+		$http.get('./MOCK_DATA.json')
+			.success(function(data){
+
+				var mocks = {
+					single: data.map(function(data){
+						return data.skill
+					}),
+					objects: data
+				};
+
+				defer.resolve(mocks);
+			});
+
+		return defer.promise;
+	})
+
+	.controller('SimpleCtrl', ['$scope', '$timeout', 'MOCK_DATA', function($scope, $timeout, MOCK_DATA){
 
 		var self = $scope.simple = this;
 
-		var num = 0;
+		self.mocks = {};
 
-		self.choices = [{"name":"Cardinal Health"},
-		{"name":"Blenheim Pharmacal, Inc."},
-		{"name":"BrandStorm HBC"},
-		{"name":"Mycone Dental Supply Co., Inc DBA Keystone Industries and Deepak Products Inc."},
-		{"name":"Apotheca Company"},
-		{"name":"A-S Medication Solutions LLC"},
-		{"name":"BioActive Nutritional, Inc."},
-		{"name":"REMEDYREPACK INC."},
-		{"name":"Fischer Pharmaceuticals Ltd"},
-		{"name":"DR. BRONNER'S MAGIC SOAPS"},
-		{"name":"Antigen Laboratories, Inc."},
-		{"name":"Colgate Oral Pharmaceuticals, Inc."},
-		{"name":"P and L Development of New York Corporation"},
-		{"name":"Sinsin Pharmaceutical Co., Ltd."},
-		{"name":"Sagent Pharmaceuticals"},
-		{"name":"WOCKHARDT LIMITED"},
-		{"name":"Biofilm, Inc"},
-		{"name":"Phoenix Global Supply Group, Inc."},
-		{"name":"Mylan Pharmaceuticals Inc."},
-		{"name":"Deseret Biologicals"},
-		{"name":"Kroger Company"},
-		{"name":"Hyland's"},
-		{"name":"Mission Pharmacal Company"},
-		{"name":"Bare Escentuals Beauty Inc."},
-		{"name":"Dermalogica, Inc."},
-		{"name":"AvPAK"},
-		{"name":"GlaxoSmithKline LLC"}];
-
-		self.choices1000 = Array.apply(null, Array(1000)).map(function(){
-			return {
-				text: 'Option ' + (num++)
-			};
+		MOCK_DATA.then(function(data){
+			angular.extend(self.mocks, data);
 		});
-
-		self.options1 = {
-			resolveInvalid: function(value, done){
-				if(value){
-					done({
-						text: 'HARHARHAR'
-					});
-				}else{
-					done(null);
-				}
-			}
-		}
-
-		$timeout(function(){
-			self.value = {
-				text: 'Option 20xx'
-			}
-		}, 2000);
-
-		$timeout(function(){
-			self.value2 = {
-				text: 'Option xx20'
-			}
-		}, 2000);
-
-		$timeout(function(){
-			self.value3 = undefined;
-		}, 2000);
 
 		self.remoteOptions = {
 			endpoint: function(params, pagination){
