@@ -28,27 +28,46 @@
         <section class="main-content">
             <div ng-controller="SimpleCtrl">
 
-                <h3>Basic Example</h3>
+                <h2>Basic Example</h2>
                 <div style="padding-bottom: 20px">
-                    <p>Array of Strings:</p>
+                    <h3>Array of Strings:</h3>
                     <reselect
                         reselect-options="simple.options1"
                         ng-model="simple.value">
                         <div reselect-choices
-                            options="option in simple.mocks.single"
+                            options="option in simple.mocks.single|limitTo:5"
                             value="$choice">
                                 <span ng-bind="$choice"></span>
                         </div reselect-choices>
                     </reselect>
 
-                    <p>Array of Objects:</p>
+                    <h3>Array of Objects:</h3>
+
+                    <p><strong>Selected Value:</strong> <span ng-bind="simple.objects1"></span></p>
                     <reselect
                         reselect-options="simple.options1"
-                        ng-model="simple.value">
+                        ng-model="simple.objects1">
+                        <div reselect-selection>
+                            <span ng-bind="$choice.skill"></span>
+                        </div>
                         <div reselect-choices
-                            options="option in simple.mocks.single"
-                            value="$choice">
-                                <span ng-bind="$choice"></span>
+                            options="option in simple.mocks.objects"
+                            value="$choice.id">
+                                <span ng-bind="$choice.first_name"></span> <span ng-bind="$choice.last_name"></span> - <span ng-bind="$choice.skill"></span>
+                        </div reselect-choices>
+                    </reselect>
+
+                    <p><strong>Selected Value:</strong> <span ng-bind="simple.objects2"></span></p>
+                    <reselect
+                        reselect-options="simple.options1"
+                        ng-model="simple.objects2">
+                        <div reselect-selection>
+                            <span ng-bind="$selection"></span>
+                        </div>
+                        <div reselect-choices
+                            options="option in simple.mocks.objects"
+                            value="$choice.skill">
+                                <span ng-bind="$choice.first_name"></span> <span ng-bind="$choice.last_name"></span> - <span ng-bind="$choice.skill"></span>
                         </div reselect-choices>
                     </reselect>
                 </div>

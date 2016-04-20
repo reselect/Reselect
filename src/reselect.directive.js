@@ -1,13 +1,13 @@
 /*
 TODO:
-	- Choice support native filters
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
+	- Directive for Empty choices
 
 TODO BUGS:
 	- Empty choices error
-	
+
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -86,20 +86,21 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.rendered_selection = null;
 
-			ctrl.renderSelection = function(state){
+			ctrl.renderSelection = function(state, $choice){
 				ctrl.selection_scope.$selection = state;
+				ctrl.selection_scope.$choice = $choice;
 			};
 
 			/**
 			 * Controller Methods
 			 */
 
-			ctrl.selectValue = function(value){
+			ctrl.selectValue = function(value, $choice){
 				$ngModel.$setViewValue(value);
 
 				ctrl.value = value;
 
-				ctrl.renderSelection(ctrl.value);
+				ctrl.renderSelection(ctrl.value, $choice);
 
 				ctrl.hideDropdown();
 			};

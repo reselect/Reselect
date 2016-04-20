@@ -215,10 +215,11 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self._selectChoice = function(containerId) {
-						var value = angular.copy(self.LazyDropdown.lazyContainers[containerId]
-							.scope.$eval($attrs.value));
+						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
 
-						$Reselect.selectValue(value);
+						var value = angular.copy(selectedScope.$eval($attrs.value));
+						
+						$Reselect.selectValue(value, selectedScope.$choice);
 					};
 
 					/**

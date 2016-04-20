@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-19T07:17:28.763Z
+ * Version: 0.0.1 - 2016-04-20T07:24:36.951Z
  * License: MIT
  */
 
@@ -951,14 +951,14 @@ angular
 
 /*
 TODO:
-	- Choice support native filters
 	- Multi level choices
 	- Dropdown positioning
 	- Keyboard selecting
+	- Directive for Empty choices
 
 TODO BUGS:
 	- Empty choices error
-	
+
 */
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
@@ -1037,20 +1037,21 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.rendered_selection = null;
 
-			ctrl.renderSelection = function(state){
+			ctrl.renderSelection = function(state, $choice){
 				ctrl.selection_scope.$selection = state;
+				ctrl.selection_scope.$choice = $choice;
 			};
 
 			/**
 			 * Controller Methods
 			 */
 
-			ctrl.selectValue = function(value){
+			ctrl.selectValue = function(value, $choice){
 				$ngModel.$setViewValue(value);
 
 				ctrl.value = value;
 
-				ctrl.renderSelection(ctrl.value);
+				ctrl.renderSelection(ctrl.value, $choice);
 
 				ctrl.hideDropdown();
 			};
@@ -1199,7 +1200,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		var optionsHeight = self.choices.length * self.options.choiceHeight;
 		var containerHeight = (optionsHeight > self.options.listHeight) ? self.options.listHeight : optionsHeight;
 
-		self.$container.css('height', (containerHeight || self.options.choiceHeight) + 2 + 'px');
+		self.$container.css('height', (containerHeight || self.options.choiceHeight) + 'px');
 
 		// Simulate the scrollbar with the estimated height for the number of choices
 		self.$list.css('height', optionsHeight + 'px');
@@ -1580,10 +1581,11 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self._selectChoice = function(containerId) {
-						var value = angular.copy(self.LazyDropdown.lazyContainers[containerId]
-							.scope.$eval($attrs.value));
+						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
 
-						$Reselect.selectValue(value);
+						var value = angular.copy(selectedScope.$eval($attrs.value));
+						
+						$Reselect.selectValue(value, selectedScope.$choice);
 					};
 
 					/**
