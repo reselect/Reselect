@@ -1,14 +1,3 @@
-/*
-TODO:
-	- Multi level choices
-	- Dropdown positioning
-	- Keyboard selecting
-	- Directive for Empty choices
-
-TODO BUGS:
-	- Empty choices error
-
-*/
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';

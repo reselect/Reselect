@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-20T07:24:36.951Z
+ * Version: 0.0.1 - 2016-04-20T07:28:15.122Z
  * License: MIT
  */
 
@@ -949,17 +949,6 @@ angular
 	.module('reselect.controller', [])
 	.controller('reselect.directive.ctrl', ReselectDirectiveCtrl);
 
-/*
-TODO:
-	- Multi level choices
-	- Dropdown positioning
-	- Keyboard selecting
-	- Directive for Empty choices
-
-TODO BUGS:
-	- Empty choices error
-
-*/
 Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
