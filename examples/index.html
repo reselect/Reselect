@@ -72,6 +72,25 @@
                     </reselect>
                 </div>
 
+                <h3>Custom No Options</h3>
+                <div style="padding-bottom: 20px">
+                    <reselect
+                        ng-model="simple.objects2">
+                        <div reselect-selection>
+                            <span ng-bind="$selection"></span>
+                        </div>
+                        <div reselect-choices
+                            no-options-text="Custom text message"
+                            options="option in []"
+                            value="$choice.skill">
+                                <span ng-bind="$choice.first_name"></span> <span ng-bind="$choice.last_name"></span> - <span ng-bind="$choice.skill"></span>
+                        </div reselect-choices>
+                        <reselect-no-option>
+
+                        </reselect-no-option>
+                    </reselect>
+                </div>
+
                 <h3>Allow Invalid</h3>
                 <div style="padding-bottom: 20px">
                     <reselect

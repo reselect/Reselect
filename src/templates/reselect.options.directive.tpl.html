@@ -9,7 +9,15 @@
 	</div>
 	<div class="reselect-options-container" trigger-at-bottom="$options.loadMore()">
 		<ul class="reselect-options-list" ng-show="$options.DataAdapter.data.length"></ul>
-		<div class="reselect-option reselect-option--static reselect-option-choice" ng-show="!$options.DataAdapter.data.length && !$options.is_loading">No Options</div>
-		<div class="reselect-option reselect-option--static reselect-option-loading" ng-show="$options.is_loading">Loading More</div>
+
+		<div class="reselect-option reselect-option--static reselect-option-choice"
+			ng-show="!$options.DataAdapter.data.length && !$options.is_loading">
+			{{$options.options.noOptionsText}}
+		</div>
+
+		<div class="reselect-option reselect-option--static reselect-option-loading"
+			ng-show="$options.is_loading">
+			Loading More
+		</div>
 	</div>
 </div>

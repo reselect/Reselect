@@ -1,5 +1,5 @@
 Reselect.value('reselectChoicesOptions', {
-
+	noOptionsText: 'No Options'
 });
 
 Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($parse, ReselectUtils) {
@@ -51,8 +51,8 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 }]);
 
 Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
-	'LazyScroller', 'LazyContainer', 'ReselectUtils',
-	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils) {
+	'LazyScroller', 'LazyContainer', 'ReselectUtils', 'reselectChoicesOptions',
+	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
 		return {
 			restrict: 'AE',
 			templateUrl: 'templates/reselect.options.directive.tpl.html',
@@ -113,6 +113,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						'$options.activeIndex = null');
 
 					var $Reselect = $element.controller('reselect');
+
+					/**
+					 * Options
+					 */
+					
+					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {}, {
+						noOptionsText: $attrs.noOptionsText
+					});
 
 					/**
 					 * Choices Functionalities
@@ -231,12 +239,23 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || self.DataAdapter.data;
 
-						var dimensions = self.LazyDropdown.renderContainer();
-						self.LazyDropdown._calculateLazyRender(true);
+						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length){
+							var dimensions = self.LazyDropdown.renderContainer();
+							self.LazyDropdown._calculateLazyRender(true);
 
-						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length && (dimensions.containerHeight >= dimensions.choiceHeight)){
-							self.loadMore();
+							/**
+							 * If the result's first page does not fill up
+							 * the height of the dropdown, automatically fetch
+							 * the next page
+							 */
+
+							if(self.LazyDropdown.choices && self.LazyDropdown.choices.length && (dimensions.containerHeight >= dimensions.choiceHeight)){
+								self.loadMore();
+							}
+						}else{
+
 						}
+
 					};
 				}
 			]
