@@ -1,6 +1,7 @@
 # Reselect [![Build Status](https://travis-ci.org/alexcheuk/Reselect.svg?branch=master)](https://travis-ci.org/alexcheuk/Reselect)
 
-TODO: Write a project description
+Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element.
+
 
 ## Installation
 
@@ -8,7 +9,18 @@ TODO: Describe the installation process
 
 ## Usage
 
-TODO: Write usage instructions
+As an element:
+````html
+<reselect
+    reselect-options=""
+    ng-model="">
+    <div reselect-choices
+        options=""
+        value="">
+            <span ng-bind=""></span>
+    </div>
+</reselect>
+````
 
 ## Contributing
 
