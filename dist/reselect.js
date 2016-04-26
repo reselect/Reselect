@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-26T21:55:35.864Z
+ * Version: 0.0.1 - 2016-04-26T22:06:30.810Z
  * License: MIT
  */
 
@@ -967,31 +967,28 @@ Reselect.value('reselectDefaultOptions', {
 			ngModel         : '=',
 			reselectOptions : '='
 		},
-		compile: function($element, $attrs, transcludeFn){
+		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
-			return function($scope, $element, $attrs, ctrls){
-				var $Reselect = ctrls[0];
-				var $transcludeElems = null;
+			var $Reselect = ctrls[0];
+			var $transcludeElems = null;
 
-				transcludeFn($scope, function(clone){
-					$transcludeElems = clone;
-					$element.append(clone);
-				}).detach();
+			transcludeFn($scope, function(clone){
+				$transcludeElems = clone;
+				$element.append(clone);
+			}).detach();
 
-				$transcludeElems = angular.element('<div>').append($transcludeElems);
+			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
-				var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices]');
-				var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection]');
-					$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
+			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices]');
+			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection]');
+				$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
 
-				angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
-				angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
+			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
+			angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
 
-				$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
+			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
 
-				$compile($selection)($Reselect.selection_scope);
-			};
-
+			$compile($selection)($Reselect.selection_scope);
 		},
 		controllerAs: '$reselect',
 		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', function($scope, $element, reselectDefaultOptions, $timeout){
