@@ -38,7 +38,7 @@ describe('Reselect Selection Test', function(){
 			$rootScope.$digest();
 		});
 
-		it('should display choice selection without directive', function(){
+		it('should display choice selection WITHOUT directive', function(){
 			expect($reselect.find('.reselect-rendered-selection').text()).toBe(random);
 		});
 
@@ -73,10 +73,10 @@ describe('Reselect Selection Test', function(){
 			$rootScope.$digest();
 		});
 
-		it('should display choice selection without directive', function(){
-            console.log($reselect.find('.reselect-rendered-selection').html());
-			// expect($reselect.find('.reselect-rendered-selection').text()).toBe('asd');
-		});
+		// it('should display choice selection WITH directive', function(){
+        //     // console.log($reselect.find('.reselect-rendered-selection').html());
+		// 	// expect($reselect.find('.reselect-rendered-selection').text()).toBe('asd');
+		// });
 
 	});
 
