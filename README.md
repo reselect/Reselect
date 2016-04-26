@@ -1,4 +1,4 @@
-# Reselect [![Build Status](https://travis-ci.org/alexcheuk/Reselect.svg?branch=master)](https://travis-ci.org/alexcheuk/Reselect)
+# Reselect [![Build Status](https://travis-ci.org/reselect/Reselect.svg?branch=master)](https://travis-ci.org/reselect/Reselect)
 
 Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. It supports searching, remote data sets, and infinite scrolling of results.
 
