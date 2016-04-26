@@ -4,9 +4,9 @@
 
 The following is a set of guidelines for contributing to Reselect and its packages, which are hosted at [Reselect](https://github.com/reselect/Reselect) on GitHub.
 
-[How Can I Contribute?](#how-can-i-contribute)
-- [Reporting Bugs](#reporting-bugs)
-- [Your First Code Contribution](#your-first-code-contribution)
+[How Can I Contribute?](#how-can-i-contribute-book)
+- [Reporting Bugs](#reporting-bugs-beetle)
+- [Your First Code Contribution](#your-first-code-contribution-point-up)
 - [Pull Requests](#pull-requests)
 
 [Styleguides](#styleguides)
@@ -20,7 +20,7 @@ The following is a set of guidelines for contributing to Reselect and its packag
 
 Before creating a bug report, please check [this list](https://github.com/reselect/Reselect/issues?q=is%3Aopen+is%3Aissue+label%3Abug). When submitting a bug report, please include as many details as possible.
 
-### Your First Code Contribution
+### Your First Code Contribution :point_up:
 
 Looking for a good place to start contributing? Look through these `beginner` and `help-wanted` issues:
 - [Beginner Issues][beginner] - issues that should only require a few lines of code and minimal testing.
