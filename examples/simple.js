@@ -28,8 +28,13 @@
 
 		self.mocks = {};
 
+		self.value = 'HTML';
+		self.objects1 = 1;
+
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);
+
+			self.ready = true;
 		});
 
 		self.remoteOptions = {

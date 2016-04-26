@@ -2,7 +2,7 @@ Reselect.value('reselectDefaultOptions', {
 	placeholderTemplate: function(){
 		return 'Select an option';
 	},
-	selectionTemplate: angular.element('<div><span ng-bind="$selection"></span></div>')
+	selectionTemplate: angular.element('<span ng-bind="$selection"></span>')
 })
 
 .directive('reselect', ['$compile', function($compile){
@@ -117,9 +117,8 @@ Reselect.value('reselectDefaultOptions', {
 							choiceMatch = choices[i];
 							valueSelectedMatch = valueSelected;
 						}
-
 						if(choiceMatch === valueSelectedMatch){
-							valueToBeSelected = choices[i][trackBy];
+							valueToBeSelected = choiceMatch;
 							break;
 						}
 					}
