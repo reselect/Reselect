@@ -7,8 +7,8 @@ Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angula
 
 1. Download [Reselect](https://github.com/reselect/Reselect)
 2. Run `npm install` and `bower install`
-3. To use Reselect in your project refer to [Usage](#Usage)
-4. To contribute to Reselect refer to [Contributing](#Contributing)
+3. To use Reselect in your project refer to [Usage](#usage)
+4. To contribute to Reselect refer to [Contributing](#contributing)
 
 ## Usage
 Download [Reselect](https://github.com/reselect/Reselect) and use the production version within the `dist/` folder.
