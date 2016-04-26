@@ -117,7 +117,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Options
 					 */
-					
+
 					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {}, {
 						noOptionsText: $attrs.noOptionsText
 					});
@@ -132,7 +132,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.parsedOptions = ChoiceParser.parse($attrs.options);
 
 						self.DataAdapter = new ReselectDataAdapter();
-
 						self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
 
 						self.DataAdapter.observe = function(onChange) {
@@ -226,7 +225,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
 
 						var value = angular.copy(selectedScope.$eval($attrs.value));
-						
+
 						$Reselect.selectValue(value, selectedScope.$choice);
 					};
 
@@ -255,7 +254,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						}else{
 
 						}
-
 					};
 				}
 			]
