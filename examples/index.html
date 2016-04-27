@@ -39,7 +39,7 @@
                             ng-model="simple.value">
                             <reselect-choices
                                 options="option in simple.mocks.single">
-                                    <span ng-bind="option"></span>
+                                    <span ng-bind-html="option | rshighlight : $options.search_term"></span>
                             </reselect-choices>
                         </reselect>
 
@@ -50,11 +50,11 @@
                             reselect-options="simple.options1"
                             ng-model="simple.objects1">
                             <div reselect-selection>
-                                <span ng-bind="$choice.skill"></span>
+                                <span ng-bind="$choice.first_name"></span>
                             </div>
                             <div reselect-choices
                                 options="option.id as option in simple.mocks.objects track by id">
-                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                                    <span ng-bind-html="option.first_name | rshighlight : $options.search_term"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
                             </div reselect-choices>
                         </reselect>
 
