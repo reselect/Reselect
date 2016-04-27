@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-27T08:45:45.041Z
+ * Version: 0.0.1 - 2016-04-27T16:55:03.783Z
  * License: MIT
  */
 
@@ -1727,6 +1727,34 @@ Reselect.factory('ReselectUtils', function(){
 
     return ReselectUtils;
 });
+
+Reselect.filter('rshighlight', ['$sce', function($sce){
+    return function(target, str){
+        var result, matches, re;
+        var match_class = "reselect-text-match";
+
+		re = new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+		if (!target) {
+			return;
+		}
+
+		if (!str) {
+			return target;
+		}
+
+		if (!target.match || !target.replace) {
+			target = target.toString();
+		}
+		matches = target.match(re);
+		if (matches) {
+			result = target.replace(re, '<span class="' + match_class + '">' + matches[0] + '</span>');
+		} else {
+			result = target;
+		}
+
+		return $sce.trustAsHtml(result);
+    };
+}]);
 
 Reselect.directive('focusOn', ['$timeout', function($timeout){
     return {

@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('simple', ['Reselect'])
+	angular.module('simple', ['Reselect', 'ngSanitize'])
 
 	.service('MOCK_DATA', function($q, $http){
 		var defer = $q.defer();
