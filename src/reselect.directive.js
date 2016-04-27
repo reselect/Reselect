@@ -28,8 +28,8 @@ Reselect.value('reselectDefaultOptions', {
 
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
-			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices]');
-			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection]');
+			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
+			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
 				$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
 
 			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
@@ -67,7 +67,7 @@ Reselect.value('reselectDefaultOptions', {
 			 * Selection
 			 */
 
-			ctrl.selection_scope = $scope.$new();
+			ctrl.selection_scope = $scope.$parent.$new();
 			ctrl.selection_scope.$selection = null;
 
 			ctrl.rendered_selection = null;
@@ -102,20 +102,20 @@ Reselect.value('reselectDefaultOptions', {
 
 					var choiceMatch, valueSelectedMatch;
 
+
 					for(var i = 0; i < choices.length; i++){
 						if(!angular.isDefined(choices[i])){
 							continue;
 						}
 
-						if(trackBy){
-							choiceMatch = choices[i][trackBy];
-							valueSelectedMatch = valueSelected[trackBy];
-						}else{
-							choiceMatch = choices[i];
-							valueSelectedMatch = valueSelected;
-						}
+						var scp = {};
+						scp[ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.itemName] = choices[i];
+
+						choiceMatch = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.modelMapper(scp);
+						valueSelectedMatch = valueSelected;
+
 						if(choiceMatch === valueSelectedMatch){
-							valueToBeSelected = choiceMatch;
+							valueToBeSelected = choices[i];
 							break;
 						}
 					}
@@ -124,7 +124,7 @@ Reselect.value('reselectDefaultOptions', {
 				}
 
 				if(valueToBeSelected){
-					ctrl.selectValue($ngModel.$viewValue);
+					ctrl.selectValue($ngModel.$viewValue, valueToBeSelected);
 				}else{
 					if(ctrl.options.resolveInvalid && typeof ctrl.options.resolveInvalid === 'function'){
 						var validateDone = function(value){
