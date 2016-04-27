@@ -118,9 +118,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * Options
 					 */
 
-					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {}, {
-						noOptionsText: $attrs.noOptionsText
-					});
+					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {});
+
+					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
 
 					/**
 					 * Choices Functionalities

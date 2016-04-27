@@ -7,15 +7,19 @@
 			ng-model="$options.search_term"
 			ng-change="$options.search()"/>
 	</div>
-	<div class="reselect-options-container" trigger-at-bottom="$options.loadMore()">
+	<div class="reselect-options-container"
+		ng-class="{'reselect-options-container--autoheight': !$options.DataAdapter.data.length && !$options.is_loading }"
+		trigger-at-bottom="$options.loadMore()">
 		<ul class="reselect-options-list" ng-show="$options.DataAdapter.data.length"></ul>
 
-		<div class="reselect-option reselect-option--static reselect-option-choice"
+		<div class="reselect-static-option reselect-empty-container"
 			ng-show="!$options.DataAdapter.data.length && !$options.is_loading">
-			{{$options.options.noOptionsText}}
+			<div class="reselect-option reselect-option--static reselect-option-choice">
+				{{$options.options.noOptionsText}}
+			</div>
 		</div>
 
-		<div class="reselect-option reselect-option--static reselect-option-loading"
+		<div class="reselect-option reselect-static-option reselect-option-loading"
 			ng-show="$options.is_loading">
 			Loading More
 		</div>

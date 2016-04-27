@@ -10,7 +10,7 @@ describe('Reselect Selection Test', function(){
 	                        options="option in ctrl.choices" \
 	                        value="$choice"> \
 	                            <span ng-bind="$choice"></span>\
-	                    </reselect-options> \
+	                    </reselect-choices> \
 	                </reselect>';
 
 	beforeEach(module('Reselect'));
@@ -66,7 +66,7 @@ describe('Reselect Selection Test', function(){
         	                    <reselect-choices \
         	                        options="option.first_name as option in ctrl.choices"> \
         	                            <span ng-bind="option.first_name"></span>\
-        	                    </reselect-options> \
+        	                    </reselect-choices> \
         	                </reselect>')($scope);
 
 			$rootScope.$digest();
@@ -91,7 +91,7 @@ describe('Reselect Selection Test', function(){
                                 </reselect-selection> \
         	                    <reselect-choices \
         	                        options="option in [1]"> \
-        	                    </reselect-options> \
+        	                    </reselect-choices> \
         	                </reselect>')($scope);
 
 			$rootScope.$digest();

@@ -10,7 +10,7 @@ describe('Reselect Test', function(){
 	                        options="option in ctrl.choices" \
 	                        value="$choice"> \
 	                            <span ng-bind="$choice.text"></span> - Choice \
-	                    </reselect-options> \
+	                    </reselect-choices> \
 	                </reselect>';
 
 	beforeEach(module('Reselect'));
@@ -62,7 +62,7 @@ describe('Reselect Test', function(){
 		it('Replaces options directive with the template', function(){
 			expect($reselect.children('.reselect-dropdown').length).toBe(1);
 		});
-		// 
+		//
 		// it('Should have calculated the options list dimensions correctly', function(){
 		// 	expect($reselect.find('.reselect-options-container').height()).toBe(300);
 		// 	expect($reselect.find('.reselect-options-list').height()).toBe($scope.ctrl.choices.length * 36);
