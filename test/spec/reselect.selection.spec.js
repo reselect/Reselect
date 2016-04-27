@@ -56,27 +56,25 @@ describe('Reselect Selection Test', function(){
 
 		beforeEach(function(){
 			$scope.ctrl.choices = choices;
-            $scope.ctrl.value = 1;
+            $scope.ctrl.value = choices[1].first_name;
 
 			$reselect = $compile('<reselect \
         	                    ng-model="ctrl.value"> \
                                 <reselect-selection> \
-                                    <span ng-bind="$selection"></span> \
+                                    <span ng-bind="$selection"></span><span ng-bind="$choice.email"></span> \
                                 </reselect-selection> \
         	                    <reselect-choices \
-        	                        options="option in ctrl.choices track by id" \
-        	                        value="$choice.email"> \
-        	                            <span ng-bind="$choice"></span>\
+        	                        options="option.first_name as option in ctrl.choices"> \
+        	                            <span ng-bind="option.first_name"></span>\
         	                    </reselect-options> \
         	                </reselect>')($scope);
 
 			$rootScope.$digest();
 		});
 
-		// it('should display choice selection WITH directive', function(){
-        //     // console.log($reselect.find('.reselect-rendered-selection').html());
-		// 	// expect($reselect.find('.reselect-rendered-selection').text()).toBe('asd');
-		// });
+		it('should display choice selection WITH directive', function(){
+			expect($reselect.find('.reselect-rendered-selection').text().trim()).toBe(choices[1].first_name + choices[1].email);
+		});
 
 	});
 

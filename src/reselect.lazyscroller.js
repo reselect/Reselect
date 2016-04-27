@@ -1,9 +1,13 @@
 Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyContainer, $compile){
 
+	var defaultOptions = {
+		scopeName: '$choice'
+	};
+
 	var LazyScroller = function($scope, options){
 		var self = this;
 
-		self.options = angular.extend({}, options);
+		self.options = angular.extend({}, defaultOptions, options);
 
 		self.$scope = $scope;
 
@@ -123,7 +127,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 						$index       : i
 					});
 
-					container.scope.$choice = self.choices[i];
+					container.scope[self.options.scopeName] = self.choices[i];
 				}
 			}
 		}
@@ -139,8 +143,10 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		for(var i = 0; i < self.numLazyContainers; i++){
 			var $choice = tpl.clone();
 
-			var lazyScope = self.$scope.$new();
-				lazyScope.$choice = {};
+			// HACK
+			var lazyScope = self.$scope.$parent.$parent.$new();
+				lazyScope.$options = self.$scope.$options;
+				lazyScope[self.options.scopeName] = {};
 
 			$compile($choice)(lazyScope);
 

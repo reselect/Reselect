@@ -200,6 +200,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self.LazyDropdown = new LazyScroller($scope, {
+						scopeName: self.parsedOptions.itemName,
 						container: self.$container,
 						list: self.$list,
 						choiceHeight: 36,
@@ -224,9 +225,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self._selectChoice = function(containerId) {
 						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
 
-						var value = angular.copy(selectedScope.$eval($attrs.value));
+						var value = angular.copy(self.parsedOptions.modelMapper(selectedScope));
 
-						$Reselect.selectValue(value, selectedScope.$choice);
+						$Reselect.selectValue(value, selectedScope[self.parsedOptions.itemName]);
 					};
 
 					/**
