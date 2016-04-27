@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-27T02:58:23.455Z
+ * Version: 0.0.1 - 2016-04-27T08:45:45.041Z
  * License: MIT
  */
 
@@ -963,29 +963,32 @@ Reselect.value('reselectDefaultOptions', {
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
 		replace     : true,
-		scope: {
-			ngModel         : '=',
-			reselectOptions : '='
-		},
+		scope		: true,
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];
 			var $transcludeElems = null;
 
-			transcludeFn($scope, function(clone){
+			transcludeFn($scope, function(clone, scp){
 				$transcludeElems = clone;
 				$element.append(clone);
 			}).detach();
 
+			// Wrap array of transcluded elements in a <div> so we can run css queries
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
+			// Transclude [reselect-choices] directive
 			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
+
+			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
+
+			// Transclude [reselect-selection] directive
 			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
 				$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
 
-			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
 			angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
 
+			// Store [reselect-choices]'s controller
 			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
 
 			$compile($selection)($Reselect.selection_scope);
@@ -1018,7 +1021,7 @@ Reselect.value('reselectDefaultOptions', {
 			 * Selection
 			 */
 
-			ctrl.selection_scope = $scope.$parent.$new();
+			ctrl.selection_scope = $scope.$new();
 			ctrl.selection_scope.$selection = null;
 
 			ctrl.rendered_selection = null;
@@ -1052,7 +1055,6 @@ Reselect.value('reselectDefaultOptions', {
 					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
 
 					var choiceMatch, valueSelectedMatch;
-
 
 					for(var i = 0; i < choices.length; i++){
 						if(!angular.isDefined(choices[i])){
@@ -1302,7 +1304,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 			var $choice = tpl.clone();
 
 			// HACK
-			var lazyScope = self.$scope.$parent.$parent.$new();
+			var lazyScope = self.$scope.$new();
 				lazyScope.$options = self.$scope.$options;
 				lazyScope[self.options.scopeName] = {};
 
@@ -1431,7 +1433,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * each choice in the options list
 					 */
 
-					transcludeFn(function(clone) {
+					transcludeFn(function(clone, scope) {
 						$reselectChoices.CHOICE_TEMPLATE.append(clone);
 					});
 

@@ -144,7 +144,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 			var $choice = tpl.clone();
 
 			// HACK
-			var lazyScope = self.$scope.$parent.$parent.$new();
+			var lazyScope = self.$scope.$new();
 				lazyScope.$options = self.$scope.$options;
 				lazyScope[self.options.scopeName] = {};
 

@@ -78,5 +78,30 @@ describe('Reselect Selection Test', function(){
 
 	});
 
+	describe('Selection Scope Checks', function(){
+		var $reselect;
+
+		beforeEach(function(){
+			$scope.ctrl.scopeCheck = '__SCOPE__';
+
+			$reselect = $compile('<reselect \
+        	                    ng-model="ctrl.value"> \
+                                <reselect-selection> \
+                                    {{ctrl.scopeCheck}} \
+                                </reselect-selection> \
+        	                    <reselect-choices \
+        	                        options="option in [1]"> \
+        	                    </reselect-options> \
+        	                </reselect>')($scope);
+
+			$rootScope.$digest();
+		});
+
+		it('should have access to outer scope', function(){
+			expect($reselect.find('.reselect-rendered-selection').text().trim()).toBe($scope.ctrl.scopeCheck);
+		});
+
+	});
+
 
 });

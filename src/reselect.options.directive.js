@@ -74,7 +74,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * each choice in the options list
 					 */
 
-					transcludeFn(function(clone) {
+					transcludeFn(function(clone, scope) {
 						$reselectChoices.CHOICE_TEMPLATE.append(clone);
 					});
 

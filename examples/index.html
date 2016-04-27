@@ -37,11 +37,10 @@
                         <reselect
                             reselect-options="simple.options1"
                             ng-model="simple.value">
-                            <div reselect-choices
-                                options="option in simple.mocks.single"
-                                value="$choice">
-                                    <span ng-bind="$choice"></span>
-                            </div reselect-choices>
+                            <reselect-choices
+                                options="option in simple.mocks.single">
+                                    <span ng-bind="option"></span>
+                            </reselect-choices>
                         </reselect>
 
                         <h3>Array of Objects:</h3>

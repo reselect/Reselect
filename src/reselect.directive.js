@@ -12,29 +12,32 @@ Reselect.value('reselectDefaultOptions', {
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
 		replace     : true,
-		scope: {
-			ngModel         : '=',
-			reselectOptions : '='
-		},
+		scope		: true,
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];
 			var $transcludeElems = null;
 
-			transcludeFn($scope, function(clone){
+			transcludeFn($scope, function(clone, scp){
 				$transcludeElems = clone;
 				$element.append(clone);
 			}).detach();
 
+			// Wrap array of transcluded elements in a <div> so we can run css queries
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
+			// Transclude [reselect-choices] directive
 			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
+
+			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
+
+			// Transclude [reselect-selection] directive
 			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
 				$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
 
-			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
 			angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
 
+			// Store [reselect-choices]'s controller
 			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
 
 			$compile($selection)($Reselect.selection_scope);
@@ -67,7 +70,7 @@ Reselect.value('reselectDefaultOptions', {
 			 * Selection
 			 */
 
-			ctrl.selection_scope = $scope.$parent.$new();
+			ctrl.selection_scope = $scope.$new();
 			ctrl.selection_scope.$selection = null;
 
 			ctrl.rendered_selection = null;
@@ -101,7 +104,6 @@ Reselect.value('reselectDefaultOptions', {
 					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
 
 					var choiceMatch, valueSelectedMatch;
-
 
 					for(var i = 0; i < choices.length; i++){
 						if(!angular.isDefined(choices[i])){
