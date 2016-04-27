@@ -84,9 +84,12 @@
                                 options="option in []">
                                     <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
                             </div reselect-choices>
-                            <reselect-no-option>
-
-                            </reselect-no-option>
+                            <reselect-no-choice>
+                                <div style="text-align:center; padding: 20px;">
+                                    <h2>CUSTOM MSGS</h2>
+                                    <button>BUTTONS</button>
+                                </div>
+                            </reselect-no-choice>
                         </reselect>
                     </div>
 
@@ -114,8 +117,7 @@
                                 <span ng-bind="$selection.data.title"></span>
                             </div>
                             <div reselect-choices
-                                remote="simple.remoteOptions"
-                                value="$choice">
+                                remote="simple.remoteOptions">
                                     <span ng-bind="$choice.data.title"></span>
                             </div>
                         </reselect>

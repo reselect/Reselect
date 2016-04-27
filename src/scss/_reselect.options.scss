@@ -34,6 +34,10 @@
 
 	position: relative;
 
+	&.reselect-options-container--autoheight{
+		height: auto !important;
+	}
+
 	&.disable-hover .reselect-option-choice{
 		pointer-events:none;
 	}
@@ -70,6 +74,10 @@
 
 	font-size: 11px;
 	font-weight: 400;
+}
+
+.reselect-static-option{
+	position: relative;
 }
 
 .reselect-option-choice{
