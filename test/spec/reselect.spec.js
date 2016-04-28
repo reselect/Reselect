@@ -10,7 +10,7 @@ describe('Reselect Test', function(){
 	                        options="option in ctrl.choices" \
 	                        value="$choice"> \
 	                            <span ng-bind="$choice.text"></span> - Choice \
-	                    </reselect-options> \
+	                    </reselect-choices> \
 	                </reselect>';
 
 	beforeEach(module('Reselect'));

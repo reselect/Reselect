@@ -37,6 +37,13 @@ Reselect.value('reselectDefaultOptions', {
 
 			angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
 
+			// Transclude [reselect-no-choice] directive
+			var $noChoice = angular.element($transcludeElems[0].querySelectorAll('.reselect-no-choice, [reselect-selection], reselect-selection'));
+
+			if($noChoice.length === 1){
+				angular.element($element[0].querySelectorAll('.reselect-empty-container')).html('').append($noChoice);
+			}
+
 			// Store [reselect-choices]'s controller
 			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
 
