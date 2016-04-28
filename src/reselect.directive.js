@@ -43,7 +43,7 @@ Reselect.value('reselectDefaultOptions', {
 			$compile($selection)($Reselect.selection_scope);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', function($scope, $element, reselectDefaultOptions, $timeout){
+		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, reselectDefaultOptions, $timeout, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -154,6 +154,28 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.parsedOptions = null;
 			ctrl.choices = [];
 
+            /**
+			 * Keyboard Support
+			 */
+
+            ctrl.handleKeyDown = function(evt) {
+                var key = evt.which;
+
+                if (ctrl.opened) {
+                   if (key === KEYS.ESC || key === KEYS.TAB) {
+                     ctrl.hideDropdown();
+
+                     evt.preventDefault();
+                   }
+                 } else {
+                   if (key === KEYS.ENTER || key === KEYS.SPACE) {
+                     ctrl.showDropdown();
+
+                     evt.preventDefault();
+                   }
+                 }
+            };
+
 			/**
 			 * Dropdown
 			 */
@@ -190,6 +212,8 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(){
 				ctrl.opened = false;
+
+                $scope.$emit('reselect.input.focus');
 			};
 
 			/**

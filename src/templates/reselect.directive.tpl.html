@@ -1,8 +1,10 @@
-<div class="reselect-container reselect">
+<div class="reselect-container reselect" ng-keydown="$reselect.handleKeyDown($event)">
 
 	<input type="hidden" value="{{ngModel}}"/>
 
 	<div class="reselect-selection"
+        tabindex="0"
+        focus-on="reselect.input.focus"
 		ng-class="{'reselect-selection--active' : $reselect.opened }"
 		ng-click="$reselect.toggleDropdown()">
 
