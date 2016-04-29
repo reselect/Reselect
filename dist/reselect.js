@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-04-27T18:08:25.730Z
+ * Version: 0.0.1 - 2016-04-29T03:49:04.859Z
  * License: MIT
  */
 
@@ -790,9 +790,6 @@
 })(this)
 
 /**
- * Common shared functionalities
- */
-/**
  * Reselect base
  */
 
@@ -858,10 +855,12 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
 Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
 
-    var DataAdapter = function(remoteOptions){
+    var DataAdapter = function(remoteOptions, parsedOptions){
         this.data = [];
         this.page = 1;
         this.pagination = {};
+
+        this.parsedOptions = parsedOptions;
 
         this.options = angular.extend({
             params: function(params){
@@ -900,7 +899,9 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
             params: params
         })
             .then(function(res){
-                return res.data;
+                return self.parsedOptions.source({
+                    '$remote': res.data
+                });
             })
             .then(this.options.onData)
             .then(function(choices){
@@ -1432,8 +1433,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 			replace: true,
 			compile: function(element, attrs) {
 
-				if (!attrs.options && !attrs.remote) {
-					throw new Error('"reselect-options" directive requires the [options] or [remote] attribute.');
+				if (!attrs.options) {
+					console.warn('"reselect-options" directive requires the [options] the attribute.');
+					return;
 				}
 
 				return function($scope, $element, $attrs, $ctrls, transcludeFn) {
@@ -1499,9 +1501,20 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 					self.DataAdapter = null;
 
-					if ($attrs.options) {
-						self.parsedOptions = ChoiceParser.parse($attrs.options);
+					self.parsedOptions = ChoiceParser.parse($attrs.options);
 
+					if ($attrs.remote) {
+						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
+
+						self.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, self.parsedOptions);
+
+						self.DataAdapter.prepareGetData = function(){
+							self.DataAdapter.page = 1;
+							self.DataAdapter.pagination = {};
+							self.DataAdapter.updateData([]);
+							self.render();
+						};
+					} else {
 						self.DataAdapter = new ReselectDataAdapter();
 						self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
 
@@ -1513,17 +1526,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							});
 						};
 
-					} else if ($attrs.remote) {
-						self.parsedOptions = $parse($attrs.remote)($scope.$parent);
-
-						self.DataAdapter = new ReselectAjaxDataAdapter(self.parsedOptions);
-
-						self.DataAdapter.prepareGetData = function(){
-							self.DataAdapter.page = 1;
-							self.DataAdapter.pagination = {};
-							self.DataAdapter.updateData([]);
-							self.render();
-						};
 					}
 
 					self.DataAdapter.init();
@@ -1671,7 +1673,7 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 		// 4 Value on (key,value)
 		// 5 Source expression (including filters)
 		// 6 Track by
-		
+
 		if (!match) {
 			throw uiSelectMinErr('iexp',
 				"Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
@@ -1700,6 +1702,7 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 			itemName: match[4] || match[2], // (lhs) Left-hand side,
 			keyName: match[3], //for (key, value) syntax
 			source: $parse(source),
+			sourceItem: source,
 			filters: filters,
 			trackByExp: match[6],
 			modelMapper: $parse(match[1] || match[4] || match[2]),
@@ -1786,4 +1789,7 @@ Reselect.directive('focusOn', ['$timeout', function($timeout){
     };
 }]);
 
+/**
+ * Common shared functionalities
+ */
 }).apply(this);
