@@ -1,7 +1,7 @@
 (function(){
 	'use strict';
 
-	angular.module('simple', ['Reselect'])
+	angular.module('simple', ['Reselect', 'ngSanitize'])
 
 	.service('MOCK_DATA', function($q, $http){
 		var defer = $q.defer();
@@ -22,14 +22,21 @@
 		return defer.promise;
 	})
 
-	.controller('SimpleCtrl', ['$scope', '$timeout', 'MOCK_DATA', function($scope, $timeout, MOCK_DATA){
+	.controller('SimpleCtrl', ['$scope', '$rootScope', '$timeout', 'MOCK_DATA', function($scope, $rootScope, $timeout, MOCK_DATA){
 
 		var self = $scope.simple = this;
 
 		self.mocks = {};
 
+		self.value = 'HTML';
+		self.objects1 = 3;
+
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);
+
+			self.objects2 = data.objects[2];
+
+			self.ready = true;
 		});
 
 		self.remoteOptions = {
