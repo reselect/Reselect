@@ -61,8 +61,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 			replace: true,
 			compile: function(element, attrs) {
 
-				if (!attrs.options && !attrs.remote) {
-					throw new Error('"reselect-options" directive requires the [options] or [remote] attribute.');
+				if (!attrs.options) {
+					console.warn('"reselect-options" directive requires the [options] the attribute.');
+					return;
 				}
 
 				return function($scope, $element, $attrs, $ctrls, transcludeFn) {
@@ -128,9 +129,20 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 					self.DataAdapter = null;
 
-					if ($attrs.options) {
-						self.parsedOptions = ChoiceParser.parse($attrs.options);
+					self.parsedOptions = ChoiceParser.parse($attrs.options);
 
+					if ($attrs.remote) {
+						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
+
+						self.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, self.parsedOptions);
+
+						self.DataAdapter.prepareGetData = function(){
+							self.DataAdapter.page = 1;
+							self.DataAdapter.pagination = {};
+							self.DataAdapter.updateData([]);
+							self.render();
+						};
+					} else {
 						self.DataAdapter = new ReselectDataAdapter();
 						self.DataAdapter.updateData(self.parsedOptions.source($scope.$parent));
 
@@ -142,17 +154,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							});
 						};
 
-					} else if ($attrs.remote) {
-						self.parsedOptions = $parse($attrs.remote)($scope.$parent);
-
-						self.DataAdapter = new ReselectAjaxDataAdapter(self.parsedOptions);
-
-						self.DataAdapter.prepareGetData = function(){
-							self.DataAdapter.page = 1;
-							self.DataAdapter.pagination = {};
-							self.DataAdapter.updateData([]);
-							self.render();
-						};
 					}
 
 					self.DataAdapter.init();

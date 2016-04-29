@@ -36,7 +36,7 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 		// 4 Value on (key,value)
 		// 5 Source expression (including filters)
 		// 6 Track by
-		
+
 		if (!match) {
 			throw uiSelectMinErr('iexp',
 				"Expected expression in form of '_item_ in _collection_[ track by _id_]' but got '{0}'.",
@@ -65,6 +65,7 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 			itemName: match[4] || match[2], // (lhs) Left-hand side,
 			keyName: match[3], //for (key, value) syntax
 			source: $parse(source),
+			sourceItem: source,
 			filters: filters,
 			trackByExp: match[6],
 			modelMapper: $parse(match[1] || match[4] || match[2]),
