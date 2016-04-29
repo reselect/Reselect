@@ -13,7 +13,7 @@
 		<ul class="reselect-options-list" ng-show="$options.DataAdapter.data.length"></ul>
 
 		<div class="reselect-static-option reselect-empty-container"
-			ng-show="!$options.DataAdapter.data.length && !$options.is_loading">
+			ng-show="!$options.haveChoices && !$options.is_loading">
 			<div class="reselect-option reselect-option--static reselect-option-choice">
 				{{$options.options.noOptionsText}}
 			</div>

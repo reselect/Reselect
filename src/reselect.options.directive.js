@@ -62,7 +62,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 			compile: function(element, attrs) {
 
 				if (!attrs.options) {
-					console.warn('"reselect-options" directive requires the [options] the attribute.');
+					console.warn('[reselect-options] directive requires the [options] attribute.');
 					return;
 				}
 
@@ -101,6 +101,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 					self.search_term = '';
 					self.remotePagination = {};
+
+					self.haveChoices = false;
 
 					self.CHOICE_TEMPLATE = angular.element(
 						'<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($containerId)"></li>'
@@ -240,7 +242,10 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || self.DataAdapter.data;
 
-						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length){
+						// Check if choices is empty
+						self.haveChoices = !!self.LazyDropdown.choices.length;
+
+						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							var dimensions = self.LazyDropdown.renderContainer();
 							self.LazyDropdown._calculateLazyRender(true);
 
