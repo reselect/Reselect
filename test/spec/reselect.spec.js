@@ -68,15 +68,34 @@ describe('Reselect Test', function(){
 		// });
 	});
 
-    describe('controller', function(){
+    describe('Controller', function(){
 
-        var ctrl, dropdown;
+        var ctrl, $dropdown;
 
         beforeEach(function() {
             $reselect = $compile(template)($scope);
             $rootScope.$digest();
             ctrl = $reselect.controller('reselect');
-            dropdown = $reselect.find('.reselect-dropdown');
+            $dropdown = $reselect.find('.reselect-dropdown');
+        });
+
+        function isDropdownOpen() {
+            $rootScope.$digest();
+            return $dropdown.hasClass('reselect-dropdown--opened');
+        };
+
+        describe('renderPlaceholder', function() {
+            it('should render a custom placeholder', function() {
+                ctrl.options.placeholderTemplate = function() {
+                    return 'foo'
+                };
+
+                ctrl.renderPlaceholder();
+
+                $rootScope.$digest();
+
+                expect($reselect.find('.reselect-rendered-placeholder').text()).toBe('foo');
+            });
         });
 
         describe('handleKeyDown', function() {
@@ -88,7 +107,7 @@ describe('Reselect Test', function(){
                     preventDefault: angular.noop
                 });
 
-                expect(ctrl.opened).toBe(true);
+                expect(isDropdownOpen()).toBe(true);
             });
 
             it('should close the dropdown when the ESC key is pressed', function() {
@@ -99,7 +118,24 @@ describe('Reselect Test', function(){
                     preventDefault: angular.noop
                 });
 
-                expect(ctrl.opened).toBe(false);
+                expect(isDropdownOpen()).toBe(false);
+            });
+        });
+
+        describe('toggleDropdown', function() {
+            it('should open the dropdown if it is closed', function() {
+                ctrl.opened = false;
+
+                ctrl.toggleDropdown();
+
+                expect(isDropdownOpen()).toBe(true);
+            });
+            it('should close the dropdown if it is open', function() {
+                ctrl.opened = true;
+
+                ctrl.toggleDropdown();
+
+                expect(isDropdownOpen()).toBe(false);
             });
         });
     })
