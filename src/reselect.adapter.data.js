@@ -59,10 +59,12 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
 Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
 
-    var DataAdapter = function(remoteOptions){
+    var DataAdapter = function(remoteOptions, parsedOptions){
         this.data = [];
         this.page = 1;
         this.pagination = {};
+
+        this.parsedOptions = parsedOptions;
 
         this.options = angular.extend({
             params: function(params){
@@ -101,7 +103,9 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
             params: params
         })
             .then(function(res){
-                return res.data;
+                return self.parsedOptions.source({
+                    '$remote': res.data
+                });
             })
             .then(this.options.onData)
             .then(function(choices){

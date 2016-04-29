@@ -124,11 +124,11 @@
                             ng-model="simple.value4">
                             <div reselect-selection>
                                 <span ng-bind="$selection"></span>
-                                <span ng-bind="$selection.data.title"></span>
                             </div>
                             <div reselect-choices
+                                options="option.data.title as option in $remote"
                                 remote="simple.remoteOptions">
-                                    <span ng-bind="$choice.data.title"></span>
+                                    <span ng-bind="option.data.title"></span>
                             </div>
                         </reselect>
                     </div>
