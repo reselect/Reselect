@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="simple">
+    <head>
+        <meta charset="UTF-8">
+        <title>Reselect by alexcheuk</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+        <script src="angular.min.js"></script>
+        <script src="angular-sanitize.min.js"></script>
+        <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"> -->
+        <!-- ui-select files -->
+        <script src="libs/reselect.js"></script>
+        <link rel="stylesheet" href="libs/reselect.css">
+        <script src="simple.js"></script>
+    </head>
+    <body>
+        <section class="header">
+            <h1 class="project-name">Reselect</h1>
+            <h2 class="project-tagline"></h2>
+            <a href="https://github.com/alexcheuk/Reselect" class="btn">View on GitHub</a>
+            <a href="https://github.com/alexcheuk/Reselect/zipball/master" class="btn">Download .zip</a>
+            <a href="https://github.com/alexcheuk/Reselect/tarball/master" class="btn">Download .tar.gz</a>
+        </section>
+        <section class="main-content">
+            <div ng-controller="SimpleCtrl">
+
+                <div ng-if="simple.ready">
+                    <h2>Basic Example</h2>
+                    <div style="padding-bottom: 20px">
+                        <h3>Array of Strings:</h3>
+
+                        <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
+                        <reselect
+                            reselect-options="simple.options1"
+                            ng-model="simple.value">
+                            <reselect-choices
+                                options="option in simple.mocks.single">
+                                    <span ng-bind-html="option | rshighlight : $options.search_term"></span>
+                            </reselect-choices>
+                        </reselect>
+
+                        <h3>Array of Objects:</h3>
+
+                        <p><strong>Selected Value:</strong> <span ng-bind="simple.objects1"></span></p>
+                        <reselect
+                            reselect-options="simple.options1"
+                            ng-model="simple.objects1">
+                            <div reselect-selection>
+                                <span ng-bind="$choice.first_name"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option.id as option in simple.mocks.objects track by id">
+                                    <span ng-bind-html="option.first_name | rshighlight : $options.search_term"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                        </reselect>
+
+                        <p><strong>Selected Value:</strong> <small ng-bind="simple.objects2|json"></small></p>
+                        <reselect
+                            reselect-options="simple.options1"
+                            ng-model="simple.objects2">
+                            <div reselect-selection>
+                                <span ng-bind="$choice.id"></span> - <span ng-bind="$selection.first_name"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in simple.mocks.objects">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                        </reselect>
+                    </div>
+
+                    <h3>Custom No Options</h3>
+                    <div style="padding-bottom: 20px">
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                no-options-text="Custom text message"
+                                options="option in []">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                            <div reselect-no-choice>
+                                <div style="text-align:center; padding: 20px;">
+                                    <h2>CUSTOM MSGS</h2>
+                                    <button>BUTTONS</button>
+                                </div>
+                            </div>
+                        </reselect>
+
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in []">
+                            </div reselect-choices>
+                        </reselect>
+                    </div>
+
+                    <h3>Allow Invalid</h3>
+                    <div style="padding-bottom: 20px">
+                        <reselect
+                            reselect-options="{allowInvalid: true}"
+                            ng-model="simple.value2">
+                            <div reselect-selection>
+                                <span ng-bind="$selection.text"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in simple.choices1000 track by text">
+                                    <span ng-bind="option.text"></span> - Choice {{$index}}
+                            </div reselect-choices>
+                        </reselect>
+                    </div>
+
+                    <h3>Remote Fetching</h3>
+                    <div style="padding-bottom: 20px">
+                        <reselect
+                            ng-model="simple.value4">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option.data.title as option in $remote"
+                                remote="simple.remoteOptions">
+                                    <span ng-bind="option.data.title"></span>
+                            </div>
+                        </reselect>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="site-footer">
+                <span class="site-footer-owner"><a href="https://github.com/alexcheuk/Reselect">Reselect</a> is maintained by <a href="https://github.com/alexcheuk">alexcheuk</a>.</span>
+                <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+            </footer>
+        </section>
+
+    </body>
+</html>
