@@ -33,7 +33,9 @@ gulp.task('build', ['scripts', 'styles'], function() {
 });
 
 gulp.task('dev', ['watch', 'dev-watch', 'dev-karma'], function() {
-    connect.server();
+    connect.server({
+        root: 'examples'
+    });
 });
 
 gulp.task('dev-watch', function() {
@@ -119,6 +121,7 @@ gulp.task('scripts', function() {
             pkg: config.pkg
         }))
         .pipe($.footer('\n}).apply(this);'))
+        .pipe(gulp.dest('examples/libs'))
         .pipe(gulp.dest('dist'))
         .pipe($.uglify({
             preserveComments: 'some'
@@ -126,6 +129,7 @@ gulp.task('scripts', function() {
         .pipe($.rename({
             ext: '.min.js'
         }))
+        .pipe(gulp.dest('examples/libs'))
         .pipe(gulp.dest('dist'));
 
 });
@@ -142,11 +146,13 @@ gulp.task('styles', function() {
             pkg: config.pkg
         }))
         .pipe($.rename('reselect.css'))
+        .pipe(gulp.dest('examples/libs'))
         .pipe(gulp.dest('dist'))
         .pipe($.minifyCss())
         .pipe($.rename({
             ext: '.min.css'
         }))
+        .pipe(gulp.dest('examples/libs'))
         .pipe(gulp.dest('dist'));
 
 });

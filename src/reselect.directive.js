@@ -226,7 +226,7 @@ Reselect.value('reselectDefaultOptions', {
 			/**
 			 * Initialization
 			 */
-			
+
 			ctrl.initialize = function(){
 				ctrl.renderPlaceholder();
 			};
