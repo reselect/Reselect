@@ -96,7 +96,7 @@ gulp.task('scripts', function() {
             cb(null, file);
         });
 
-        return gulp.src(['src/common.js', 'src/reselect.js', 'src/reselect*.js'])
+        return gulp.src(['src/reselect.js', 'src/reselect*.js', 'src/common.js'])
             .pipe($.plumber({
                 errorHandler: handleError
             }))
