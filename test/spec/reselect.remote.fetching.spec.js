@@ -7,18 +7,22 @@ describe('Remote Fetching Test', function(){
 
     //set up template
     var template = '<reselect\
-                        ng-model="simple.value4">\
+                        ng-model="ctrl">\
                         <div reselect-selection>\
                             <span ng-bind="$selection"></span>\
                             <span ng-bind="$selection.data.title"></span>\
                         </div>\
                         <div reselect-choices\
-                            remote="simple.remoteOptions">\
-                            <span ng-bind="$choice.data.first_name"></span>\
+                            remote="remoteOptions">\
+                            TEST \
                         </div>\
                     </reselect>';
+                    // make api call, get results
+                    // setting ctrl model as ctrl.value?
+                    // remote is set to ctrl.remoteOptions that's defined beforeEach to be compiled?
+                    // test what is binded from remote
 
-    //set up module
+    //loads module
     beforeEach(module('Reselect'));
 
     //inject dependencies
@@ -28,7 +32,9 @@ describe('Remote Fetching Test', function(){
         $compile     = _$compile_;
         $httpBackend = _$httpBackend_;
 
+        // set up ctrl
         $scope.ctrl = {};
+        $scope.ctrl.remoteOptions = {};
 
         default_result = [
             { "id": 1, "gender": "Male", "first_name": "Gerald", "last_name": "Gonzales", "email": "ggonzales0@joomla.org", "ip_address": "153.239.46.41" },
@@ -38,16 +44,28 @@ describe('Remote Fetching Test', function(){
 
         $httpBackend.when('GET', 'http://mock_data/').respond(default_result);
 
-        $reselect = $compile(template)($scope);
-        $rootScope.$digest();
+        // set $reselect as compiled template
+
+        // $reselect = $compile(template)($scope);
+
+        // fire watcher to evaluate expressions
+
+        // $rootScope.$digest();
     }));
+
 
     // test to retrieve data, should check that first item in select dropdown matches first item in response
     it('should retrieve data', function(){
+
         $httpBackend.expectGET('http://mock_data/');
+
+        expect($reselect.)
+        $httpBackend.flush();
         //expect($reselect.hasClass('reselect-options-container')).toBe(true);
         //expect($reselect.find('.reselect-option-choice').first().text().trim()).toBe(default_results[0].first_name);
         //flush after done test
-        $httpBackend.flush();
     });
+    it('should have text', function(){
+
+    })
 })
