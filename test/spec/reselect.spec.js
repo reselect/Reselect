@@ -2,7 +2,7 @@
 
 describe('Reselect Test', function(){
 
-	var $scope, $rootScope, $compile;
+	var $scope, $rootScope, $compile, $reselect;
 
 	var template = '<reselect \
 	                    ng-model="ctrl.value"> \
@@ -25,7 +25,6 @@ describe('Reselect Test', function(){
 
 	describe('Initialization', function(){
 
-		var $reselect;
 
 		beforeEach(function(){
 			$scope.ctrl.choices = [
@@ -69,5 +68,39 @@ describe('Reselect Test', function(){
 		// });
 	});
 
+    describe('controller', function(){
 
+        var ctrl, dropdown;
+
+        beforeEach(function() {
+            $reselect = $compile(template)($scope);
+            $rootScope.$digest();
+            ctrl = $reselect.controller('reselect');
+            dropdown = $reselect.find('.reselect-dropdown');
+        });
+
+        describe('handleKeyDown', function() {
+            it('should open the dropdown when the ENTER key is pressed', function() {
+                ctrl.opened = false;
+
+                ctrl.handleKeyDown({
+                    which: 13, //ENTER
+                    preventDefault: angular.noop
+                });
+
+                expect(ctrl.opened).toBe(true);
+            });
+
+            it('should close the dropdown when the ESC key is pressed', function() {
+                ctrl.opened = true;
+
+                ctrl.handleKeyDown({
+                    which: 27, // ESC
+                    preventDefault: angular.noop
+                });
+
+                expect(ctrl.opened).toBe(false);
+            });
+        });
+    })
 });
