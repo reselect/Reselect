@@ -1,40 +1,66 @@
 'use strict';
 
 describe('Remote Fetching Test', function(){
-    var $scope, $rootScope, $compile, $httpBackend, $reselect;
+    var $scope, $rootScope, $compile, $httpBackend, $reselect, $timeout, ctrl;
 
     var default_result = [];
 
     //set up template
     var template = '<reselect\
-                        ng-model="ctrl">\
+                        ng-model="ctrl.value">\
                         <div reselect-selection>\
                             <span ng-bind="$selection"></span>\
-                            <span ng-bind="$selection.data.title"></span>\
                         </div>\
                         <div reselect-choices\
-                            remote="remoteOptions">\
-                            TEST \
+                            options="option.data as option in $remote"\
+                            remote="ctrl.remoteOptions">\
+                            <span ng-bind="option.first_name"></span> \
                         </div>\
                     </reselect>';
                     // make api call, get results
-                    // setting ctrl model as ctrl.value?
-                    // remote is set to ctrl.remoteOptions that's defined beforeEach to be compiled?
+                    // set model as $scope.ctrl and pass in remoteOptions
                     // test what is binded from remote
 
     //loads module
     beforeEach(module('Reselect'));
 
     //inject dependencies
-    beforeEach(inject(function(_$rootScope_, _$compile_, _$httpBackend_){
+    beforeEach(inject(function(_$rootScope_, _$compile_, _$httpBackend_, _$timeout_){
         $rootScope   = _$rootScope_;
         $scope       = $rootScope.$new();
         $compile     = _$compile_;
         $httpBackend = _$httpBackend_;
+        $timeout     = _$timeout_;
 
         // set up ctrl
         $scope.ctrl = {};
-        $scope.ctrl.remoteOptions = {};
+        $scope.ctrl.remoteOptions = {
+            endpoint: function(params, pagination){
+                if(params.search_term){
+                    return 'http://reselect.com/foo/bar/';
+                }else{
+                    return 'http://reselect.com/foo/bar/';
+                }
+
+            },
+            params: function(params, pagination){
+                var query = {
+                    after: pagination.more,
+                    limit: 10,
+                    q    : params.search_term,
+                    t    : 'all',
+                    sort : 'relevance'
+                };
+
+                return query;
+            },
+            onData: function(data){
+                // console.log('data', data[0].first_name);
+                return {
+                    data: data
+                };
+            }
+        };
 
         default_result = [
             { "id": 1, "gender": "Male", "first_name": "Gerald", "last_name": "Gonzales", "email": "ggonzales0@joomla.org", "ip_address": "153.239.46.41" },
@@ -42,30 +68,56 @@ describe('Remote Fetching Test', function(){
             { "id": 3, "gender": "Female", "first_name": "Rebecca", "last_name": "Brown", "email": "rbrown2@zdnet.com", "ip_address": "173.237.84.89" }
         ]
 
-        $httpBackend.when('GET', 'http://mock_data/').respond(default_result);
+        $httpBackend.when('GET', /.*?foo\/bar\/?.*/g).respond(default_result);
 
         // set $reselect as compiled template
 
-        // $reselect = $compile(template)($scope);
+        $reselect = $compile(template)($scope);
 
         // fire watcher to evaluate expressions
 
-        // $rootScope.$digest();
+        $rootScope.$digest();
+        ctrl = $reselect.controller('reselect');
+
+
     }));
 
-
-    // test to retrieve data, should check that first item in select dropdown matches first item in response
-    it('should retrieve data', function(){
-
-        $httpBackend.expectGET('http://mock_data/');
-
-        expect($reselect.)
-        $httpBackend.flush();
-        //expect($reselect.hasClass('reselect-options-container')).toBe(true);
-        //expect($reselect.find('.reselect-option-choice').first().text().trim()).toBe(default_results[0].first_name);
-        //flush after done test
+    afterEach(function () {
+        $httpBackend.verifyNoOutstandingExpectation();
+        $httpBackend.verifyNoOutstandingRequest();
     });
-    it('should have text', function(){
+
+    it('should retrieve data when select is clicked', function(){
+        // expect backend call
+        $httpBackend.expectGET(/.*?foo\/bar\/?.*/g);
+        // click dropdown to initiate call
+        $reselect.find('.reselect-selection')[0].click();
+        // flush backend
+        $httpBackend.flush();
+    });
+
+    it('should have a populated options list after click', function(){
+        $reselect.find('.reselect-selection')[0].click();
+
+        $rootScope.$digest();
+
+        $httpBackend.flush();
+
+        // check if dropdown is defined
+        expect($reselect.hasClass('.reselect-options-list')).toBeDefined();
+        // check if dropdown has atleast one item returned from backend
+        expect($reselect.find('.reselect-dropdown--opened').length).toBe(1);
 
     })
+
+    it('should have options that match retrieved data', function(){
+        $reselect.find('.reselect-selection')[0].click();
+
+        $rootScope.$digest();
+
+        $httpBackend.flush();
+
+        expect($reselect.find('.reselect-option').eq(0).text().trim()).toBe(default_result[0].first_name);
+
+    });
 })
