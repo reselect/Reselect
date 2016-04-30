@@ -61,3 +61,16 @@ Reselect.directive('focusOn', ['$timeout', function($timeout){
         }
     };
 }]);
+
+Reselect.directive('blurOn', ['$timeout', function($timeout){
+    return {
+        restrict: 'A',
+        link: function($scope, $elem, $attrs){
+            $scope.$on($attrs.blurOn, function(){
+                $timeout(function(){
+                    $elem[0].blur();
+                });
+            });
+        }
+    };
+}]);

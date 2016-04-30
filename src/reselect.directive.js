@@ -179,6 +179,10 @@ Reselect.value('reselectDefaultOptions', {
                      ctrl.showDropdown();
 
                      evt.preventDefault();
+                   } else if(key === KEYS.ESC) {
+                     $scope.$emit('reselect.input.blur');
+
+                     evt.preventDefault();
                    }
                  }
             };
@@ -201,7 +205,7 @@ Reselect.value('reselectDefaultOptions', {
 				}
 
 				$scope.$apply(function(){
-					ctrl.hideDropdown();
+					ctrl.hideDropdown(true);
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);
@@ -217,10 +221,12 @@ Reselect.value('reselectDefaultOptions', {
 				angular.element(document).on('click', hideDropdownOnClick);
 			};
 
-			ctrl.hideDropdown = function(){
+			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
 
-                $scope.$emit('reselect.input.focus');
+                if(!blurInput) {
+                    $scope.$emit('reselect.input.focus');
+                }
 			};
 
 			/**
