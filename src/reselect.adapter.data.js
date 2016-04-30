@@ -17,12 +17,15 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
     DataAdapter.prototype.getData = function(search_term){
         var self = this;
 
+        // This function requires the return of a deferred promise
         var defer = $q.defer();
-        var choices;
 
+        var choices;
         var search_options = {};
 
         if(search_term){
+
+            // Fuzzy Search
             var fuse = new Fuse(this.data, search_options);
 
             choices = fuse.search(search_term);
