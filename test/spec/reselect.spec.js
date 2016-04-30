@@ -7,9 +7,8 @@ describe('Reselect Test', function(){
 	var template = '<reselect \
 	                    ng-model="ctrl.value"> \
 	                    <reselect-choices \
-	                        options="option in ctrl.choices" \
-	                        value="$choice"> \
-	                            <span ng-bind="$choice.text"></span> - Choice \
+	                        options="option in ctrl.choices" \> \
+	                            <span ng-bind="option"></span> - Choice \
 	                    </reselect-choices> \
 	                </reselect>';
 
