@@ -24,7 +24,6 @@ describe('Reselect Test', function(){
 
 	describe('Initialization', function(){
 
-
 		beforeEach(function(){
 			$scope.ctrl.choices = [
 				{ "id": 1, "gender": "Male", "first_name": "Gerald", "last_name": "Gonzales", "email": "ggonzales0@joomla.org", "ip_address": "153.239.46.41" },
@@ -76,6 +75,7 @@ describe('Reselect Test', function(){
             $rootScope.$digest();
             ctrl = $reselect.controller('reselect');
             $dropdown = $reselect.find('.reselect-dropdown');
+            spyOn($scope, '$emit');
         });
 
         function isDropdownOpen() {
@@ -119,6 +119,16 @@ describe('Reselect Test', function(){
 
                 expect(isDropdownOpen()).toBe(false);
             });
+            it('should $emit lose focus event when the ESC key is pressed while the dropdown is closed', function() {
+                ctrl.opened = false;
+
+                ctrl.handleKeyDown({
+                    which: 27, // ESC
+                    preventDefault: angular.noop
+                });
+
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.input.blur');
+            });
         });
 
         describe('toggleDropdown', function() {
@@ -135,6 +145,28 @@ describe('Reselect Test', function(){
                 ctrl.toggleDropdown();
 
                 expect(isDropdownOpen()).toBe(false);
+            });
+        });
+        describe('showDropdown', function() {
+            beforeEach(function() {
+                ctrl.showDropdown();
+            });
+            it('should open the dropdown', function() {
+                expect(isDropdownOpen()).toBe(true);
+            });
+            it('should emit focus seach input event', function() {
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.search.focus');
+            });
+        });
+        describe('hideDropdown', function() {
+            beforeEach(function() {
+                ctrl.hideDropdown();
+            });
+            it('should open the dropdown', function() {
+                expect(isDropdownOpen()).toBe(false);
+            });
+            it('should emit focus select input event', function() {
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.input.focus');
             });
         });
     })
