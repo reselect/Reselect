@@ -63,6 +63,14 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.opened = false;
 			ctrl.transcludeCtrls = {};
 
+			ctrl.parsedChoices = null;
+			ctrl.DataAdapter = null;
+
+			ctrl.search_term = '';
+			ctrl.isDisabled = false; // TODO
+			ctrl.isFetching = false; // TODO
+			ctrl.isRequired = false; // TODO
+
 			/**
 			 * Placeholder
 			 */
@@ -107,8 +115,8 @@ Reselect.value('reselectDefaultOptions', {
 				var valueToBeSelected;
 
 				if(!ctrl.options.allowInvalid && angular.isDefined(valueSelected)){
-					var choices = ctrl.transcludeCtrls.$ReselectChoice.DataAdapter.data;
-					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
+					var choices = ctrl.DataAdapter.data;
+					var trackBy = ctrl.parsedOptions.trackByExp;
 
 					var choiceMatch, valueSelectedMatch;
 
@@ -118,9 +126,9 @@ Reselect.value('reselectDefaultOptions', {
 						}
 
 						var scp = {};
-						scp[ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.itemName] = choices[i];
+						scp[ctrl.parsedOptions.itemName] = choices[i];
 
-						choiceMatch = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.modelMapper(scp);
+						choiceMatch = ctrl.parsedOptions.modelMapper(scp);
 						valueSelectedMatch = valueSelected;
 
 						if(choiceMatch === valueSelectedMatch){
@@ -128,7 +136,14 @@ Reselect.value('reselectDefaultOptions', {
 							break;
 						}
 					}
-				}else{
+				}
+				/**
+				 * Allow Invalid
+				 *
+				 * This options allows the select to try and resolve a possible
+				 * value when an invalid value is set to the ng-model
+				 */
+				else {
 					valueToBeSelected = valueSelected;
 				}
 
