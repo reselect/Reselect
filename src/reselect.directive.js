@@ -12,7 +12,9 @@ Reselect.value('reselectDefaultOptions', {
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
 		replace     : true,
-		scope		: true,
+		scope		: {
+			reselectOptions: '='
+		},
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];
@@ -120,20 +122,22 @@ Reselect.value('reselectDefaultOptions', {
 
 					var choiceMatch, valueSelectedMatch;
 
-					for(var i = 0; i < choices.length; i++){
-						if(!angular.isDefined(choices[i])){
-							continue;
-						}
+					if(choices && choices.length >= 0){
+						for(var i = 0; i < choices.length; i++){
+							if(!angular.isDefined(choices[i])){
+								continue;
+							}
 
-						var scp = {};
-						scp[ctrl.parsedOptions.itemName] = choices[i];
+							var scp = {};
+							scp[ctrl.parsedOptions.itemName] = choices[i];
 
-						choiceMatch = ctrl.parsedOptions.modelMapper(scp);
-						valueSelectedMatch = valueSelected;
+							choiceMatch = ctrl.parsedOptions.modelMapper(scp);
+							valueSelectedMatch = valueSelected;
 
-						if(choiceMatch === valueSelectedMatch){
-							valueToBeSelected = choices[i];
-							break;
+							if(choiceMatch === valueSelectedMatch){
+								valueToBeSelected = choices[i];
+								break;
+							}
 						}
 					}
 				}
@@ -143,7 +147,7 @@ Reselect.value('reselectDefaultOptions', {
 				 * This options allows the select to try and resolve a possible
 				 * value when an invalid value is set to the ng-model
 				 */
-				else {
+				else if(ctrl.options.allowInvalid) {
 					valueToBeSelected = valueSelected;
 				}
 
