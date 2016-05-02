@@ -109,6 +109,10 @@ Reselect.value('reselectDefaultOptions', {
 				ctrl.hideDropdown();
 			};
 
+			ctrl.clearSearch = function(){
+				ctrl.search_term = '';
+			};
+
 			// Override ng-model render function
 			$ngModel.$render = function(){
 				var valueSelected = $ngModel.$viewValue;
@@ -240,6 +244,9 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
+
+				// Clear search
+				ctrl.clearSearch();
 
                 if(!blurInput) {
                     $scope.$emit('reselect.input.focus');
