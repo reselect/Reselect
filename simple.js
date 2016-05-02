@@ -29,6 +29,7 @@
 		self.mocks = {};
 
 		self.value = 'HTML';
+		self.invalidValue = 50;
 		self.objects1 = 3;
 
 		MOCK_DATA.then(function(data){
