@@ -69,7 +69,6 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.search_term = '';
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
-			ctrl.isRequired = false; // TODO
 
 			/**
 			 * Placeholder
@@ -104,7 +103,7 @@ Reselect.value('reselectDefaultOptions', {
 
 				ctrl.value = value;
 
-				ctrl.renderSelection(ctrl.value, $choice);
+				ctrl.renderSelection(ctrl.value, $choice || value);
 
 				ctrl.hideDropdown();
 			};
@@ -118,7 +117,7 @@ Reselect.value('reselectDefaultOptions', {
 				var valueSelected = $ngModel.$viewValue;
 				var valueToBeSelected;
 
-				if(!ctrl.options.allowInvalid && angular.isDefined(valueSelected)){
+				if(angular.isDefined(valueSelected)){
 					var choices = ctrl.DataAdapter.data;
 					var trackBy = ctrl.parsedOptions.trackByExp;
 
@@ -143,31 +142,31 @@ Reselect.value('reselectDefaultOptions', {
 						}
 					}
 				}
-				/**
-				 * Allow Invalid
-				 *
-				 * This options allows the select to try and resolve a possible
-				 * value when an invalid value is set to the ng-model
-				 */
-				else if(ctrl.options.allowInvalid) {
-					// TODO
-				}
+
 
 				if(valueToBeSelected){
 					ctrl.selectValue($ngModel.$viewValue, valueToBeSelected);
 				}else{
-					if(ctrl.options.resolveInvalid && typeof ctrl.options.resolveInvalid === 'function'){
+					/**
+					 * Allow Invalid
+					 *
+					 * This options allows the select to try and resolve a possible
+					 * value when an invalid value is set to the ng-model
+					 */
+					if(ctrl.options.allowInvalid === true){
+						ctrl.selectValue(valueSelected);
+					}else if(ctrl.options.allowInvalid && typeof ctrl.options.allowInvalid === 'function'){
 						var validateDone = function(value){
 							if(value !== undefined){
 								ctrl.selectValue(value);
 							}else{
-								$ngModel.$setViewValue(valueToBeSelected);
+								ctrl.selectValue(undefined);
 							}
 						};
 
-						ctrl.options.resolveInvalid(valueSelected, validateDone);
+						ctrl.options.allowInvalid(valueSelected, validateDone);
 					}else{
-						$ngModel.$setViewValue(valueToBeSelected);
+						ctrl.selectValue(undefined);
 					}
 
 				}
