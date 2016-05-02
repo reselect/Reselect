@@ -35,7 +35,6 @@
 
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
                         <reselect
-                            reselect-options="simple.options1"
                             ng-model="simple.value">
                             <reselect-choices
                                 options="option in simple.mocks.single">
@@ -47,7 +46,6 @@
 
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.objects1"></span></p>
                         <reselect
-                            reselect-options="simple.options1"
                             ng-model="simple.objects1">
                             <div reselect-selection>
                                 <span ng-bind="$choice.first_name"></span>
@@ -60,7 +58,6 @@
 
                         <p><strong>Selected Value:</strong> <small ng-bind="simple.objects2|json"></small></p>
                         <reselect
-                            reselect-options="simple.options1"
                             ng-model="simple.objects2">
                             <div reselect-selection>
                                 <span ng-bind="$choice.id"></span> - <span ng-bind="$selection.first_name"></span>

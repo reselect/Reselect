@@ -12,9 +12,7 @@ Reselect.value('reselectDefaultOptions', {
 		require     : ['^reselect', '^ngModel'],
 		transclude  : true,
 		replace     : true,
-		scope		: {
-			reselectOptions: '='
-		},
+		scope		: true,
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];
@@ -52,13 +50,13 @@ Reselect.value('reselectDefaultOptions', {
 			$compile($selection)($Reselect.selection_scope);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, reselectDefaultOptions, $timeout, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
 
 			// Options
-			ctrl.options = angular.extend({}, reselectDefaultOptions, $scope.reselectOptions);
+			ctrl.options = angular.extend({}, reselectDefaultOptions, $parse($attrs.reselectOptions)($scope));
 
 			// Variables
 			ctrl.value = null;
@@ -148,7 +146,7 @@ Reselect.value('reselectDefaultOptions', {
 				 * value when an invalid value is set to the ng-model
 				 */
 				else if(ctrl.options.allowInvalid) {
-					valueToBeSelected = valueSelected;
+					// TODO
 				}
 
 				if(valueToBeSelected){
