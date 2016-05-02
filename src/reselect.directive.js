@@ -50,18 +50,26 @@ Reselect.value('reselectDefaultOptions', {
 			$compile($selection)($Reselect.selection_scope);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, reselectDefaultOptions, $timeout, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
 
 			// Options
-			ctrl.options = angular.extend({}, reselectDefaultOptions, $scope.reselectOptions);
+			ctrl.options = angular.extend({}, reselectDefaultOptions, $parse($attrs.reselectOptions)($scope));
 
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
 			ctrl.transcludeCtrls = {};
+
+			ctrl.parsedChoices = null;
+			ctrl.DataAdapter = null;
+
+			ctrl.search_term = '';
+			ctrl.isDisabled = false; // TODO
+			ctrl.isFetching = false; // TODO
+			ctrl.isRequired = false; // TODO
 
 			/**
 			 * Placeholder
@@ -107,29 +115,38 @@ Reselect.value('reselectDefaultOptions', {
 				var valueToBeSelected;
 
 				if(!ctrl.options.allowInvalid && angular.isDefined(valueSelected)){
-					var choices = ctrl.transcludeCtrls.$ReselectChoice.DataAdapter.data;
-					var trackBy = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.trackByExp;
+					var choices = ctrl.DataAdapter.data;
+					var trackBy = ctrl.parsedOptions.trackByExp;
 
 					var choiceMatch, valueSelectedMatch;
 
-					for(var i = 0; i < choices.length; i++){
-						if(!angular.isDefined(choices[i])){
-							continue;
-						}
+					if(choices && choices.length >= 0){
+						for(var i = 0; i < choices.length; i++){
+							if(!angular.isDefined(choices[i])){
+								continue;
+							}
 
-						var scp = {};
-						scp[ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.itemName] = choices[i];
+							var scp = {};
+							scp[ctrl.parsedOptions.itemName] = choices[i];
 
-						choiceMatch = ctrl.transcludeCtrls.$ReselectChoice.parsedOptions.modelMapper(scp);
-						valueSelectedMatch = valueSelected;
+							choiceMatch = ctrl.parsedOptions.modelMapper(scp);
+							valueSelectedMatch = valueSelected;
 
-						if(choiceMatch === valueSelectedMatch){
-							valueToBeSelected = choices[i];
-							break;
+							if(choiceMatch === valueSelectedMatch){
+								valueToBeSelected = choices[i];
+								break;
+							}
 						}
 					}
-				}else{
-					valueToBeSelected = valueSelected;
+				}
+				/**
+				 * Allow Invalid
+				 *
+				 * This options allows the select to try and resolve a possible
+				 * value when an invalid value is set to the ng-model
+				 */
+				else if(ctrl.options.allowInvalid) {
+					// TODO
 				}
 
 				if(valueToBeSelected){

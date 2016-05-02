@@ -10,6 +10,7 @@ var karma    = require('karma').server;
 var notifier = require('node-notifier');
 var $        = require('gulp-load-plugins')();
 var connect  = require('gulp-connect');
+var bourbon  = require('node-bourbon');
 
 var config = {
     pkg: JSON.parse(fs.readFileSync('./package.json')),
@@ -140,7 +141,9 @@ gulp.task('styles', function() {
         .pipe($.plumber({
             errorHandler: handleError
         }))
-        .pipe($.sass())
+        .pipe($.sass({
+            includePaths: bourbon.includePaths
+        }))
         .pipe($.header(config.banner, {
             timestamp: (new Date()).toISOString(),
             pkg: config.pkg
