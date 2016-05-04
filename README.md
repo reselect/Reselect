@@ -16,9 +16,13 @@ Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angula
 4. To contribute to Reselect refer to [Contributing](#contributing)
 
 ## Usage
-Download [Reselect](https://github.com/reselect/Reselect) and use the production version within the `dist/` folder.
+Download [Reselect](https://github.com/reselect/Reselect) and use the production version within the `dist/` folder. Once downloaded, add the `Reselect` dependency to your AngularJS module.
 
-As an element:
+```js
+angular.module('myModule', ['Reselect']);
+```
+
+Then use the directive in your application:
 ````html
 <reselect
     reselect-options=""
