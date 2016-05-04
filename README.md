@@ -2,6 +2,11 @@
 
 Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. It supports searching, remote data sets, and infinite scrolling of results.
 
+## Features
+1. Lazy rendered options list
+2. Remote data source
+3. Infinite scroll
+4. Invalid choice handlers
 
 ## Installation
 

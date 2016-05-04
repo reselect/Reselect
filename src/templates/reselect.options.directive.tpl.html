@@ -4,13 +4,13 @@
 			type="text"
 			focus-on="reselect.search.focus"
 			placeholder="Type to search..."
-			ng-model="$options.search_term"
+			ng-model="$reselect.search_term"
 			ng-change="$options.search()"/>
 	</div>
 	<div class="reselect-options-container"
-		ng-class="{'reselect-options-container--autoheight': !$options.DataAdapter.data.length && !$options.is_loading }"
+		ng-class="{'reselect-options-container--autoheight': !$reselect.DataAdapter.data.length && !$options.is_loading }"
 		trigger-at-bottom="$options.loadMore()">
-		<ul class="reselect-options-list" ng-show="$options.DataAdapter.data.length"></ul>
+		<ul class="reselect-options-list" ng-show="$reselect.DataAdapter.data.length"></ul>
 
 		<div class="reselect-static-option reselect-empty-container"
 			ng-show="!$options.haveChoices && !$options.is_loading">
