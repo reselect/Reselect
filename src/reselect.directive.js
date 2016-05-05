@@ -180,7 +180,18 @@ Reselect.value('reselectDefaultOptions', {
 			 */
 
 			ctrl.parsedOptions = null;
-			ctrl.choices = [];
+			ctrl.choiceCtrls = [];
+
+			ctrl.generateChoiceID = function(choiceCtrl){
+
+				var choice = {
+					controller: choiceCtrl
+				};
+
+				ctrl.choiceCtrls.push(choice);
+
+				return choice;
+			};
 
             /**
 			 * Keyboard Support

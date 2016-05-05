@@ -130,46 +130,52 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * Choices Functionalities
 					 */
 
-					$Reselect.parsedOptions = ChoiceParser.parse($attrs.options);
+					var $ReselectChoice = $Reselect.generateChoiceID(self);
+
+					if(!$attrs.options){
+						return;
+					}
+
+					$ReselectChoice.parsedOptions = ChoiceParser.parse($attrs.options);
 
 					if ($attrs.remote) {
 						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
 
-						$Reselect.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $Reselect.parsedOptions);
+						$ReselectChoice.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $ReselectChoice.parsedOptions);
 
-						$Reselect.DataAdapter.prepareGetData = function(){
-							$Reselect.DataAdapter.page = 1;
-							$Reselect.DataAdapter.pagination = {};
-							$Reselect.DataAdapter.updateData([]);
+						$ReselectChoice.DataAdapter.prepareGetData = function(){
+							$ReselectChoice.DataAdapter.page = 1;
+							$ReselectChoice.DataAdapter.pagination = {};
+							$ReselectChoice.DataAdapter.updateData([]);
 							self.render();
 						};
 					} else {
-						$Reselect.DataAdapter = new ReselectDataAdapter();
-						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope.$parent));
+						$ReselectChoice.DataAdapter = new ReselectDataAdapter();
+						$ReselectChoice.DataAdapter.updateData($ReselectChoice.parsedOptions.source($scope.$parent));
 
-						$Reselect.DataAdapter.observe = function(onChange) {
+						$ReselectChoice.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
-								return $Reselect.parsedOptions.source($scope.$parent);
+								return $ReselectChoice.parsedOptions.source($scope.$parent);
 							}, function(newChoices) {
-								$Reselect.DataAdapter.updateData(newChoices);
+								$ReselectChoice.DataAdapter.updateData(newChoices);
 							});
 						};
 
 					}
 
-					$Reselect.DataAdapter.init();
+					$ReselectChoice.DataAdapter.init();
 
 					self.getData = function(reset, loadingMore) {
 						if(reset === true){
-							$Reselect.DataAdapter.prepareGetData();
+							$ReselectChoice.DataAdapter.prepareGetData();
 						}
 
 						self.is_loading = true;
 
-						$Reselect.DataAdapter.getData($Reselect.search_term)
+						$ReselectChoice.DataAdapter.getData($ReselectChoice.search_term)
 							.then(function(choices) {
-								if(!$Reselect.search_term){
-									$Reselect.DataAdapter.updateData(choices.data, loadingMore);
+								if(!$ReselectChoice.search_term){
+									$ReselectChoice.DataAdapter.updateData(choices.data, loadingMore);
 									self.render();
 								}else{
 									self.render(choices.data);
@@ -191,7 +197,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * returns pagination.more === true
 					 */
 					self.loadMore = function() {
-						if(!$Reselect.DataAdapter.pagination || !$Reselect.DataAdapter.pagination.more){
+						if(!$ReselectChoice.DataAdapter.pagination || !$ReselectChoice.DataAdapter.pagination.more){
 							return;
 						}
 						self.getData(false, true);
@@ -215,7 +221,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self.LazyDropdown = new LazyScroller($scope, {
-						scopeName: $Reselect.parsedOptions.itemName,
+						scopeName: $ReselectChoice.parsedOptions.itemName,
 						container: self.$container,
 						list: self.$list,
 						choiceHeight: 36,
@@ -236,7 +242,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self._selectChoice = function(containerId) {
 						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
 
-						var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
+						var value = angular.copy($ReselectChoice.parsedOptions.modelMapper(selectedScope));
 
 						$Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
 					};
@@ -249,7 +255,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * handle the rendering of the data.
 					 */
 					self.render = function(choices) {
-						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
+						self.LazyDropdown.choices = choices || $ReselectChoice.DataAdapter.data;
 
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty

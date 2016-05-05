@@ -28,5 +28,14 @@
 		</div>
 	</div>
 
-	<div class="reselect-dropdown" ng-class="{'reselect-dropdown--opened' : $reselect.opened }"></div>
+	<div class="reselect-dropdown" ng-class="{'reselect-dropdown--opened' : $reselect.opened }">
+		<div class="reselect-search-container">
+			<input class="reselect-search-input"
+				type="text"
+				focus-on="reselect.search.focus"
+				placeholder="Type to search..."
+				ng-model="$reselect.search_term"
+				ng-change="$options.search()"/>
+		</div>
+	</div>
 </div>
