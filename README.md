@@ -1,6 +1,6 @@
 # Reselect [![Build Status](https://travis-ci.org/reselect/Reselect.svg?branch=master)](https://travis-ci.org/reselect/Reselect)
 
-Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. It supports searching, remote data sets, and infinite scrolling of results.
+Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. It supports searching, remote data sets, infinite scrolling of results, and handling invalid choices.
 
 ## Features
 1. Lazy rendered options list
@@ -22,17 +22,21 @@ Download [Reselect](https://github.com/reselect/Reselect) and use the production
 angular.module('myModule', ['Reselect']);
 ```
 
-Then use the directive in your application:
+Then use the directive in your application: 
 ````html
+
 <reselect
-    reselect-options=""
     ng-model="">
+    <div reselect-selection>
+        <span ng-bind=""></span>
+    </div>
     <div reselect-choices
         options=""
-        value="">
+        remote="">
             <span ng-bind=""></span>
     </div>
 </reselect>
+
 ````
 
 ## Contributing
