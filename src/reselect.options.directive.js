@@ -233,13 +233,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * from the directive with the scope of the lazy container
 					 */
 
-					self._selectChoice = function(containerId) {
-						var selectedScope = self.LazyDropdown.lazyContainers[containerId].scope;
-
-						var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
-
-						$Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
-					};
+                    self._selectChoice = function(activeIndex) {
+                        var selectedScope = {};
+                        selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[activeIndex];
+                        var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
+                        $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
+                    };
 
 					/**
 					 * Rendering
