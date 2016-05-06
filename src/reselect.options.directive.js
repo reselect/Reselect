@@ -209,7 +209,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Lazy Containers
 					 *
-					 * The goal is to used the minimum amount of DOM elements (containers)
+					 * The goal is to use the minimal amount of DOM elements (containers)
 					 * to display large amounts of data. Containers are shuffled and repositioned
 					 * whenever the options list is scrolled.
 					 */
