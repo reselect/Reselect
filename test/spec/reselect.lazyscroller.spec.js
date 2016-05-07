@@ -47,12 +47,37 @@ describe('Reselect Lazyscroller Test', function(){
             }
         }));
 
-        describe('LazyScroller.initialize', function () {
+        describe('LazyScroller instantiation', function () {
             it('should create a new LazyScroller class', function() {
                 var LazyDropdown = new LazyScroller($scope, LazyScrollerOpts);
 
                 expect(angular.isObject(LazyDropdown)).toBe(true);
                 expect(LazyDropdown.options.scopeName).toEqual(LazyScrollerOpts.scopeName);
+            });
+        });
+    });
+
+    describe('LazyContainer', function() {
+        var LazyContainerOpts;
+
+        beforeEach(inject(function () {
+            var lazyScope = $scope.$new();
+				lazyScope.$options = {};
+				lazyScope['option'] = {};
+
+            LazyContainerOpts = {
+                containerId : 1,
+				element     : $reselect.find('.reselect-options-list .reselect-option-choice').eq(0),
+				scope       : lazyScope
+            }
+        }));
+
+        describe('LazyContainer instantiation', function () {
+            it('should create a new LazyContainer class', function() {
+                var LazyCntr = new LazyContainer($scope, LazyContainerOpts);
+
+                expect(angular.isObject(LazyCntr)).toBe(true);
+                expect(LazyCntr.render).toBeDefined();
             });
         });
     });

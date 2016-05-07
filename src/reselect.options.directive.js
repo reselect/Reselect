@@ -183,13 +183,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Load More function
 					 *
-					 * This function gets run when user scroll to the bottom
-					 * of the dropdown OR if the data return does not fill up the
-					 * full height of the dropdown.
+					 * This function gets run when user scrolls to the bottom
+					 * of the dropdown OR the data returned to reselect does not
+                     * fill up the full height of the dropdown.
 					 *
 					 * This function also checks if remote option's onData
 					 * returns pagination.more === true
 					 */
+
 					self.loadMore = function() {
 						if(!$Reselect.DataAdapter.pagination || !$Reselect.DataAdapter.pagination.more){
 							return;
@@ -200,6 +201,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Search
 					 */
+
 					self.search = ReselectUtils.debounce(function(){
 						self.getData(true, false);
 					}, 300, false, function(){
@@ -243,10 +245,11 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Rendering
 					 *
-					 * This function handles the render of the dropdown.
+					 * This function handles rendering the dropdown.
 					 * Choices are passed along to LazyContainer which will
 					 * handle the rendering of the data.
 					 */
+
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
 
