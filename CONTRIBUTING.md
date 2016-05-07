@@ -37,7 +37,38 @@ Looking for a good place to start contributing? Look through these `beginner` an
 
 ### Git Commit Messages
 
-TODO: Git Commit Style Guide
+Structure your git commit message as per the Git documentation.
+
+From: [[http://git-scm.com/book/ch5-2.html]]
+
+> Short (50 chars or less) summary of changes
+
+> More detailed explanatory text, if necessary.  Wrap it to about 72 characters or so.  In some contexts, the first line is treated as the subject of an email and the rest of the text as the body.  The blank line separating the summary from the body is critical (unless you omit the body entirely); tools like rebase can get confused if you run the two together.
+
+> Further paragraphs come after blank lines.
+
+>  - Bullet points are okay, too
+
+>  - Typically a hyphen or asterisk is used for the bullet, preceded by a single space, with blank lines in between, but conventions vary here
+
+TL:DR;
+
+1. Separate the subject line from the body 
+2. Include the type of change in your subject i.e "Test", "Feat"
+3. Include the branch or feature in brackets
+4. Limit the subject line to 50 characters
+5. Capitalize the subject line
+6. Don't end the subject line with a period
+7. Wrap the message body at 72 characters
+8. Use an imperative mood i.e "Fix", "Change", "Add" vs "Fixed", "Changed"
+9. Explain what and why the change was made *not* how it was changed
+10. Split up your commits if it includes several changes to logic
+
+#### Example
+
+> Test(reselect-choices): 
+
+> Add basic test to ensure reselect-choices outputs correct choices
 
 ### Specs Styleguide
 
