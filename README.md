@@ -47,7 +47,4 @@ Then use the directive in your application:
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :rocket:
 
-## History
-
-TODO: Write history
 
