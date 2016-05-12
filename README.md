@@ -1,6 +1,6 @@
 # Reselect [![Build Status](https://travis-ci.org/reselect/Reselect.svg?branch=master)](https://travis-ci.org/reselect/Reselect)
 
-Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. It supports searching, remote data sets, infinite scrolling of results, and handling invalid choices.
+Reselect is a directive built off of [Angular's HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. Reselect features searching, ability to use remote data sets, infinite scrolling of results, and handling of invalid choices.
 
 ## Features
 1. Lazy rendered options list
