@@ -39,6 +39,8 @@ Then use the directive in your application:
 
 ````
 
+Check out more in-depth examples on the [demo](http://reselect.github.io/Reselect/) page.
+
 ## Contributing
 
 1. Fork it!
