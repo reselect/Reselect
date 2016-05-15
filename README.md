@@ -41,6 +41,11 @@ Then use the directive in your application:
 
 Check out more in-depth examples on the [demo](http://reselect.github.io/Reselect/) page.
 
+
+## Found a bug?
+
+Please check the [CONTRIBUTING.md](CONTRIBUTING.md) and submit your issue [here](https://github.com/reselect/Reselect/issues/new).
+
 ## Contributing
 
 1. Fork it!
