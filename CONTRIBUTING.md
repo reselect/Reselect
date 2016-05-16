@@ -22,7 +22,7 @@ Before creating a bug report, please check [this list](https://github.com/resele
 
 ### Your First Code Contribution :point_up:
 
-Looking for a good place to start contributing? Look through these `beginner` and `help-wanted` issues:
+Looking for a good place to start contributing? Look through these `beginner` and `help wanted` issues:
 - [Beginner Issues]() - issues that should only require a few lines of code and minimal testing.
 - [Help Wanted Issues](https://github.com/reselect/Reselect/labels/help%20wanted) - issues that are more involved than `beginner` issues.
 
@@ -53,7 +53,7 @@ From: [[http://git-scm.com/book/ch5-2.html]]
 
 TL:DR;
 
-1. Separate the subject line from the body 
+1. Separate the subject line from the body
 2. Include the type of change in your subject i.e "Test", "Feat"
 3. Include the branch or feature in brackets
 4. Limit the subject line to 50 characters
@@ -66,13 +66,9 @@ TL:DR;
 
 #### Example
 
-> Test(reselect-choices): 
+> Test(reselect-choices): Adding reselect tests
 
-> Add basic test to ensure reselect-choices outputs correct choices
-
-### Specs Styleguide
-
-TODO: Spec Styleguide
+> Add basic test to ensure reselect-choices outputs correct values.
 
 ### Documentation Styleguide
 
