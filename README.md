@@ -56,3 +56,4 @@ Please check the [CONTRIBUTING.md](CONTRIBUTING.md) and submit your issue [here]
 5. Submit a pull request :rocket:
 
 Quality contributions are always welcome! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) for more details on the contribution guidelines.
+
