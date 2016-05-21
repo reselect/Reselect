@@ -27,9 +27,9 @@ Reselect.value('reselectDefaultOptions', {
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
 			// Transclude [reselect-choices] directive
-			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
+			var $choiceList = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
 
-			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
+			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choiceList);
 
 			// Transclude [reselect-selection] directive
 			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
@@ -45,7 +45,11 @@ Reselect.value('reselectDefaultOptions', {
 			}
 
 			// Store [reselect-choices]'s controller
-			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
+			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choiceList).controller('reselectChoices');
+
+            var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
+
+            $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 
 			$compile($selection)($Reselect.selection_scope);
 		},
