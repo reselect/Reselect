@@ -1,12 +1,12 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-05-22T01:59:47.502Z
+ * Version: 0.0.1 - 2016-05-22T02:28:22.156Z
  * License: MIT
  */
 
 
-@-webkit-keyframes fadeInUpSmall {
+@-webkit-keyframes reselectOptionOpen {
   0% {
     opacity: 0;
     -webkit-transform: scaleY(0); }
@@ -14,7 +14,7 @@
     opacity: 1;
     -webkit-transform: scaleY(1); } }
 
-@-moz-keyframes fadeInUpSmall {
+@-moz-keyframes reselectOptionOpen {
   0% {
     opacity: 0;
     -moz-transform: scaleY(0); }
@@ -22,7 +22,7 @@
     opacity: 1;
     -moz-transform: scaleY(1); } }
 
-@keyframes fadeInUpSmall {
+@keyframes reselectOptionOpen {
   0% {
     opacity: 0;
     -webkit-transform: scaleY(0);
@@ -123,9 +123,9 @@
   -ms-transform-origin: top center;
   -o-transform-origin: top center;
   transform-origin: top center;
-  -webkit-animation: fadeInUpSmall 0.2s;
-  -moz-animation: fadeInUpSmall 0.2s;
-  animation: fadeInUpSmall 0.2s;
+  -webkit-animation: reselectOptionOpen 0.2s;
+  -moz-animation: reselectOptionOpen 0.2s;
+  animation: reselectOptionOpen 0.2s;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
   display: none; }
   .reselect-dropdown.reselect-dropdown--opened {
