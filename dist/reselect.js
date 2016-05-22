@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-05-22T01:59:12.751Z
+ * Version: 0.0.1 - 2016-05-22T02:28:22.007Z
  * License: MIT
  */
 

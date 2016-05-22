@@ -113,7 +113,7 @@
 	position: absolute;
 
 	@include transform-origin(top center);
-	@include animation(fadeInUpSmall 0.2s);
+	@include animation(reselectOptionOpen 0.2s);
 
 	box-shadow: $reselect-box-shadow;
 
