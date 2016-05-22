@@ -30,12 +30,12 @@ Then use the directive in your application:
     <div reselect-selection>
         <span ng-bind=""></span>
     </div>
-    <div reselect-choices>Static Option</div>
-    <div reselect-choices
+    <reselect-choice ng-click="onClick()">Static Option</reselect-choice>
+    <reselect-choices
         options=""
         remote="">
             <span ng-bind=""></span>
-    </div>
+    </reselect-choices>
 </reselect>
 
 ````
@@ -56,4 +56,3 @@ Please check the [CONTRIBUTING.md](CONTRIBUTING.md) and submit your issue [here]
 5. Submit a pull request :rocket:
 
 Quality contributions are always welcome! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) for more details on the contribution guidelines.
-
