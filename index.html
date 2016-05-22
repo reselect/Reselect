@@ -11,6 +11,7 @@
 
         <script src="angular.min.js"></script>
         <script src="angular-sanitize.min.js"></script>
+        <!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.css"> -->
         <!-- ui-select files -->
         <script src="libs/reselect.js"></script>
         <link rel="stylesheet" href="libs/reselect.css">
@@ -24,7 +25,6 @@
             <a href="https://github.com/alexcheuk/Reselect/zipball/master" class="btn">Download .zip</a>
             <a href="https://github.com/alexcheuk/Reselect/tarball/master" class="btn">Download .tar.gz</a>
         </section>
-
         <section class="main-content">
             <div ng-controller="SimpleCtrl">
 
@@ -55,6 +55,8 @@
                                     <span ng-bind-html="option.first_name | rshighlight : $reselect.search_term"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
                             </div reselect-choices>
                         </reselect>
+
+                        <a ng-click="simple.objects1 = ''">CLEAR</a>
 
                         <p><strong>Selected Value:</strong> <small ng-bind="simple.objects2|json"></small></p>
                         <reselect

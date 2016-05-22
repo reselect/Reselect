@@ -32,6 +32,10 @@
 		self.invalidValue = 50;
 		self.objects1 = 3;
 
+        self.click = function(){
+            console.log('CLICKED');
+        };
+
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);
 
