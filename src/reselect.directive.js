@@ -171,7 +171,7 @@ Reselect.value('reselectDefaultOptions', {
 
 						ctrl.options.resolveInvalid(valueSelected, validateDone);
 					}else{
-						$ngModel.$setViewValue(valueToBeSelected);
+                        ctrl.selectValue($ngModel.$viewValue, $ngModel.$viewValue);
 					}
 
 				}
