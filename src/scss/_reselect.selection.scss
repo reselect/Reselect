@@ -48,6 +48,10 @@
 	&:hover, &.reselect-selection--active{
 		border-color: $reselect-border-color-active;
 	}
+
+    [reselect-selection]{
+        display:inline-block;
+    }
 }
 
 .reselect-rendered-placeholder{
