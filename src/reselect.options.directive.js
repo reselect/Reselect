@@ -76,7 +76,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					transcludeFn(function(clone, scope) {
-						$reselectChoices.CHOICE_TEMPLATE.append(clone);
+						angular.element($reselectChoices.CHOICE_TEMPLATE[0].querySelectorAll('.reselect-option-choice-container')).append(clone);
 					});
 
 					$reselectChoices.LazyDropdown.initialize($reselectChoices.CHOICE_TEMPLATE);
@@ -84,9 +84,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 				};
 			},
 			controllerAs: '$options',
-			controller: ['$scope', '$element', '$attrs', '$parse', '$http',
+			controller: ['$scope', '$element', '$attrs', '$parse', '$http', '$timeout',
 				'ReselectDataAdapter', 'ReselectAjaxDataAdapter',
-				function($scope, $element, $attrs, $parse, $http, ReselectDataAdapter,
+				function($scope, $element, $attrs, $parse, $http, $timeout, ReselectDataAdapter,
 					ReselectAjaxDataAdapter) {
 
 					var $Reselect = $element.controller('reselect');
@@ -107,10 +107,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.haveChoices = false;
 
 					self.CHOICE_TEMPLATE = angular.element(
-						'<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($containerId)"></li>'
+						'<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($index, $onClick)"></li>'
 					);
+                    self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-sticky" ng-show="$sticky === true" ng-bind-html="$stickyContent"></div>');
+                    self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-container" ng-show="!$sticky"></div>');
 					self.CHOICE_TEMPLATE.attr('ng-class',
-						'{\'reselect-option-choice--highlight\' : $options.activeIndex === $index }'
+						'[{\'reselect-option-choice--highlight\' : $options.activeIndex === $index, \'reselect-option-choice--selected\' : $options.selectedIndex === $index }, cssClass]'
 					);
 					self.CHOICE_TEMPLATE.attr('ng-mouseenter',
 						'$options.activeIndex = $index');
@@ -125,6 +127,31 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {});
 
 					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
+
+                    /**
+                     * Single Choice - Sticky Choices
+                     */
+
+                    self.stickyChoices = [];
+
+                    self.registerChoices = function($choices){
+                        angular.forEach($choices, function(choice){
+
+                            choice = angular.element(choice);
+
+                            var sticky = {
+                                class         : choice.attr('class'),
+                                $sticky       : true,
+                                $stickyContent: choice.html()
+                            };
+
+                            if(choice.attr('ng-click')){
+                                sticky.onClick = choice.attr('ng-click');
+                            }
+
+                            self.stickyChoices.push(sticky);
+                        });
+                    };
 
 					/**
 					 * Choices Functionalities
@@ -229,17 +256,31 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self.activeIndex = null;
+					self.selectedIndex = null;
 
 					/**
 					 * Using the container id that is passed in, find the actual value by $eval the [value=""]
 					 * from the directive with the scope of the lazy container
 					 */
 
-                    self._selectChoice = function(activeIndex) {
-                        var selectedScope = {};
-                        selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[activeIndex];
-                        var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
-                        $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
+                    self._selectChoice = function(choiceIndex, choiceOnClick) {
+
+
+                        if(choiceOnClick){
+                            $parse(choiceOnClick)($scope.$parent);
+                            $Reselect.hideDropdown();
+                        }else{
+                            self.selectedIndex = choiceIndex;
+
+                            var selectedChoiceIndex = choiceIndex - self.stickyChoices.length;
+
+                            var selectedScope = {};
+                            selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[selectedChoiceIndex];
+                            var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
+                            $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
+
+
+                        }
                     };
 
 					/**
@@ -252,6 +293,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
+
+                        self.LazyDropdown.choices = self.stickyChoices.concat(self.LazyDropdown.choices);
 
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty

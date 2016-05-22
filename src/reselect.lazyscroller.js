@@ -48,6 +48,8 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 		self.$container.on('scroll', function(){
 			window.requestAnimationFrame(function(){
 				self._calculateLazyRender();
+
+                self.$scope.$apply();
 			});
 		});
 	};
@@ -124,15 +126,23 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 
 					angular.extend(container.scope, {
 						$containerId : container.containerId,
-						$index       : i
+						$index       : i,
+                        cssClass     : self.choices[i] ? self.choices[i].class : ''
 					});
 
-					container.scope[self.options.scopeName] = self.choices[i];
+                    if(self.choices[i] && self.choices[i].$sticky === true){
+                        container.scope[self.options.scopeName] = self.choices[i].text;
+                        container.scope.$onClick       = self.choices[i].onClick;
+                        container.scope.$sticky        = self.choices[i].$sticky;
+                        container.scope.$stickyContent = self.choices[i].$stickyContent;
+                    }else{
+                        container.scope[self.options.scopeName] = self.choices[i];
+                        container.scope.$sticky        = false;
+                    }
+
 				}
 			}
 		}
-
-		self.$scope.$evalAsync();
 
 		self.lastCheck = Math.floor(scrollTop/self.options.choiceHeight) * self.options.choiceHeight;
 	};
