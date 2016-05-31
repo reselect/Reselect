@@ -83,20 +83,6 @@ describe('Reselect Test', function(){
             return $dropdown.hasClass('reselect-dropdown--opened');
         };
 
-        describe('renderPlaceholder', function() {
-            it('should render a custom placeholder', function() {
-                ctrl.options.placeholderTemplate = function() {
-                    return 'foo'
-                };
-
-                ctrl.renderPlaceholder();
-
-                $rootScope.$digest();
-
-                expect($reselect.find('.reselect-rendered-placeholder').text()).toBe('foo');
-            });
-        });
-
         describe('handleKeyDown', function() {
             it('should open the dropdown when the ENTER key is pressed', function() {
                 ctrl.opened = false;
