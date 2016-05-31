@@ -27,9 +27,9 @@ Reselect.value('reselectDefaultOptions', {
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
 			// Transclude [reselect-choices] directive
-			var $choiceList = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
+			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
 
-			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choiceList);
+			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
 
 			// Transclude [reselect-selection] directive
 			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
@@ -45,11 +45,7 @@ Reselect.value('reselectDefaultOptions', {
 			}
 
 			// Store [reselect-choices]'s controller
-			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choiceList).controller('reselectChoices');
-
-            var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
-
-            $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
+			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
 
 			$compile($selection)($Reselect.selection_scope);
 		},
@@ -110,7 +106,9 @@ Reselect.value('reselectDefaultOptions', {
 
 				ctrl.renderSelection(ctrl.value, $choice);
 
-				ctrl.hideDropdown();
+                $scope.$safeApply(function(){
+				    ctrl.hideDropdown();
+                });
 			};
 
 			ctrl.clearSearch = function(){
@@ -171,7 +169,7 @@ Reselect.value('reselectDefaultOptions', {
 
 						ctrl.options.resolveInvalid(valueSelected, validateDone);
 					}else{
-                        ctrl.selectValue(null, null);
+						$ngModel.$setViewValue(valueToBeSelected);
 					}
 
 				}
@@ -201,6 +199,7 @@ Reselect.value('reselectDefaultOptions', {
                    }
                  } else {
                    if (key === KEYS.ENTER || key === KEYS.SPACE) {
+                     console.log('enter called from parent ', ctrl.opened);
                      ctrl.showDropdown();
 
                      evt.preventDefault();
@@ -229,7 +228,7 @@ Reselect.value('reselectDefaultOptions', {
 					return;
 				}
 
-				$scope.$apply(function(){
+				$scope.$safeApply(function(){
 					ctrl.hideDropdown(true);
 				});
 
@@ -257,12 +256,25 @@ Reselect.value('reselectDefaultOptions', {
                 }
 			};
 
+            /**
+            * Event Listeners
+            */
+
+            ctrl.bindEventListeners = function() {
+                $scope.$on('reselect.hide', function(){
+                    $scope.$safeApply(function(){
+    					ctrl.hideDropdown();
+    				});
+                });
+            };
+
 			/**
 			 * Initialization
 			 */
 
 			ctrl.initialize = function(){
 				ctrl.renderPlaceholder();
+                ctrl.bindEventListeners();
 			};
 
 			ctrl.initialize();
