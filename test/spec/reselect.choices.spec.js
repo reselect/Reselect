@@ -96,4 +96,42 @@ describe('Reselect Choices Test', function(){
     	});
 	});
 
+    describe('Controller', function(){
+
+        var ctrl, $regularOption;
+
+        beforeEach(function() {
+
+            var regularTemplate = '<reselect \
+                                ng-model="ctrl.value1"> \
+                                <reselect-choices \
+                                    options="option in ctrl.arrayOfStrings"> \
+                                        <span ng-bind="option"></span> \
+                                </reselect-choices> \
+                            </reselect>';
+
+            $regularOption = $compile(regularTemplate)($scope);
+
+            $rootScope.$digest();
+
+            $regularOption.find('.reselect-selection')[0].click();
+
+            $rootScope.$digest();
+
+            // reselectChoices controller
+            ctrl = $regularOption.find('.reselect-choices').controller('reselectChoices');
+        });
+
+        describe('_selectChoice', function() {
+            it('should select choice using the choices index', function() {
+
+                ctrl._selectChoice(4);
+
+                $rootScope.$digest();
+
+                expect($regularOption.find('.reselect-rendered-selection').text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+            });
+        });
+    });
+
 });

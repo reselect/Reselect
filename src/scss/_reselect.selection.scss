@@ -29,7 +29,7 @@
 	// box-shadow: inset 0px 0px 5px rgba(0,0,0, 0.1);
 }
 
-.reselect-selection{
+.reselect-selection-container{
 	position: relative;
 	cursor: pointer;
 
@@ -48,6 +48,10 @@
 	&:hover, &.reselect-selection--active{
 		border-color: $reselect-border-color-active;
 	}
+
+    [reselect-selection]{
+        display:inline-block;
+    }
 }
 
 .reselect-rendered-placeholder{
@@ -113,7 +117,7 @@
 	position: absolute;
 
 	@include transform-origin(top center);
-	@include animation(fadeInUpSmall 0.2s);
+	@include animation(reselectOptionOpen 0.2s);
 
 	box-shadow: $reselect-box-shadow;
 

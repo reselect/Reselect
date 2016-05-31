@@ -1,0 +1,208 @@
+/*!
+ * reselect
+ * https://github.com/alexcheuk/Reselect
+ * Version: 0.0.1 - 2016-05-31T22:24:42.094Z
+ * License: MIT
+ */
+
+
+@-webkit-keyframes reselectOptionOpen {
+  0% {
+    opacity: 0;
+    -webkit-transform: scaleY(0); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scaleY(1); } }
+
+@-moz-keyframes reselectOptionOpen {
+  0% {
+    opacity: 0;
+    -moz-transform: scaleY(0); }
+  100% {
+    opacity: 1;
+    -moz-transform: scaleY(1); } }
+
+@keyframes reselectOptionOpen {
+  0% {
+    opacity: 0;
+    -webkit-transform: scaleY(0);
+    -moz-transform: scaleY(0);
+    -ms-transform: scaleY(0);
+    -o-transform: scaleY(0);
+    transform: scaleY(0); }
+  100% {
+    opacity: 1;
+    -webkit-transform: scaleY(1);
+    -moz-transform: scaleY(1);
+    -ms-transform: scaleY(1);
+    -o-transform: scaleY(1);
+    transform: scaleY(1); } }
+
+.reselect {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  -webkit-user-select: none;
+  /* Chrome/Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+  /* Rules below not implemented in browsers yet */
+  -o-user-select: none;
+  user-select: none; }
+
+.reselect * {
+  box-sizing: border-box; }
+
+.reselect-container {
+  position: relative;
+  display: inline-block; }
+
+.reselect-rendered {
+  min-height: 38px;
+  padding: 6px 14px;
+  font-size: 12px; }
+
+.reselect-selection-container {
+  position: relative;
+  cursor: pointer;
+  background: #fff;
+  line-height: 26px;
+  min-height: 38px;
+  min-width: 200px;
+  border-radius: 3px;
+  padding-right: 18px;
+  border: 1px solid #ccc; }
+  .reselect-selection-container:hover, .reselect-selection-container.reselect-selection--active {
+    border-color: #09c; }
+  .reselect-selection-container [reselect-selection] {
+    display: inline-block; }
+
+.reselect-rendered-placeholder {
+  color: #999;
+  font-style: italic; }
+
+.reselect-input-container {
+  z-index: 10;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 18px; }
+
+.reselect-text-input {
+  font-size: 12px;
+  height: 38px;
+  width: 100%;
+  padding: 6px;
+  border: none;
+  background: none; }
+
+.reselect-arrow-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 18px;
+  border-left: 1px solid #ccc; }
+  .reselect-arrow-container::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    margin-left: -5px;
+    top: 50%;
+    margin-top: -2.5px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #ccc; }
+
+.reselect-dropdown {
+  top: 38px;
+  position: absolute;
+  -webkit-transform-origin: top center;
+  -moz-transform-origin: top center;
+  -ms-transform-origin: top center;
+  -o-transform-origin: top center;
+  transform-origin: top center;
+  -webkit-animation: reselectOptionOpen 0.2s;
+  -moz-animation: reselectOptionOpen 0.2s;
+  animation: reselectOptionOpen 0.2s;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+  display: none; }
+  .reselect-dropdown.reselect-dropdown--opened {
+    z-index: 10;
+    display: block; }
+
+.reselect-choices {
+  border: 1px solid #ccc;
+  border-color: #09c;
+  border-top-color: #eee;
+  width: 200px;
+  background: white; }
+
+.reselect-search-container {
+  background: #f9f9f9;
+  border-bottom: 1px solid #eee; }
+
+input[type="text"].reselect-search-input {
+  width: 100%;
+  height: 36px;
+  font-size: 12px;
+  padding: 0 15px;
+  outline: none;
+  border: none;
+  background: none; }
+
+.reselect-text-match {
+  font-weight: bold;
+  color: #111; }
+
+.reselect-options-container {
+  overflow: auto;
+  position: relative; }
+  .reselect-options-container.reselect-options-container--autoheight {
+    height: auto !important; }
+  .reselect-options-container.disable-hover .reselect-option-choice {
+    pointer-events: none; }
+  .reselect-options-container::-webkit-scrollbar {
+    width: 6px; }
+  .reselect-options-container::-webkit-scrollbar-track {
+    background: #ddd; }
+  .reselect-options-container::-webkit-scrollbar-thumb {
+    background: #666; }
+
+.reselect-options-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative; }
+
+.reselect-option {
+  padding: 12px 15px;
+  line-height: 1;
+  font-size: 11px;
+  font-weight: 400; }
+
+.reselect-static-option {
+  position: relative; }
+
+.reselect-option-choice {
+  height: 36px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: absolute;
+  border-bottom: 1px solid #eee;
+  cursor: pointer; }
+  .reselect-option-choice.reselect-option-choice--highlight {
+    background: #f3f3f3;
+    color: #111; }
+  .reselect-option-choice.reselect-option-choice--selected {
+    background: #f9f9f9;
+    color: #111; }
+  .reselect-option-choice.inactive {
+    display: none; }
+  .reselect-option-choice.reselect-option--static {
+    position: relative; }

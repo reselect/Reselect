@@ -1,8 +1,4 @@
 Reselect.value('reselectDefaultOptions', {
-	placeholderTemplate: function(){
-		return 'Select an option';
-	},
-	selectionTemplate: angular.element('<span ng-bind="$selection"></span>')
 })
 
 .directive('reselect', ['$compile', function($compile){
@@ -23,31 +19,38 @@ Reselect.value('reselectDefaultOptions', {
 				$element.append(clone);
 			}).detach();
 
+			function transcludeAndAppend(target, destination, store, ctrl, replace){
+				var $transcludeElement = $transcludeElems[0].querySelectorAll('.'+target+','+ '['+target+'],' + target);
+
+				if($transcludeElement.length === 1){
+					if(replace === true){
+						angular.element($element[0].querySelector('.'+target)).replaceWith($transcludeElement);
+					}else{
+						angular.element($element[0].querySelectorAll(destination)).append($transcludeElement);
+					}
+				}else{
+                    $transcludeElement = $element[0].querySelectorAll('.'+target);
+                }
+
+                if(store && ctrl){
+                    $Reselect.transcludeCtrls[store] = angular.element($transcludeElement).controller(ctrl);
+                    $Reselect.transcludeScopes[store] = angular.element($transcludeElement).scope();
+                }
+			}
+
 			// Wrap array of transcluded elements in a <div> so we can run css queries
 			$transcludeElems = angular.element('<div>').append($transcludeElems);
 
 			// Transclude [reselect-choices] directive
-			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choices, [reselect-choices], reselect-choices');
-
-			angular.element($element[0].querySelectorAll('.reselect-dropdown')).append($choice);
-
-			// Transclude [reselect-selection] directive
-			var $selection = $transcludeElems[0].querySelectorAll('.reselect-selection, [reselect-selection], reselect-selection');
-				$selection = $selection.length ? $selection : $Reselect.options.selectionTemplate.clone();
-
-			angular.element($element[0].querySelectorAll('.reselect-rendered-selection')).append($selection);
+			transcludeAndAppend('reselect-choices', '.reselect-dropdown', '$ReselectChoice', 'reselectChoices');
+			transcludeAndAppend('reselect-no-choice', '.reselect-empty-container', null, null, true);
+			transcludeAndAppend('reselect-placeholder', '.reselect-rendered-placeholder', '$ReselectPlaceholder', 'reselectPlaceholder', true);
+			transcludeAndAppend('reselect-selection', '.reselect-rendered-selection', '$ReselectSelection', 'reselectSelection', true);
 
 			// Transclude [reselect-no-choice] directive
-			var $noChoice = angular.element($transcludeElems[0].querySelectorAll('.reselect-no-choice, [reselect-selection], reselect-selection'));
+            var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
 
-			if($noChoice.length === 1){
-				angular.element($element[0].querySelectorAll('.reselect-empty-container')).html('').append($noChoice);
-			}
-
-			// Store [reselect-choices]'s controller
-			$Reselect.transcludeCtrls.$ReselectChoice = angular.element($choice).controller('reselectChoices');
-
-			$compile($selection)($Reselect.selection_scope);
+            $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 		},
 		controllerAs: '$reselect',
 		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, KEYS){
@@ -62,6 +65,7 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.value = null;
 			ctrl.opened = false;
 			ctrl.transcludeCtrls = {};
+			ctrl.transcludeScopes = {};
 
 			ctrl.parsedChoices = null;
 			ctrl.DataAdapter = null;
@@ -71,27 +75,17 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.isFetching = false; // TODO
 
 			/**
-			 * Placeholder
-			 */
-
-			ctrl.rendered_placeholder = null;
-
-			ctrl.renderPlaceholder = function(){
-				ctrl.rendered_placeholder = ctrl.options.placeholderTemplate();
-			};
-
-			/**
 			 * Selection
 			 */
 
-			ctrl.selection_scope = $scope.$new();
+			ctrl.selection_scope = {};
 			ctrl.selection_scope.$selection = null;
-
-			ctrl.rendered_selection = null;
 
 			ctrl.renderSelection = function(state, $choice){
 				ctrl.selection_scope.$selection = state;
 				ctrl.selection_scope.$choice = $choice;
+
+                $scope.$broadcast('reselect.renderselection', ctrl.selection_scope);
 			};
 
 			/**
@@ -251,16 +245,6 @@ Reselect.value('reselectDefaultOptions', {
                     $scope.$emit('reselect.input.focus');
                 }
 			};
-
-			/**
-			 * Initialization
-			 */
-
-			ctrl.initialize = function(){
-				ctrl.renderPlaceholder();
-			};
-
-			ctrl.initialize();
 
 			return ctrl;
 		}]

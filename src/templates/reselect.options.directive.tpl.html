@@ -14,9 +14,11 @@
 
 		<div class="reselect-static-option reselect-empty-container"
 			ng-show="!$options.haveChoices && !$options.is_loading">
-			<div class="reselect-option reselect-option--static reselect-option-choice">
-				{{$options.options.noOptionsText}}
-			</div>
+            <div class="reselect-no-choice" reselect-no-choice>
+                <div class="reselect-option reselect-option--static reselect-option-choice">
+    				{{$options.options.noOptionsText}}
+    			</div>
+            </div>
 		</div>
 
 		<div class="reselect-option reselect-static-option reselect-option-loading"

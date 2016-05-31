@@ -56,6 +56,8 @@
                             </div reselect-choices>
                         </reselect>
 
+                        <a ng-click="simple.objects1 = null">CLEAR</a>
+
                         <p><strong>Selected Value:</strong> <small ng-bind="simple.objects2|json"></small></p>
                         <reselect
                             ng-model="simple.objects2">
@@ -71,6 +73,32 @@
 
                     <h3>Custom No Options</h3>
                     <div style="padding-bottom: 20px">
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in []">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                        </reselect>
+
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                no-options-text="SHOULD NOT SHOW"
+                                options="option in []">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                            <div reselect-no-choice>
+                                THIS SHOULD SHOW
+                            </div>
+                        </reselect>
+
                         <reselect
                             ng-model="simple.objects3">
                             <div reselect-selection>
@@ -105,6 +133,7 @@
                         ALLOW INVALID
                     -->
                     <h3>Allow Invalid</h3>
+                    <p><strong>Selected Value:</strong> <small ng-bind="simple.invalidValue"></small></p>
                     <div style="padding-bottom: 20px">
                         <p>Selected Value: <small ng-bind="simple.invalidValue"></small></p>
                         <reselect
@@ -157,6 +186,9 @@
                     <div style="padding-bottom: 20px">
                         <reselect
                             ng-model="simple.value4">
+                            <div reselect-placeholder>
+                                Custom
+                            </div>
                             <div reselect-selection>
                                 <span ng-bind="$selection"></span>
                             </div>
