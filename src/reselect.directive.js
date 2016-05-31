@@ -20,11 +20,11 @@ Reselect.value('reselectDefaultOptions', {
 			}).detach();
 
 			function transcludeAndAppend(target, destination, store, ctrl, replace){
-				var $transcludeElement = $transcludeElems[0].querySelectorAll('.'+target, '['+target+']', target);
+				var $transcludeElement = $transcludeElems[0].querySelectorAll('.'+target+','+ '['+target+'],' + target);
 
 				if($transcludeElement.length === 1){
 					if(replace === true){
-						angular.element($element[0].querySelectorAll('.'+target)).replaceWith($transcludeElement);
+						angular.element($element[0].querySelector('.'+target)).replaceWith($transcludeElement);
 					}else{
 						angular.element($element[0].querySelectorAll(destination)).append($transcludeElement);
 					}
@@ -43,11 +43,9 @@ Reselect.value('reselectDefaultOptions', {
 
 			// Transclude [reselect-choices] directive
 			transcludeAndAppend('reselect-choices', '.reselect-dropdown', '$ReselectChoice', 'reselectChoices');
-			transcludeAndAppend('reselect-no-choice', '.reselect-empty-container');
+			transcludeAndAppend('reselect-no-choice', '.reselect-empty-container', null, null, true);
 			transcludeAndAppend('reselect-placeholder', '.reselect-rendered-placeholder', '$ReselectPlaceholder', 'reselectPlaceholder', true);
 			transcludeAndAppend('reselect-selection', '.reselect-rendered-selection', '$ReselectSelection', 'reselectSelection', true);
-
-            console.log($Reselect.transcludeScopes);
 
 			// Transclude [reselect-no-choice] directive
             var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');

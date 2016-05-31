@@ -12,21 +12,15 @@
 
 		<div class="reselect-rendered reselect-rendered-selection"
 			ng-show="$reselect.value">
-            <div reselect-selection>
+            <div class="reselect-selection" reselect-selection>
                 <span ng-bind="$selection"></span>
             </div>
 		</div>
 
 		<div class="reselect-rendered reselect-rendered-placeholder"
 			ng-show="!$reselect.value">
-            <div reselect-placeholder>Please select an option</div>
+            <div class="reselect-placeholder" reselect-placeholder>Please select an option</div>
         </div>
-
-		<!-- <div class="reselect-input-container">
-			<input class="reselect-text-input"
-				readonly="readonly"
-				ng-if="true"/>
-		</div> -->
 
 		<div class="reselect-arrow-container">
 			<div class="reselect-arrow"></div>

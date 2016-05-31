@@ -79,6 +79,32 @@
                                 <span ng-bind="$selection"></span>
                             </div>
                             <div reselect-choices
+                                options="option in []">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                        </reselect>
+
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                no-options-text="SHOULD NOT SHOW"
+                                options="option in []">
+                                    <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                            <div reselect-no-choice>
+                                THIS SHOULD SHOW
+                            </div>
+                        </reselect>
+
+                        <reselect
+                            ng-model="simple.objects3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
                                 no-options-text="Custom text message"
                                 options="option in []">
                                     <span ng-bind="option.first_name"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
@@ -104,6 +130,7 @@
                     </div>
 
                     <h3>Allow Invalid</h3>
+                    <p><strong>Selected Value:</strong> <small ng-bind="simple.invalidValue"></small></p>
                     <div style="padding-bottom: 20px">
                         <reselect
                             reselect-options="{allowInvalid: true}"
