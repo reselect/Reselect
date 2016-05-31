@@ -129,22 +129,59 @@
                         </reselect>
                     </div>
 
+                    <!--
+                        ALLOW INVALID
+                    -->
                     <h3>Allow Invalid</h3>
                     <p><strong>Selected Value:</strong> <small ng-bind="simple.invalidValue"></small></p>
                     <div style="padding-bottom: 20px">
+                        <p>Selected Value: <small ng-bind="simple.invalidValue"></small></p>
                         <reselect
                             reselect-options="{allowInvalid: true}"
                             ng-model="simple.invalidValue">
                             <div reselect-selection>
-                                <span ng-bind="$selection.text"></span>
+                                <span ng-bind="$selection"></span>
                             </div>
                             <div reselect-choices
-                                options="option in simple.choices1000 track by text">
-                                    <span ng-bind="option.text"></span> - Choice {{$index}}
+                                options="option in simple.mocks.single">
+                                    <span ng-bind="option"></span>
                             </div reselect-choices>
                         </reselect>
                     </div>
 
+                    <div style="padding-bottom: 20px">
+                        <p>Selected Value: <small ng-bind="simple.invalidValue2"></small></p>
+                        <reselect
+                            reselect-options="simple.invalidOptions2"
+                            ng-model="simple.invalidValue2">
+                            <div reselect-selection>
+                                <span ng-bind="$selection"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in simple.mocks.single">
+                                    <span ng-bind="option"></span>
+                            </div reselect-choices>
+                        </reselect>
+                    </div>
+
+                    <div style="padding-bottom: 20px">
+                        <p>Selected Value: <small ng-bind="simple.invalidValue3|json"></small></p>
+                        <reselect
+                            reselect-options="simple.invalidOptions3"
+                            ng-model="simple.invalidValue3">
+                            <div reselect-selection>
+                                <span ng-bind="$selection.skill"></span>
+                            </div>
+                            <div reselect-choices
+                                options="option in simple.mocks.objects">
+                                    <span ng-bind="option.skill"></span>
+                            </div reselect-choices>
+                        </reselect>
+                    </div>
+
+                    <!--
+                        REMOTE FETCHING
+                    -->
                     <h3>Remote Fetching</h3>
                     <div style="padding-bottom: 20px">
                         <reselect
@@ -161,6 +198,42 @@
                                     <span ng-bind="option.data.title"></span>
                             </div>
                         </reselect>
+                    </div>
+
+                    <!--
+                        FORM VALIDATION
+                    -->
+                    <h3>Form Validation</h3>
+                    <div style="padding-bottom: 20px">
+                        <form name="simple.form1">
+                            <reselect
+                                name="form_input1"
+                                ng-required="true"
+                                ng-model="simple.form_value">
+                                <div reselect-selection>
+                                    <span ng-bind="$selection"></span>
+                                </div>
+                                <div reselect-choices
+                                    options="option.data.title as option in $remote"
+                                    remote="simple.remoteOptions">
+                                        <span ng-bind="option.data.title"></span>
+                                </div>
+                            </reselect>
+                            <table style="margin-top: 20px">
+                                <tr>
+                                    <td>required</td>
+                                    <td>true</td>
+                                </tr>
+                                <tr>
+                                    <td>$valid</td>
+                                    <td><span ng-bind="simple.form1.form_input1.$valid"></span></td>
+                                </tr>
+                                <tr>
+                                    <td>$pristine</td>
+                                    <td><span ng-bind="simple.form1.form_input1.$pristine"></span></td>
+                                </tr>
+                            </table>
+                        </form>
                     </div>
                 </div>
             </div>
