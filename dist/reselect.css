@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-05-22T03:27:53.488Z
+ * Version: 0.0.1 - 2016-05-31T09:32:03.861Z
  * License: MIT
  */
 
@@ -63,7 +63,7 @@
   padding: 6px 14px;
   font-size: 12px; }
 
-.reselect-selection {
+.reselect-selection-container {
   position: relative;
   cursor: pointer;
   background: #fff;
@@ -73,9 +73,9 @@
   border-radius: 3px;
   padding-right: 18px;
   border: 1px solid #ccc; }
-  .reselect-selection:hover, .reselect-selection.reselect-selection--active {
+  .reselect-selection-container:hover, .reselect-selection-container.reselect-selection--active {
     border-color: #09c; }
-  .reselect-selection [reselect-selection] {
+  .reselect-selection-container [reselect-selection] {
     display: inline-block; }
 
 .reselect-rendered-placeholder {
