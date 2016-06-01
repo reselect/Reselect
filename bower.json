@@ -1,7 +1,7 @@
 {
   "name": "angular-reselect",
   "description": "Reselect is a directive built off of Angular's HTML SELECT element.",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "homepage": "https://github.com/alexcheuk/Reselect",
   "keywords": [
     "select",
