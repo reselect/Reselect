@@ -99,9 +99,9 @@ Reselect.value('reselectDefaultOptions', {
 
 				ctrl.renderSelection(ctrl.value, $choice || value);
 
-                $scope.$safeApply(function(){
-				    ctrl.hideDropdown();
-                });
+                if(ctrl.opened) {
+                    ctrl.hideDropdown();
+                }
 			};
 
 			ctrl.clearSearch = function(){
@@ -220,9 +220,7 @@ Reselect.value('reselectDefaultOptions', {
 					return;
 				}
 
-				$scope.$safeApply(function(){
-					ctrl.hideDropdown();
-				});
+				ctrl.hideDropdown(true);
 
 				angular.element(document).off('click', hideDropdownOnClick);
 			}
