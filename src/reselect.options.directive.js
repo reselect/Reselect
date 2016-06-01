@@ -85,9 +85,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 			},
 			controllerAs: '$options',
 			controller: ['$scope', '$element', '$attrs', '$parse', '$http', '$timeout',
-				'ReselectDataAdapter', 'ReselectAjaxDataAdapter',
+				'ReselectDataAdapter', 'ReselectAjaxDataAdapter', 'KEYS',
 				function($scope, $element, $attrs, $parse, $http, $timeout, ReselectDataAdapter,
-					ReselectAjaxDataAdapter) {
+					ReselectAjaxDataAdapter, KEYS) {
 
 					var $Reselect = $element.controller('reselect');
 
@@ -119,11 +119,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					self.CHOICE_TEMPLATE.attr('ng-mouseleave',
 						'$options.activeIndex = null');
 
-
 					/**
 					 * Options
 					 */
-
 					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {});
 
 					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
@@ -151,6 +149,47 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
                             self.stickyChoices.push(sticky);
                         });
+                    };
+
+                    /**
+                    * Keyboard Support
+                    */
+
+                    self.keydown = function(evt) {
+                       var key = evt.which;
+
+                       if (!key || evt.shiftKey || evt.altKey) {
+                           return;
+                       }
+
+                       switch (key) {
+                           case KEYS.ENTER:
+                               $scope.$emit('reselect.select');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.SPACE:
+                               $scope.$emit('reselect.select');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.UP:
+                               $scope.$emit('reselect.previous');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.DOWN:
+                               $scope.$emit('reselect.next');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           default:
+                               break;
+                       }
                     };
 
 					/**
@@ -210,7 +249,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Load More function
 					 *
-					 * This function gets run when user scrolls to the bottom
+					 * This function gets run when the user scrolls to the bottom
 					 * of the dropdown OR the data returned to reselect does not
                      * fill up the full height of the dropdown.
 					 *
@@ -265,7 +304,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
                     self._selectChoice = function(choiceIndex, choiceOnClick) {
 
-
                         if(choiceOnClick){
                             $parse(choiceOnClick)($scope.$parent);
                             $Reselect.hideDropdown();
@@ -278,9 +316,46 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[selectedChoiceIndex];
                             var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
                             $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
-
-
                         }
+                    };
+
+                    self.bindEventListeners = function() {
+                        $scope.$on('reselect.select', function() {
+                            self._selectChoice(self.activeIndex);
+                        });
+
+                        $scope.$on('reselect.next', function() {
+
+                            var container_height = self.$container[0].offsetHeight;
+                            var container_top = self.$container[0].scrollTop;
+
+                            if(self.activeIndex !== null) {
+                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                    self.activeIndex++;
+                                }
+                            } else {
+                                self.activeIndex = 0; // Start at the first element
+                            }
+
+                            if((container_top + container_height) < ((self.activeIndex * self.choiceHeight) + self.choiceHeight)) {
+                                self.$container[0].scrollTop = ((self.activeIndex * self.choiceHeight) - container_height) + self.choiceHeight;
+                            }
+                        });
+
+                        $scope.$on('reselect.previous', function() {
+
+                            var container_top = self.$container[0].scrollTop;
+
+                            if(self.activeIndex) {
+                                self.activeIndex--;
+                            } else {
+                                self.activeIndex = 0;
+                            }
+
+                            if(container_top > ((self.activeIndex * self.choiceHeight))) {
+                                self.$container[0].scrollTop = container_top - self.choiceHeight;
+                            }
+                        });
                     };
 
 					/**
@@ -322,6 +397,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							self.haveChoices = false;
 						}
 					};
+
+                    self.bindEventListeners();
 				}
 			]
 		};
