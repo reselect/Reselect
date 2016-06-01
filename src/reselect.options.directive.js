@@ -337,8 +337,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                 self.activeIndex = 0; // Start at the first element
                             }
 
-                            console.log('next ', container_height, ' < ', ((self.activeIndex * self.choiceHeight) + self.choiceHeight));
-
                             if((container_top + container_height) < ((self.activeIndex * self.choiceHeight) + self.choiceHeight)) {
                                 self.$container[0].scrollTop = ((self.activeIndex * self.choiceHeight) - container_height) + self.choiceHeight;
                             }
@@ -353,8 +351,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             } else {
                                 self.activeIndex = 0;
                             }
-
-                            console.log('prev ', container_top, ' < ', ((self.activeIndex * self.choiceHeight) + self.choiceHeight));
 
                             if(container_top > ((self.activeIndex * self.choiceHeight))) {
                                 self.$container[0].scrollTop = container_top - self.choiceHeight;
