@@ -220,7 +220,9 @@ Reselect.value('reselectDefaultOptions', {
 					return;
 				}
 
-				ctrl.hideDropdown(true);
+                $scope.$safeApply(function() {
+                    ctrl.hideDropdown(true);
+                });
 
 				angular.element(document).off('click', hideDropdownOnClick);
 			}

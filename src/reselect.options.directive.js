@@ -98,6 +98,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						'.reselect-options-container'));
 					self.$list = angular.element(self.element.querySelectorAll(
 						'.reselect-options-list'));
+                    self.$search = angular.element(self.element.querySelectorAll(
+						'.reselect-search-input'));
 
 					self.choiceHeight = 36;
 					self.listHeight = 300;
@@ -320,12 +322,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                     };
 
                     self.bindEventListeners = function() {
+
                         $scope.$on('reselect.select', function() {
                             self._selectChoice(self.activeIndex);
                         });
 
                         $scope.$on('reselect.next', function() {
-
                             var container_height = self.$container[0].offsetHeight;
                             var container_top    = self.$container[0].scrollTop;
 
@@ -356,6 +358,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                 self.$container[0].scrollTop = container_top - self.choiceHeight;
                             }
                         });
+
+                        self.$search.on('keydown', function (evt) {
+                            if(evt.which === KEYS.SPACE) {
+                                evt.stopPropagation();
+                            }
+                        });
                     };
 
 					/**
@@ -370,7 +378,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
 
                         self.LazyDropdown.choices = self.stickyChoices.concat(self.LazyDropdown.choices);
-                        
+
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty
 							self.haveChoices = !!self.LazyDropdown.choices.length;
