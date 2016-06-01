@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-05-31T22:35:30.693Z
+ * Version: 0.0.1 - 2016-06-01T01:02:06.341Z
  * License: MIT
  */
 
@@ -129,7 +129,8 @@
   -moz-animation: reselectOptionOpen 0.2s;
   animation: reselectOptionOpen 0.2s;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
-  display: none; }
+  display: none;
+  width: 100%; }
   .reselect-dropdown.reselect-dropdown--opened {
     z-index: 10;
     display: block; }
@@ -138,7 +139,7 @@
   border: 1px solid #ccc;
   border-color: #09c;
   border-top-color: #eee;
-  width: 200px;
+  width: 100%;
   background: white; }
 
 .reselect-search-container {
