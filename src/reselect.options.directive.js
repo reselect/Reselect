@@ -264,8 +264,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
                     self._selectChoice = function(choiceIndex, choiceOnClick) {
-
-
                         if(choiceOnClick){
                             $parse(choiceOnClick)($scope.$parent);
                             $Reselect.hideDropdown();
@@ -295,7 +293,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
 
                         self.LazyDropdown.choices = self.stickyChoices.concat(self.LazyDropdown.choices);
-
+                        
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty
 							self.haveChoices = !!self.LazyDropdown.choices.length;

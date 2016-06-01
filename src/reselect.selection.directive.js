@@ -4,9 +4,8 @@ Reselect.directive('reselectSelection', function(){
         replace: true,
         transclude: true,
         templateUrl: 'templates/reselect.selection.tpl.html',
-        require: '^reselect',
         scope: {},
-        link: function($scope, $element, $attrs, $Reselect, transclude){
+        link: function($scope, $element, $attrs, ctrls, transclude){
             transclude($scope, function(clone){
                 $element.append(clone);
             });
