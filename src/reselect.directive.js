@@ -99,7 +99,9 @@ Reselect.value('reselectDefaultOptions', {
 
 				ctrl.renderSelection(ctrl.value, $choice || value);
 
-				ctrl.hideDropdown();
+                $scope.$safeApply(function(){
+				    ctrl.hideDropdown();
+                });
 			};
 
 			ctrl.clearSearch = function(){
@@ -189,7 +191,7 @@ Reselect.value('reselectDefaultOptions', {
                      evt.preventDefault();
                    }
                  } else {
-                   if (key === KEYS.ENTER || key === KEYS.SPACE) {
+                   if (key === KEYS.ENTER || key === KEYS.SPACE || key === KEYS.UP || key === KEYS.DOWN) {
                      ctrl.showDropdown();
 
                      evt.preventDefault();
@@ -218,8 +220,8 @@ Reselect.value('reselectDefaultOptions', {
 					return;
 				}
 
-				$scope.$apply(function(){
-					ctrl.hideDropdown(true);
+				$scope.$safeApply(function(){
+					ctrl.hideDropdown();
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);
@@ -245,6 +247,28 @@ Reselect.value('reselectDefaultOptions', {
                     $scope.$emit('reselect.input.focus');
                 }
 			};
+
+            /**
+            * Event Listeners
+            */
+
+            ctrl.bindEventListeners = function() {
+                $scope.$on('reselect.hide', function(){
+                    $scope.$safeApply(function(){
+    					ctrl.hideDropdown();
+    				});
+                });
+            };
+
+			/**
+			 * Initialization
+			 */
+
+			ctrl.initialize = function(){
+                ctrl.bindEventListeners();
+			};
+
+			ctrl.initialize();
 
 			return ctrl;
 		}]

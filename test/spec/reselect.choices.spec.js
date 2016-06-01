@@ -2,14 +2,15 @@
 
 describe('Reselect Choices Test', function(){
 
-	var $scope, $rootScope, $compile, $reselect;
+	var $scope, $rootScope, $compile, $reselect, KEYS;
 
 	beforeEach(module('Reselect'));
 
-	beforeEach(inject(function(_$rootScope_, _$compile_){
+	beforeEach(inject(function(_$rootScope_, _$compile_, _KEYS_){
 		$rootScope  = _$rootScope_;
 		$scope      = $rootScope.$new();
 		$compile    = _$compile_;
+		KEYS    = _KEYS_;
 
         $scope.ctrl = {};
 
@@ -130,6 +131,104 @@ describe('Reselect Choices Test', function(){
                 $rootScope.$digest();
 
                 expect($regularOption.find('.reselect-rendered-selection').text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+            });
+        });
+
+        describe('keydown', function() {
+            var event_methods = {
+                stopPropagation: angular.noop,
+                preventDefault: angular.noop
+            };
+
+            function mock_key_evt (which) {
+                return {
+                    which: which,
+                    stopPropagation: event_methods.stopPropagation,
+                    preventDefault: event_methods.preventDefault
+                }
+            }
+
+            it('should emit a select event if the ENTER key is pressed', function() {
+                spyOn($scope, '$emit');
+                spyOn(event_methods, 'stopPropagation');
+                spyOn(event_methods, 'preventDefault');
+
+                var evt = mock_key_evt(KEYS.ENTER);
+                ctrl.keydown(evt);
+
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.select');
+                expect(event_methods.stopPropagation).toHaveBeenCalled();
+                expect(event_methods.preventDefault).toHaveBeenCalled();
+            });
+            it('should emit a select event if the SPACE key is pressed', function() {
+                spyOn($scope, '$emit');
+                spyOn(event_methods, 'stopPropagation');
+                spyOn(event_methods, 'preventDefault');
+
+                var evt = mock_key_evt(KEYS.SPACE);
+                ctrl.keydown(evt);
+
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.select');
+                expect(event_methods.stopPropagation).toHaveBeenCalled();
+                expect(event_methods.preventDefault).toHaveBeenCalled();
+            });
+            it('should emit a select event if the UP key is pressed', function() {
+                spyOn($scope, '$emit');
+                spyOn(event_methods, 'stopPropagation');
+                spyOn(event_methods, 'preventDefault');
+
+                var evt = mock_key_evt(KEYS.UP);
+                ctrl.keydown(evt);
+
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.previous');
+                expect(event_methods.stopPropagation).toHaveBeenCalled();
+                expect(event_methods.preventDefault).toHaveBeenCalled();
+            });
+            it('should emit a select event if the UP key is pressed', function() {
+                spyOn($scope, '$emit');
+                spyOn(event_methods, 'stopPropagation');
+                spyOn(event_methods, 'preventDefault');
+
+                var evt = mock_key_evt(KEYS.DOWN);
+                ctrl.keydown(evt);
+
+                expect($scope.$emit).toHaveBeenCalledWith('reselect.next');
+                expect(event_methods.stopPropagation).toHaveBeenCalled();
+                expect(event_methods.preventDefault).toHaveBeenCalled();
+            });
+        });
+
+        describe('events', function() {
+            describe('reselect.select', function() {
+                it('should call _selectChoice with the active index', function() {
+                    spyOn(ctrl, '_selectChoice');
+
+                    ctrl.activeIndex = 0;
+
+                    $scope.$broadcast('reselect.select');
+
+                    expect(ctrl._selectChoice).toHaveBeenCalledWith(0);
+                });
+            });
+
+            describe('reselect.next', function() {
+                it('should increase active index if there is a next option', function() {
+                    ctrl.activeIndex = 0;
+
+                    $scope.$broadcast('reselect.next');
+
+                    expect(ctrl.activeIndex).toEqual(1);
+                });
+            });
+
+            describe('reselect.previous', function() {
+                it('should decrease active index if there is a previous option', function() {
+                    ctrl.activeIndex = 1;
+
+                    $scope.$broadcast('reselect.previous');
+
+                    expect(ctrl.activeIndex).toEqual(0);
+                });
             });
         });
     });
