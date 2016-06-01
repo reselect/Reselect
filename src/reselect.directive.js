@@ -198,8 +198,7 @@ Reselect.value('reselectDefaultOptions', {
                      evt.preventDefault();
                    }
                  } else {
-                   if (key === KEYS.ENTER || key === KEYS.SPACE) {
-                     console.log('enter called from parent ', ctrl.opened);
+                   if (key === KEYS.ENTER || key === KEYS.SPACE || key === KEYS.UP || key === KEYS.DOWN) {
                      ctrl.showDropdown();
 
                      evt.preventDefault();
@@ -229,7 +228,7 @@ Reselect.value('reselectDefaultOptions', {
 				}
 
 				$scope.$safeApply(function(){
-					ctrl.hideDropdown(true);
+					ctrl.hideDropdown();
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);

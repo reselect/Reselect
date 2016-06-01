@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-05-31T21:55:15.844Z
+ * Version: 0.0.1 - 2016-06-01T00:49:35.614Z
  * License: MIT
  */
 
@@ -1137,8 +1137,7 @@ Reselect.value('reselectDefaultOptions', {
                      evt.preventDefault();
                    }
                  } else {
-                   if (key === KEYS.ENTER || key === KEYS.SPACE) {
-                     console.log('enter called from parent ', ctrl.opened);
+                   if (key === KEYS.ENTER || key === KEYS.SPACE || key === KEYS.UP || key === KEYS.DOWN) {
                      ctrl.showDropdown();
 
                      evt.preventDefault();
@@ -1168,7 +1167,7 @@ Reselect.value('reselectDefaultOptions', {
 				}
 
 				$scope.$safeApply(function(){
-					ctrl.hideDropdown(true);
+					ctrl.hideDropdown();
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);
@@ -1617,11 +1616,13 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                            case KEYS.UP:
                                $scope.$emit('reselect.previous');
 
+                               evt.stopPropagation();
                                evt.preventDefault();
                                break;
                            case KEYS.DOWN:
                                $scope.$emit('reselect.next');
 
+                               evt.stopPropagation();
                                evt.preventDefault();
                                break;
                            default:
@@ -1757,7 +1758,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                     };
 
                     self.bindEventListeners = function() {
-
                         $scope.$on('reselect.select', function() {
                             self._selectChoice(self.activeIndex);
                         });
@@ -1765,6 +1765,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                         $scope.$on('reselect.next', function() {
 
                             var container_height = self.$container[0].offsetHeight;
+                            var container_top = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
                                 if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
@@ -1774,7 +1775,9 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                 self.activeIndex = 0; // Start at the first element
                             }
 
-                            if(container_height < ((self.activeIndex * self.choiceHeight) + self.choiceHeight)) {
+                            console.log('next ', container_height, ' < ', ((self.activeIndex * self.choiceHeight) + self.choiceHeight));
+
+                            if((container_top + container_height) < ((self.activeIndex * self.choiceHeight) + self.choiceHeight)) {
                                 self.$container[0].scrollTop = ((self.activeIndex * self.choiceHeight) - container_height) + self.choiceHeight;
                             }
                         });
@@ -1788,6 +1791,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             } else {
                                 self.activeIndex = 0;
                             }
+
+                            console.log('prev ', container_top, ' < ', ((self.activeIndex * self.choiceHeight) + self.choiceHeight));
 
                             if(container_top > ((self.activeIndex * self.choiceHeight))) {
                                 self.$container[0].scrollTop = container_top - self.choiceHeight;
