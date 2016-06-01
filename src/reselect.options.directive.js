@@ -327,7 +327,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                         $scope.$on('reselect.next', function() {
 
                             var container_height = self.$container[0].offsetHeight;
-                            var container_top = self.$container[0].scrollTop;
+                            var container_top    = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
                                 if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {

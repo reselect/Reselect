@@ -1,12 +1,12 @@
 <div class="reselect-container reselect"
      tabindex="0"
+     focus-on="reselect.input.focus"
+     blur-on="reselect.input.blur"
      ng-keydown="$reselect.handleKeyDown($event)">
 
 	<input type="hidden" value="{{ngModel}}"/>
 
 	<div class="reselect-selection-container"
-        focus-on="reselect.input.focus"
-        blur-on="reselect.input.blur"
 		ng-class="{'reselect-selection--active' : $reselect.opened }"
 		ng-click="$reselect.toggleDropdown()">
 

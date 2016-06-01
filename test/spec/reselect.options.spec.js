@@ -20,6 +20,16 @@ describe('Reselect Choices Test', function(){
             { "id": 3, "gender": "Female", "first_name": "Rebecca", "last_name": "Brown", "email": "rbrown2@zdnet.com", "ip_address": "173.237.84.89" },
             { "id": 4, "gender": "Female", "first_name": "Betty", "last_name": "Stanley", "email": "bstanley3@g.co", "ip_address": "1.17.161.76" },
             { "id": 5, "gender": "Male", "first_name": "Samuel", "last_name": "Larson", "email": "slarson4@godaddy.com", "ip_address": "38.160.25.219" },
+            { "id": 6, "gender": "Male", "first_name": "Gerald", "last_name": "Gonzales", "email": "ggonzales0@joomla.org", "ip_address": "153.239.46.41" },
+            { "id": 7, "gender": "Female", "first_name": "Shirley", "last_name": "Gonzalez", "email": "sgonzalez1@indiatimes.com", "ip_address": "81.199.252.111" },
+            { "id": 8, "gender": "Female", "first_name": "Rebecca", "last_name": "Brown", "email": "rbrown2@zdnet.com", "ip_address": "173.237.84.89" },
+            { "id": 9, "gender": "Female", "first_name": "Betty", "last_name": "Stanley", "email": "bstanley3@g.co", "ip_address": "1.17.161.76" },
+            { "id": 10, "gender": "Male", "first_name": "Samuel", "last_name": "Larson", "email": "slarson4@godaddy.com", "ip_address": "38.160.25.219" },
+            { "id": 11, "gender": "Male", "first_name": "Gerald", "last_name": "Gonzales", "email": "ggonzales0@joomla.org", "ip_address": "153.239.46.41" },
+            { "id": 12, "gender": "Female", "first_name": "Shirley", "last_name": "Gonzalez", "email": "sgonzalez1@indiatimes.com", "ip_address": "81.199.252.111" },
+            { "id": 13, "gender": "Female", "first_name": "Rebecca", "last_name": "Brown", "email": "rbrown2@zdnet.com", "ip_address": "173.237.84.89" },
+            { "id": 14, "gender": "Female", "first_name": "Betty", "last_name": "Stanley", "email": "bstanley3@g.co", "ip_address": "1.17.161.76" },
+            { "id": 15, "gender": "Male", "first_name": "Samuel", "last_name": "Larson", "email": "slarson4@godaddy.com", "ip_address": "38.160.25.219" },
         ];
 
         $scope.ctrl.arrayOfStrings = $scope.ctrl.arrayOfObjects.map(function(obj){
@@ -113,6 +123,8 @@ describe('Reselect Choices Test', function(){
 
             $regularOption = $compile(regularTemplate)($scope);
 
+            angular.element('body').append($regularOption);
+
             $rootScope.$digest();
 
             $regularOption.find('.reselect-selection')[0].click();
@@ -148,53 +160,47 @@ describe('Reselect Choices Test', function(){
                 }
             }
 
-            it('should emit a select event if the ENTER key is pressed', function() {
-                spyOn($scope, '$emit');
+            beforeEach(function() {
                 spyOn(event_methods, 'stopPropagation');
                 spyOn(event_methods, 'preventDefault');
+            });
+
+            afterEach(function() {
+                expect(event_methods.stopPropagation).toHaveBeenCalled();
+                expect(event_methods.preventDefault).toHaveBeenCalled();
+            });
+
+            it('should emit a select event if the ENTER key is pressed', function() {
+                spyOn($scope, '$emit');
 
                 var evt = mock_key_evt(KEYS.ENTER);
                 ctrl.keydown(evt);
 
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.select');
-                expect(event_methods.stopPropagation).toHaveBeenCalled();
-                expect(event_methods.preventDefault).toHaveBeenCalled();
             });
             it('should emit a select event if the SPACE key is pressed', function() {
                 spyOn($scope, '$emit');
-                spyOn(event_methods, 'stopPropagation');
-                spyOn(event_methods, 'preventDefault');
 
                 var evt = mock_key_evt(KEYS.SPACE);
                 ctrl.keydown(evt);
 
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.select');
-                expect(event_methods.stopPropagation).toHaveBeenCalled();
-                expect(event_methods.preventDefault).toHaveBeenCalled();
             });
             it('should emit a select event if the UP key is pressed', function() {
                 spyOn($scope, '$emit');
-                spyOn(event_methods, 'stopPropagation');
-                spyOn(event_methods, 'preventDefault');
 
                 var evt = mock_key_evt(KEYS.UP);
                 ctrl.keydown(evt);
 
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.previous');
-                expect(event_methods.stopPropagation).toHaveBeenCalled();
-                expect(event_methods.preventDefault).toHaveBeenCalled();
             });
             it('should emit a select event if the UP key is pressed', function() {
                 spyOn($scope, '$emit');
-                spyOn(event_methods, 'stopPropagation');
-                spyOn(event_methods, 'preventDefault');
 
                 var evt = mock_key_evt(KEYS.DOWN);
                 ctrl.keydown(evt);
 
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.next');
-                expect(event_methods.stopPropagation).toHaveBeenCalled();
-                expect(event_methods.preventDefault).toHaveBeenCalled();
             });
         });
 
@@ -230,6 +236,7 @@ describe('Reselect Choices Test', function(){
                     expect(ctrl.activeIndex).toEqual(0);
                 });
             });
+
         });
     });
 
