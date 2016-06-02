@@ -1,5 +1,7 @@
 Reselect.value('reselectChoicesOptions', {
-	noOptionsText: 'No Options'
+	noOptionsText: 'No Options',
+    choiceHeight: 36,
+    listHeight:300
 });
 
 Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($parse, ReselectUtils) {
@@ -93,21 +95,31 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 					var self = this;
 
+                    /**
+					 * Options
+					 */
+					self.options = angular.extend({}, reselectChoicesOptions, $parse($attrs.reselectChoices)($scope) || {});
+
+					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
+
+                    /**
+                     * Variables
+                     */
 					self.element = $element[0];
 					self.$container = angular.element(self.element.querySelectorAll(
 						'.reselect-options-container'));
 					self.$list = angular.element(self.element.querySelectorAll(
 						'.reselect-options-list'));
 
-					self.choiceHeight = 36;
-					self.listHeight = 300;
+					self.choiceHeight = self.options.choiceHeight;
+					self.listHeight = self.options.listHeight;
 
 					self.remotePagination = {};
 
 					self.haveChoices = false;
 
 					self.CHOICE_TEMPLATE = angular.element(
-						'<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($index, $onClick)"></li>'
+						'<li class="reselect-option reselect-option-choice" style="height: {{$options.choiceHeight}}px" ng-click="$options._selectChoice($index, $onClick)"></li>'
 					);
                     self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-sticky" ng-show="$sticky === true" ng-bind-html="$stickyContent"></div>');
                     self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-container" ng-show="!$sticky"></div>');
@@ -118,13 +130,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						'$options.activeIndex = $index');
 					self.CHOICE_TEMPLATE.attr('ng-mouseleave',
 						'$options.activeIndex = null');
-
-					/**
-					 * Options
-					 */
-					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {});
-
-					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
 
                     /**
                      * Single Choice - Sticky Choices
@@ -286,8 +291,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						scopeName: $Reselect.parsedOptions.itemName,
 						container: self.$container,
 						list: self.$list,
-						choiceHeight: 36,
-						listHeight: 300
+						choiceHeight: self.choiceHeight,
+						listHeight: self.listHeight
 					});
 
 					/**
@@ -313,7 +318,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             var selectedChoiceIndex = choiceIndex - self.stickyChoices.length;
 
                             var selectedScope = {};
-                            selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[selectedChoiceIndex];
+                            selectedScope[$Reselect.parsedOptions.itemName] = self.LazyDropdown.choices[selectedChoiceIndex];
                             var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
                             $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
                         }
@@ -370,7 +375,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
 
                         self.LazyDropdown.choices = self.stickyChoices.concat(self.LazyDropdown.choices);
-                        
+
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty
 							self.haveChoices = !!self.LazyDropdown.choices.length;

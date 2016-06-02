@@ -36,10 +36,10 @@
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
                         <reselect
                             ng-model="simple.value">
-                            <reselect-choices
+                            <div reselect-choices="{choiceHeight: 50}"
                                 options="option in simple.mocks.single">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
-                            </reselect-choices>
+                            </div>
                         </reselect>
 
                         <h3>Array of Objects:</h3>
@@ -170,10 +170,10 @@
                             reselect-options="simple.invalidOptions3"
                             ng-model="simple.invalidValue3">
                             <div reselect-selection>
-                                <span ng-bind="$selection.skill"></span>
+                                <span ng-bind="$choice.skill"></span>
                             </div>
                             <div reselect-choices
-                                options="option in simple.mocks.objects">
+                                options="option.skill as option in simple.mocks.objects">
                                     <span ng-bind="option.skill"></span>
                             </div reselect-choices>
                         </reselect>
