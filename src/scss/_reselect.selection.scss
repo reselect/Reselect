@@ -18,6 +18,8 @@
 .reselect-container{
 	position: relative;
 	display:inline-block;
+
+    min-width: $reselect-width;
 }
 
 .reselect-rendered{
@@ -37,7 +39,6 @@
 
 	line-height: $reselect-height - 12px;
 	min-height: $reselect-height;
-	min-width: $reselect-width;
 
 	border-radius: $reselect-border-radius;
 

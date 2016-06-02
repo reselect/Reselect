@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-02T00:34:09.166Z
+ * Version: 0.0.1 - 2016-06-02T01:44:36.850Z
  * License: MIT
  */
 
@@ -56,7 +56,8 @@
 
 .reselect-container {
   position: relative;
-  display: inline-block; }
+  display: inline-block;
+  min-width: 200px; }
 
 .reselect-rendered {
   min-height: 38px;
@@ -69,7 +70,6 @@
   background: #fff;
   line-height: 26px;
   min-height: 38px;
-  min-width: 200px;
   border-radius: 3px;
   padding-right: 18px;
   border: 1px solid #ccc; }
