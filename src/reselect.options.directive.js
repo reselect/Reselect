@@ -317,7 +317,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                         }else{
                             self.selectedIndex = choiceIndex;
 
-                            var selectedChoiceIndex = choiceIndex - self.stickyChoices.length;
+                            var selectedChoiceIndex = choiceIndex;
 
                             var selectedScope = {};
                             selectedScope[$Reselect.parsedOptions.itemName] = self.LazyDropdown.choices[selectedChoiceIndex];
