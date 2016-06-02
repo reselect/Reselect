@@ -113,13 +113,9 @@
 }
 
 .reselect-dropdown{
-	top: $reselect-height;
 	position: absolute;
 
-	@include transform-origin(top center);
 	@include animation(reselectOptionOpen 0.2s);
-
-	box-shadow: $reselect-box-shadow;
 
 	display:none;
 
@@ -129,4 +125,21 @@
 		z-index: 10;
 		display:block;
 	}
+    &.reselect-dropdown--above{
+        bottom: 38px; // TODO make dynamic in JS
+        box-shadow: $reselect-box-shadow-above;
+
+        @include transform-origin(bottom center);
+
+        .reselect-choices {
+            border-top-color: $reselect-border-color;
+            border-bottom-color: #eee;
+        }
+    }
+    &.reselect-dropdown--below{
+        top: $reselect-height;
+        box-shadow: $reselect-box-shadow;
+
+        @include transform-origin(top center);
+    }
 }

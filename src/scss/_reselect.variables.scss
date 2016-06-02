@@ -1,5 +1,6 @@
 $reselect-height: 38px;
 $reselect-width: 200px;
+$reselect-options-height: 300px;
 
 $reselect-border-color: #ccc;
 $reselect-border-color-active: #09c;
@@ -10,6 +11,7 @@ $reselect-text-size: 12px;
 $reselect-placeholder-color: #999;
 
 $reselect-box-shadow: 0 3px 4px 0 rgba(0,0,0,0.2);
+$reselect-box-shadow-above: 0 -3px 4px 0 rgba(0,0,0,0.2);
 
 @mixin reselect-border(){
 	border:1px solid $reselect-border-color;

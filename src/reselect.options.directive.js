@@ -234,7 +234,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.is_loading = true;
 
-						$Reselect.DataAdapter.getData($Reselect.search_term)
+						return $Reselect.DataAdapter.getData($Reselect.search_term)
 							.then(function(choices) {
 								if(!$Reselect.search_term){
 									$Reselect.DataAdapter.updateData(choices.data, loadingMore);

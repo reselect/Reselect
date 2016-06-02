@@ -53,7 +53,7 @@ Reselect.value('reselectDefaultOptions', {
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, $window, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -64,6 +64,7 @@ Reselect.value('reselectDefaultOptions', {
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
+			ctrl.isDropdownAbove = true;
 			ctrl.transcludeCtrls = {};
 			ctrl.transcludeScopes = {};
 
@@ -73,6 +74,10 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.search_term = '';
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
+
+            ctrl.$element  = $element[0];
+            ctrl.$dropdown = angular.element(ctrl.$element.querySelectorAll(
+                '.reselect-dropdown'));
 
 			/**
 			 * Selection
@@ -230,7 +235,9 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
-				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
+				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
+                    ctrl._positionDropdown();
+                });
 
 				$scope.$emit('reselect.search.focus');
 
@@ -259,6 +266,39 @@ Reselect.value('reselectDefaultOptions', {
     				});
                 });
             };
+
+            /**
+			 * Position Dropdown
+			 */
+
+             ctrl._positionDropdown = function() {
+                var $element = ctrl.$element;
+                var $dropdown = ctrl.$dropdown[0];
+
+                var listHeight = ctrl.transcludeCtrls.$ReselectChoice.listHeight;
+                var choicesHeight = ctrl.transcludeCtrls.$ReselectChoice.LazyDropdown.choices.length * ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
+
+                var offset = {
+                    top: $element.offsetTop,
+                    bottom: $element.offsetTop + $element.clientHeight
+                };
+                var dropdown = {
+                    height: choicesHeight >= listHeight ? listHeight : choicesHeight
+                };
+                var viewport = {
+                  top: $window.scrollY,
+                  bottom: $window.scrollY + $window.outerHeight
+                };
+
+                var enoughRoomAbove = viewport.top < (offset.top - dropdown.height);
+                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height);
+
+                if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
+                  ctrl.isDropdownAbove = true;
+                } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
+                  ctrl.isDropdownAbove = false;
+                }
+             };
 
 			/**
 			 * Initialization
