@@ -110,6 +110,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						'.reselect-options-container'));
 					self.$list = angular.element(self.element.querySelectorAll(
 						'.reselect-options-list'));
+                    self.$search = angular.element(self.element.querySelectorAll(
+						'.reselect-search-input'));
 
 					self.choiceHeight = self.options.choiceHeight;
 					self.listHeight = self.options.listHeight;
@@ -325,12 +327,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                     };
 
                     self.bindEventListeners = function() {
+
                         $scope.$on('reselect.select', function() {
                             self._selectChoice(self.activeIndex);
                         });
 
                         $scope.$on('reselect.next', function() {
-
                             var container_height = self.$container[0].offsetHeight;
                             var container_top    = self.$container[0].scrollTop;
 
@@ -359,6 +361,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
                             if(container_top > ((self.activeIndex * self.choiceHeight))) {
                                 self.$container[0].scrollTop = container_top - self.choiceHeight;
+                            }
+                        });
+
+                        self.$search.on('keydown', function (evt) {
+                            if(evt.which === KEYS.SPACE) {
+                                evt.stopPropagation();
                             }
                         });
                     };
