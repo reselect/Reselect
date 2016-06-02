@@ -131,3 +131,28 @@
 		display:block;
 	}
 }
+
+.reselect-clear-button{
+    position: absolute;
+    right:18px;
+    top:0;
+
+    top:0;
+    bottom:0;
+    line-height: $reselect-height;
+
+    width: 30px;
+    font-size: 20px;
+
+    text-align: center;
+    color:#ccc;
+
+    background:none;
+    display: block;
+
+    font-weight: 300;
+
+    &:hover, &:active{
+        text-decoration: none;
+    }
+}
