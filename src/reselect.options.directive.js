@@ -36,11 +36,8 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 
 			$element.on('scroll', function() {
 				if (!scrolling) {
-					if (!window.requestAnimationFrame) {
-						setTimeout(checkScrollbarPosition, 300);
-					} else {
-						window.requestAnimationFrame(checkScrollbarPosition);
-					}
+                    var animationFrame = ReselectUtils.requstAnimFrame();
+                    animationFrame(checkScrollbarPosition);
 					scrolling = true;
 				}
 			});

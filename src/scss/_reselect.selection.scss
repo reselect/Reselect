@@ -18,6 +18,7 @@
 .reselect-container{
 	position: relative;
 	display:inline-block;
+    outline: none;
 }
 
 .reselect-rendered{
@@ -118,7 +119,6 @@
 	@include animation(reselectOptionOpen 0.2s);
 
 	display:none;
-    visibility: hidden;
 
     width: 100%;
 
@@ -126,12 +126,10 @@
 		z-index: 10;
 		display:block;
 	}
-    &.reselect-dropdown--ready {
-        visibility: visible;
-    }
     &.reselect-dropdown--above{
         bottom: 38px; // TODO make dynamic in JS
 
+        box-shadow: $reselect-box-shadow-above;
         @include transform-origin(bottom center);
 
         .reselect-choices {
@@ -142,12 +140,7 @@
     &.reselect-dropdown--below{
         top: $reselect-height;
 
-        @include transform-origin(top center);
-    }
-    &.reselect-dropdown--ready.reselect-dropdown--above {
-        box-shadow: $reselect-box-shadow-above;
-    }
-    &.reselect-dropdown--ready.reselect-dropdown--below {
         box-shadow: $reselect-box-shadow;
+        @include transform-origin(top center);
     }
 }

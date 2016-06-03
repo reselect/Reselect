@@ -53,7 +53,7 @@ Reselect.value('reselectDefaultOptions', {
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, $window, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -64,7 +64,6 @@ Reselect.value('reselectDefaultOptions', {
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
-            ctrl.isReady = false;
 			ctrl.isDropdownAbove = false;
 			ctrl.transcludeCtrls = {};
 			ctrl.transcludeScopes = {};
@@ -273,25 +272,22 @@ Reselect.value('reselectDefaultOptions', {
             /**
 			 * Position Dropdown
 			 */
-             
-             ctrl._calculateDropdownHeight = function() {
-                 return ctrl.$dropdown[0].clientHeight;
-             };
-             ctrl._calculateDropdownPos = function(dropdownHeight) {
-                var $element = ctrl.$element;
+
+             ctrl._calculateDropdownPosition = function(dropdownHeight) {
+                var $element  = ctrl.$element;
                 var $dropdown = ctrl.$dropdown[0];
 
-                var offset = {
+                var offset    = {
                     top: $element.offsetTop,
                     bottom: $element.offsetTop + $element.clientHeight
                 };
-                var input    = {
+                var input     = {
                     height: $element.clientHeight
                 };
-                var dropdown = {
+                var dropdown  = {
                     height: dropdownHeight
                 };
-                var viewport = {
+                var viewport  = {
                   top: $window.scrollY,
                   bottom: $window.scrollY + $window.outerHeight
                 };
@@ -299,33 +295,30 @@ Reselect.value('reselectDefaultOptions', {
                 var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
                 var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
 
-                ctrl.isDropdownAbove = false;
-
                 if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = true;
                 } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = false;
                 }
-
-                ctrl.isReady = true;
              };
-             ctrl._positionDropdown = function() {
-
-                 // Include search input in calculations
+             ctrl._calculateDropdownHeight = function() {
                  var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
                  var listHeight     = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
-                 var choicesHeight  = (ctrl.transcludeCtrls.$ReselectChoice.LazyDropdown.choices.length * ctrl.transcludeCtrls.$ReselectChoice.choiceHeight) + searchHeight;
-                 var dropdownHeight = choicesHeight >= listHeight ? listHeight : choicesHeight;
+                 var choicesHeight  = ctrl.$dropdown[0].clientHeight;
 
-                 if(!choicesHeight || choicesHeight < searchHeight * 2) {
-                     $timeout(function() {
-                         choicesHeight = ctrl._calculateDropdownHeight();
-                         dropdownHeight = choicesHeight >= listHeight ? listHeight : choicesHeight;
-                         ctrl._calculateDropdownPos(dropdownHeight);
+                 return (choicesHeight >= listHeight) ? listHeight : choicesHeight;
+             };
+             ctrl._positionDropdown = function() {
+                 var animationFrame = ReselectUtils.requstAnimFrame();
+
+                 ctrl.isDropdownAbove = false;
+
+                 animationFrame(function() {
+                     var dropdownHeight = ctrl._calculateDropdownHeight();
+                     $scope.$safeApply(function() {
+                         ctrl._calculateDropdownPosition(dropdownHeight);
                      });
-                 } else {
-                     ctrl._calculateDropdownPos(dropdownHeight);
-                 }
+                 });
              };
 
 			/**
