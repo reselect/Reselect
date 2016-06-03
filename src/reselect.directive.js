@@ -64,7 +64,8 @@ Reselect.value('reselectDefaultOptions', {
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
-			ctrl.isDropdownAbove = true;
+            ctrl.isReady = false;
+			ctrl.isDropdownAbove = false;
 			ctrl.transcludeCtrls = {};
 			ctrl.transcludeScopes = {};
 
@@ -74,6 +75,7 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.search_term = '';
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
+            ctrl.dropdownBuffer = 50; // Minimum distance between dropdown and viewport
 
             ctrl.$element  = $element[0];
             ctrl.$dropdown = angular.element(ctrl.$element.querySelectorAll(
@@ -246,6 +248,7 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
+                ctrl.isReady = false;
 
 				// Clear search
 				ctrl.clearSearch();
@@ -270,34 +273,59 @@ Reselect.value('reselectDefaultOptions', {
             /**
 			 * Position Dropdown
 			 */
-
-             ctrl._positionDropdown = function() {
+             
+             ctrl._calculateDropdownHeight = function() {
+                 return ctrl.$dropdown[0].clientHeight;
+             };
+             ctrl._calculateDropdownPos = function(dropdownHeight) {
                 var $element = ctrl.$element;
                 var $dropdown = ctrl.$dropdown[0];
-
-                var listHeight = ctrl.transcludeCtrls.$ReselectChoice.listHeight;
-                var choicesHeight = ctrl.transcludeCtrls.$ReselectChoice.LazyDropdown.choices.length * ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
 
                 var offset = {
                     top: $element.offsetTop,
                     bottom: $element.offsetTop + $element.clientHeight
                 };
+                var input    = {
+                    height: $element.clientHeight
+                };
                 var dropdown = {
-                    height: choicesHeight >= listHeight ? listHeight : choicesHeight
+                    height: dropdownHeight
                 };
                 var viewport = {
                   top: $window.scrollY,
                   bottom: $window.scrollY + $window.outerHeight
                 };
 
-                var enoughRoomAbove = viewport.top < (offset.top - dropdown.height);
-                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height);
+                var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
+                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
+
+                ctrl.isDropdownAbove = false;
 
                 if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = true;
                 } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = false;
                 }
+
+                ctrl.isReady = true;
+             };
+             ctrl._positionDropdown = function() {
+
+                 // Include search input in calculations
+                 var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
+                 var listHeight     = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
+                 var choicesHeight  = (ctrl.transcludeCtrls.$ReselectChoice.LazyDropdown.choices.length * ctrl.transcludeCtrls.$ReselectChoice.choiceHeight) + searchHeight;
+                 var dropdownHeight = choicesHeight >= listHeight ? listHeight : choicesHeight;
+
+                 if(!choicesHeight || choicesHeight < searchHeight * 2) {
+                     $timeout(function() {
+                         choicesHeight = ctrl._calculateDropdownHeight();
+                         dropdownHeight = choicesHeight >= listHeight ? listHeight : choicesHeight;
+                         ctrl._calculateDropdownPos(dropdownHeight);
+                     });
+                 } else {
+                     ctrl._calculateDropdownPos(dropdownHeight);
+                 }
              };
 
 			/**
