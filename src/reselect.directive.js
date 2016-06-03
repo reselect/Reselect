@@ -53,7 +53,7 @@ Reselect.value('reselectDefaultOptions', {
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'reselectDefaultOptions', '$timeout', 'KEYS', function($scope, $element, $attrs, $parse, reselectDefaultOptions, $timeout, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -64,6 +64,7 @@ Reselect.value('reselectDefaultOptions', {
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
+			ctrl.isDropdownAbove = false;
 			ctrl.transcludeCtrls = {};
 			ctrl.transcludeScopes = {};
 
@@ -73,6 +74,11 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.search_term = '';
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
+            ctrl.dropdownBuffer = 50; // Minimum distance between dropdown and viewport
+
+            ctrl.$element  = $element[0];
+            ctrl.$dropdown = angular.element(ctrl.$element.querySelectorAll(
+                '.reselect-dropdown'));
 
 			/**
 			 * Selection
@@ -235,7 +241,9 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
-				ctrl.transcludeCtrls.$ReselectChoice.getData(true);
+				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
+                    ctrl._positionDropdown();
+                });
 
 				$scope.$emit('reselect.search.focus');
 
@@ -244,6 +252,7 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
+                ctrl.isReady = false;
 
 				// Clear search
 				ctrl.clearSearch();
@@ -264,6 +273,59 @@ Reselect.value('reselectDefaultOptions', {
     				});
                 });
             };
+
+            /**
+			 * Position Dropdown
+			 */
+
+             ctrl._calculateDropdownPosition = function(dropdownHeight) {
+                var $element  = ctrl.$element;
+                var $dropdown = ctrl.$dropdown[0];
+
+                var offset    = {
+                    top: $element.offsetTop,
+                    bottom: $element.offsetTop + $element.clientHeight
+                };
+                var input     = {
+                    height: $element.clientHeight
+                };
+                var dropdown  = {
+                    height: dropdownHeight
+                };
+                var viewport  = {
+                  top: $window.scrollY,
+                  bottom: $window.scrollY + $window.outerHeight
+                };
+
+
+                var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
+                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
+
+                if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
+                  ctrl.isDropdownAbove = true;
+                } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
+                  ctrl.isDropdownAbove = false;
+                }
+             };
+             ctrl._calculateDropdownHeight = function() {
+                 var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
+                 var listHeight     = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
+                 var choicesHeight  = ctrl.$dropdown[0].clientHeight;
+
+                 return (choicesHeight >= listHeight) ? listHeight : choicesHeight;
+             };
+             ctrl._positionDropdown = function() {
+                 var animationFrame = ReselectUtils.requstAnimFrame();
+
+                 ctrl.isDropdownAbove = false;
+
+                 animationFrame(function() {
+                     var dropdownHeight = ctrl._calculateDropdownHeight();
+                     $scope.$safeApply(function() {
+                         ctrl._calculateDropdownPosition(dropdownHeight);
+                     });
+                 });
+             };
 
 			/**
 			 * Initialization
