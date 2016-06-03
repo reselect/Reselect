@@ -292,6 +292,7 @@ Reselect.value('reselectDefaultOptions', {
                   bottom: $window.scrollY + $window.outerHeight
                 };
 
+
                 var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
                 var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
 
