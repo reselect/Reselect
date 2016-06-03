@@ -119,6 +119,13 @@ Reselect.value('reselectDefaultOptions', {
 				var valueSelected = $ngModel.$viewValue;
 				var valueToBeSelected;
 
+                function mapModelValue(value){
+                    var scp = {};
+                    scp[ctrl.parsedOptions.itemName] = value;
+
+                    return ctrl.parsedOptions.modelMapper(scp);
+                }
+
 				if(angular.isDefined(valueSelected)){
 					var choices = ctrl.DataAdapter.data;
 					var trackBy = ctrl.parsedOptions.trackByExp;
@@ -131,10 +138,8 @@ Reselect.value('reselectDefaultOptions', {
 								continue;
 							}
 
-							var scp = {};
-							scp[ctrl.parsedOptions.itemName] = choices[i];
+							choiceMatch = mapModelValue(choices[i]);
 
-							choiceMatch = ctrl.parsedOptions.modelMapper(scp);
 							valueSelectedMatch = valueSelected;
 
 							if(choiceMatch === valueSelectedMatch){
@@ -160,7 +165,7 @@ Reselect.value('reselectDefaultOptions', {
 					}else if(ctrl.options.allowInvalid && typeof ctrl.options.allowInvalid === 'function'){
 						var validateDone = function(value){
 							if(value !== undefined){
-								ctrl.selectValue(value);
+								ctrl.selectValue(mapModelValue(value), value);
 							}else{
 								ctrl.selectValue(undefined);
 							}

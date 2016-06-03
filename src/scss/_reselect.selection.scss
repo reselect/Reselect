@@ -19,6 +19,7 @@
 	position: relative;
 	display:inline-block;
     outline: none;
+    min-width: $reselect-width;
 }
 
 .reselect-rendered{
@@ -38,7 +39,6 @@
 
 	line-height: $reselect-height - 12px;
 	min-height: $reselect-height;
-	min-width: $reselect-width;
 
 	border-radius: $reselect-border-radius;
 
@@ -51,7 +51,7 @@
 	}
 
     [reselect-selection]{
-        display:inline-block;
+        display:block;
     }
 }
 
