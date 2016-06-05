@@ -30,7 +30,13 @@
 
 		self.value = 'HTML';
 		self.invalidValue = 50;
+		self.invalidValue2 = 50;
+		self.invalidValue3 = {};
 		self.objects1 = 3;
+
+        self.click = function(){
+            console.log('CLICKED');
+        };
 
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);
@@ -39,6 +45,20 @@
 
 			self.ready = true;
 		});
+
+		self.invalidOptions2 = {
+			allowInvalid: function(value, done){
+				done('Resolved Value');
+			}
+		}
+
+		self.invalidOptions3 = {
+			allowInvalid: function(value, done){
+				$timeout(function(){
+					done(self.mocks.objects[2]);
+				}, 1000);
+			}
+		}
 
 		self.remoteOptions = {
 			endpoint: function(params, pagination){

@@ -1,10 +1,10 @@
-.reselect-choices{
+.reselect-choices {
 	@include reselect-border();
 	border-color: $reselect-border-color-active;
 	border-top-color: #eee;
 
 	// min-width: $reselect-width;
-	width: $reselect-width;
+	width: 100%;
 
 	background: white;
 }
@@ -12,9 +12,10 @@
 .reselect-search-container{
 	background:#f9f9f9;
 	border-bottom:1px solid #eee;
+
 }
 
-.reselect-search-input{
+input[type="text"].reselect-search-input{
 	width: 100%;
 	height: 36px;
 
@@ -70,6 +71,7 @@
 .reselect-option{
 	padding: 12px 15px;
 
+    line-height: 1;
 	font-size: 11px;
 	font-weight: 400;
 }
@@ -94,6 +96,11 @@
 
 	&.reselect-option-choice--highlight{
 		background: #f3f3f3;
+		color:#111;
+	}
+
+    &.reselect-option-choice--selected{
+        background:#f9f9f9;
 		color:#111;
 	}
 

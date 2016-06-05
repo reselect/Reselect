@@ -1,4 +1,4 @@
-@include keyframes(fadeInUpSmall) {
+@include keyframes(reselectOptionOpen) {
 	0% {
 		opacity: 0;
 		@include transform(scaleY(0));

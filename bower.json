@@ -1,25 +1,34 @@
 {
-    "name": "reselect",
-    "version": "0.0.1",
-    "homepage": "https://github.com/alexcheuk/Reselect",
-    "main": ["dist/reselect.js", "dist/reselect.css"],
-    "ignore": [
-        "**/.*",
-        "node_modules",
-        "bower_components",
-        "src",
-        "test",
-        "gulpfile.js",
-        "karma.conf.js",
-        "examples"
-    ],
-    "dependencies": {
-        "angular": "~1.4.8"
-    },
-    "devDependencies": {
-        "jquery": "~1.11",
-        "angular-sanitize": "~1.4.8",
-        "angular-mocks": "~1.4.8"
-    },
-    "license": "MIT"
+  "name": "angular-reselect",
+  "description": "Reselect is a directive built off of Angular's HTML SELECT element.",
+  "version": "0.2.3",
+  "homepage": "https://github.com/alexcheuk/Reselect",
+  "keywords": [
+    "select",
+    "dropdown",
+    "angular",
+    "angularjs"
+  ],
+  "main": [
+    "dist/reselect.js",
+    "dist/reselect.css"
+  ],
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "src",
+    "test",
+    "gulpfile.js",
+    "karma.conf.js",
+    "examples"
+  ],
+  "dependencies": {
+    "angular": "~1.4.8"
+  },
+  "devDependencies": {
+    "jquery": "~1.11",
+    "angular-sanitize": "~1.4.8",
+    "angular-mocks": "~1.4.8"
+  },
+  "license": "MIT"
 }

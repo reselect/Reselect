@@ -1,6 +1,7 @@
-<div class="reselect-choices">
+<div class="reselect-choices" ng-keydown="$options.keydown($event)">
 	<div class="reselect-search-container">
 		<input class="reselect-search-input"
+            tabindex="-1"
 			type="text"
 			focus-on="reselect.search.focus"
 			placeholder="Type to search..."
@@ -8,15 +9,17 @@
 			ng-change="$options.search()"/>
 	</div>
 	<div class="reselect-options-container"
-		ng-class="{'reselect-options-container--autoheight': !$reselect.DataAdapter.data.length && !$options.is_loading }"
+		ng-class="{'reselect-options-container--autoheight': !$options.LazyDropdown.choices.length && !$options.is_loading }"
 		trigger-at-bottom="$options.loadMore()">
-		<ul class="reselect-options-list" ng-show="$reselect.DataAdapter.data.length"></ul>
+		<ul class="reselect-options-list" ng-show="$options.LazyDropdown.choices.length"></ul>
 
 		<div class="reselect-static-option reselect-empty-container"
 			ng-show="!$options.haveChoices && !$options.is_loading">
-			<div class="reselect-option reselect-option--static reselect-option-choice">
-				{{$options.options.noOptionsText}}
-			</div>
+            <div class="reselect-no-choice" reselect-no-choice>
+                <div class="reselect-option reselect-option--static reselect-option-choice">
+    				{{$options.options.noOptionsText}}
+    			</div>
+            </div>
 		</div>
 
 		<div class="reselect-option reselect-static-option reselect-option-loading"

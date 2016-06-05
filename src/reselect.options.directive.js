@@ -1,5 +1,7 @@
 Reselect.value('reselectChoicesOptions', {
-	noOptionsText: 'No Options'
+	noOptionsText: 'No Options',
+    choiceHeight: 36,
+    listHeight:300
 });
 
 Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($parse, ReselectUtils) {
@@ -36,11 +38,8 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 
 			$element.on('scroll', function() {
 				if (!scrolling) {
-					if (!window.requestAnimationFrame) {
-						setTimeout(checkScrollbarPosition, 300);
-					} else {
-						window.requestAnimationFrame(checkScrollbarPosition);
-					}
+                    var animationFrame = ReselectUtils.requstAnimFrame();
+                    animationFrame(checkScrollbarPosition);
 					scrolling = true;
 				}
 			});
@@ -76,7 +75,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					transcludeFn(function(clone, scope) {
-						$reselectChoices.CHOICE_TEMPLATE.append(clone);
+						angular.element($reselectChoices.CHOICE_TEMPLATE[0].querySelectorAll('.reselect-option-choice-container')).append(clone);
 					});
 
 					$reselectChoices.LazyDropdown.initialize($reselectChoices.CHOICE_TEMPLATE);
@@ -84,47 +83,118 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 				};
 			},
 			controllerAs: '$options',
-			controller: ['$scope', '$element', '$attrs', '$parse', '$http',
-				'ReselectDataAdapter', 'ReselectAjaxDataAdapter',
-				function($scope, $element, $attrs, $parse, $http, ReselectDataAdapter,
-					ReselectAjaxDataAdapter) {
+			controller: ['$scope', '$element', '$attrs', '$parse', '$http', '$timeout',
+				'ReselectDataAdapter', 'ReselectAjaxDataAdapter', 'KEYS',
+				function($scope, $element, $attrs, $parse, $http, $timeout, ReselectDataAdapter,
+					ReselectAjaxDataAdapter, KEYS) {
 
 					var $Reselect = $element.controller('reselect');
 
 					var self = this;
 
+                    /**
+					 * Options
+					 */
+					self.options = angular.extend({}, reselectChoicesOptions, $parse($attrs.reselectChoices)($scope) || {});
+
+					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
+
+                    /**
+                     * Variables
+                     */
 					self.element = $element[0];
 					self.$container = angular.element(self.element.querySelectorAll(
 						'.reselect-options-container'));
 					self.$list = angular.element(self.element.querySelectorAll(
 						'.reselect-options-list'));
+                    self.$search = angular.element(self.element.querySelectorAll(
+						'.reselect-search-input'));
 
-					self.choiceHeight = 36;
-					self.listHeight = 300;
+					self.choiceHeight = self.options.choiceHeight;
+					self.listHeight = self.options.listHeight;
 
 					self.remotePagination = {};
 
 					self.haveChoices = false;
 
 					self.CHOICE_TEMPLATE = angular.element(
-						'<li class="reselect-option reselect-option-choice" ng-click="$options._selectChoice($containerId)"></li>'
+						'<li class="reselect-option reselect-option-choice" style="height: {{$options.choiceHeight}}px" ng-click="$options._selectChoice($index, $onClick)"></li>'
 					);
+                    self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-sticky" ng-show="$sticky === true" ng-bind-html="$stickyContent"></div>');
+                    self.CHOICE_TEMPLATE.append('<div class="reselect-option-choice-container" ng-show="!$sticky"></div>');
 					self.CHOICE_TEMPLATE.attr('ng-class',
-						'{\'reselect-option-choice--highlight\' : $options.activeIndex === $index }'
+						'[{\'reselect-option-choice--highlight\' : $options.activeIndex === $index, \'reselect-option-choice--selected\' : $options.selectedIndex === $index }, cssClass]'
 					);
 					self.CHOICE_TEMPLATE.attr('ng-mouseenter',
 						'$options.activeIndex = $index');
 					self.CHOICE_TEMPLATE.attr('ng-mouseleave',
 						'$options.activeIndex = null');
 
+                    /**
+                     * Single Choice - Sticky Choices
+                     */
 
-					/**
-					 * Options
-					 */
+                    self.stickyChoices = [];
 
-					self.options = angular.extend({}, reselectChoicesOptions, $attrs.reselectChoices || {});
+                    self.registerChoices = function($choices){
+                        angular.forEach($choices, function(choice){
 
-					self.options.noOptionsText = $attrs.noOptionsText || self.options.noOptionsText;
+                            choice = angular.element(choice);
+
+                            var sticky = {
+                                class         : choice.attr('class'),
+                                $sticky       : true,
+                                $stickyContent: choice.html()
+                            };
+
+                            if(choice.attr('ng-click')){
+                                sticky.onClick = choice.attr('ng-click');
+                            }
+
+                            self.stickyChoices.push(sticky);
+                        });
+                    };
+
+                    /**
+                    * Keyboard Support
+                    */
+
+                    self.keydown = function(evt) {
+                       var key = evt.which;
+
+                       if (!key || evt.shiftKey || evt.altKey) {
+                           return;
+                       }
+
+                       switch (key) {
+                           case KEYS.ENTER:
+                               $scope.$emit('reselect.select');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.SPACE:
+                               $scope.$emit('reselect.select');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.UP:
+                               $scope.$emit('reselect.previous');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           case KEYS.DOWN:
+                               $scope.$emit('reselect.next');
+
+                               evt.stopPropagation();
+                               evt.preventDefault();
+                               break;
+                           default:
+                               break;
+                       }
+                    };
 
 					/**
 					 * Choices Functionalities
@@ -166,7 +236,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
 						self.is_loading = true;
 
-						$Reselect.DataAdapter.getData($Reselect.search_term)
+						return $Reselect.DataAdapter.getData($Reselect.search_term)
 							.then(function(choices) {
 								if(!$Reselect.search_term){
 									$Reselect.DataAdapter.updateData(choices.data, loadingMore);
@@ -183,13 +253,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Load More function
 					 *
-					 * This function gets run when user scroll to the bottom
-					 * of the dropdown OR if the data return does not fill up the
-					 * full height of the dropdown.
+					 * This function gets run when the user scrolls to the bottom
+					 * of the dropdown OR the data returned to reselect does not
+                     * fill up the full height of the dropdown.
 					 *
 					 * This function also checks if remote option's onData
 					 * returns pagination.more === true
 					 */
+
 					self.loadMore = function() {
 						if(!$Reselect.DataAdapter.pagination || !$Reselect.DataAdapter.pagination.more){
 							return;
@@ -200,6 +271,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Search
 					 */
+
 					self.search = ReselectUtils.debounce(function(){
 						self.getData(true, false);
 					}, 300, false, function(){
@@ -209,7 +281,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					/**
 					 * Lazy Containers
 					 *
-					 * The goal is to used the minimum amount of DOM elements (containers)
+					 * The goal is to use the minimal amount of DOM elements (containers)
 					 * to display large amounts of data. Containers are shuffled and repositioned
 					 * whenever the options list is scrolled.
 					 */
@@ -218,8 +290,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 						scopeName: $Reselect.parsedOptions.itemName,
 						container: self.$container,
 						list: self.$list,
-						choiceHeight: 36,
-						listHeight: 300
+						choiceHeight: self.choiceHeight,
+						listHeight: self.listHeight
 					});
 
 					/**
@@ -227,28 +299,87 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 */
 
 					self.activeIndex = null;
+					self.selectedIndex = null;
 
 					/**
 					 * Using the container id that is passed in, find the actual value by $eval the [value=""]
 					 * from the directive with the scope of the lazy container
 					 */
 
-                    self._selectChoice = function(activeIndex) {
-                        var selectedScope = {};
-                        selectedScope[$Reselect.parsedOptions.itemName] = $Reselect.DataAdapter.data[activeIndex];
-                        var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
-                        $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
+                    self._selectChoice = function(choiceIndex, choiceOnClick) {
+
+                        if(choiceOnClick){
+                            $parse(choiceOnClick)($scope.$parent);
+                            $Reselect.hideDropdown();
+                        }else{
+                            self.selectedIndex = choiceIndex;
+
+                            var selectedChoiceIndex = choiceIndex;
+
+                            var selectedScope = {};
+                            selectedScope[$Reselect.parsedOptions.itemName] = self.LazyDropdown.choices[selectedChoiceIndex];
+                            var value = angular.copy($Reselect.parsedOptions.modelMapper(selectedScope));
+                            $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName]);
+                        }
+                    };
+
+                    self.bindEventListeners = function() {
+
+                        $scope.$on('reselect.select', function() {
+                            self._selectChoice(self.activeIndex);
+                        });
+
+                        $scope.$on('reselect.next', function() {
+                            var container_height = self.$container[0].offsetHeight;
+                            var container_top    = self.$container[0].scrollTop;
+
+                            if(self.activeIndex !== null) {
+                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                    self.activeIndex++;
+                                }
+                            } else {
+                                self.activeIndex = 0; // Start at the first element
+                            }
+
+                            if((container_top + container_height) < ((self.activeIndex * self.choiceHeight) + self.choiceHeight)) {
+                                self.$container[0].scrollTop = ((self.activeIndex * self.choiceHeight) - container_height) + self.choiceHeight;
+                            }
+                        });
+
+                        $scope.$on('reselect.previous', function() {
+
+                            var container_top = self.$container[0].scrollTop;
+
+                            if(self.activeIndex) {
+                                self.activeIndex--;
+                            } else {
+                                self.activeIndex = 0;
+                            }
+
+                            if(container_top > ((self.activeIndex * self.choiceHeight))) {
+                                self.$container[0].scrollTop = container_top - self.choiceHeight;
+                            }
+                        });
+
+                        self.$search.on('keydown', function (evt) {
+                            if(evt.which === KEYS.SPACE) {
+                                evt.stopPropagation();
+                            }
+                        });
                     };
 
 					/**
 					 * Rendering
 					 *
-					 * This function handles the render of the dropdown.
+					 * This function handles rendering the dropdown.
 					 * Choices are passed along to LazyContainer which will
 					 * handle the rendering of the data.
 					 */
+
 					self.render = function(choices) {
 						self.LazyDropdown.choices = choices || $Reselect.DataAdapter.data;
+
+                        self.LazyDropdown.choices = self.stickyChoices.concat(self.LazyDropdown.choices);
 
 						if(self.LazyDropdown.choices && self.LazyDropdown.choices.length >= 0){
 							// Check if choices is empty
@@ -276,6 +407,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							self.haveChoices = false;
 						}
 					};
+
+                    self.bindEventListeners();
 				}
 			]
 		};

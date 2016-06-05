@@ -2,14 +2,15 @@
 
 describe('Reselect No Choice', function(){
 
-	var $scope, $rootScope, $compile;
+	var $scope, $rootScope, $compile, $timeout;
 
 	beforeEach(module('Reselect'));
 
-	beforeEach(inject(function(_$rootScope_, _$compile_){
+	beforeEach(inject(function(_$rootScope_, _$compile_, _$timeout_){
 		$rootScope  = _$rootScope_;
 		$scope      = $rootScope.$new();
 		$compile    = _$compile_;
+        $timeout    = _$timeout_;
 
 		$scope.ctrl = {};
 	}));
@@ -54,19 +55,19 @@ describe('Reselect No Choice', function(){
         var template = '<reselect \
                             ng-model="ctrl.value"> \
                             <reselect-choices \
-                                no-options-text="__NO_OPTION_TEXT__" \
+                                no-options-text="__NO_OPTION_TEXT__"\
                                 options="option in []">\
                             </reselect-choices> \
-                            <reselect-no-choice>\
+                            <div reselect-no-choice>\
                                 __NO_CHOICE_DIRECTIVE__\
-                            </reselect-no-choice>\
+                            </div>\
                         </reselect>';
 
         $reselect = $compile(template)($scope);
 
         $rootScope.$digest();
 
-        expect($reselect.find('.reselect-empty-container').text().trim()).toBe('__NO_CHOICE_DIRECTIVE__');
+        expect($reselect.find('.reselect-no-choice').text().trim()).toBe('__NO_CHOICE_DIRECTIVE__');
     });
 
     it('should have access to correct scope', function(){

@@ -1,5 +1,17 @@
+Reselect.run(['$rootScope', '$http', function ($rootScope, $http) {
+    $rootScope.$safeApply = function (fn) {
+        var phase = this.$root.$$phase;
+        if (phase == '$apply' || phase == '$digest') {
+            if (fn && (typeof(fn) === 'function')) {
+                fn();
+            }
+        } else {
+            this.$apply(fn);
+        }
+    };
+}]);
 
-Reselect.factory('ReselectUtils', function(){
+Reselect.factory('ReselectUtils', ['$timeout', function($timeout){
     var ReselectUtils = {
         debounce: function(func, wait, immediate, immediateFn) {
     		var timeout;
@@ -15,11 +27,19 @@ Reselect.factory('ReselectUtils', function(){
     			if (callNow) func.apply(context, args);
                 if (!timeout, immediateFn) immediateFn.apply(context, args);
     		};
-    	}
+    	},
+        requstAnimFrame: function() {
+            return  (window.requestAnimationFrame   ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+                $timeout);
+        }
     };
 
     return ReselectUtils;
-});
+}]);
 
 Reselect.filter('rshighlight', ['$sce', function($sce){
     return function(target, str){
