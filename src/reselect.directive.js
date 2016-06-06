@@ -51,6 +51,9 @@ Reselect.value('reselectDefaultOptions', {
             var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
 
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
+
+            $Reselect.$dropdown = angular.element($element[0].querySelector('.reselect-dropdown')).detach();
+
 		},
 		controllerAs: '$reselect',
 		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, KEYS){
@@ -77,8 +80,7 @@ Reselect.value('reselectDefaultOptions', {
             ctrl.dropdownBuffer = 50; // Minimum distance between dropdown and viewport
 
             ctrl.$element  = $element[0];
-            ctrl.$dropdown = angular.element(ctrl.$element.querySelectorAll(
-                '.reselect-dropdown'));
+            ctrl.$dropdown = null;
 
 			/**
 			 * Selection
@@ -284,7 +286,9 @@ Reselect.value('reselectDefaultOptions', {
 
                 var offset    = {
                     top: $element.offsetTop,
-                    bottom: $element.offsetTop + $element.clientHeight
+                    left: $element.offsetLeft,
+                    bottom: $element.offsetTop + $element.clientHeight,
+                    width: $element.offsetWidth
                 };
                 var input     = {
                     height: $element.clientHeight
@@ -306,16 +310,28 @@ Reselect.value('reselectDefaultOptions', {
                 } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = false;
                 }
+
+                console.log('is dropdown abobe ', ctrl.isDropdownAbove, offset.top, dropdownHeight);
+
+                ctrl.$dropdown[0].style.top   = ctrl.isDropdownAbove ? offset.top - dropdownHeight + 'px' : offset.bottom + 'px';
+                ctrl.$dropdown[0].style.left  = offset.left + 'px';
+                ctrl.$dropdown[0].style.width = offset.width + 'px';
              };
              ctrl._calculateDropdownHeight = function() {
                  var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
                  var listHeight     = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
                  var choicesHeight  = ctrl.$dropdown[0].clientHeight;
 
+                 console.log('client height ', choicesHeight);
+
                  return (choicesHeight >= listHeight) ? listHeight : choicesHeight;
              };
              ctrl._positionDropdown = function() {
                  var animationFrame = ReselectUtils.requstAnimFrame();
+
+                 document.querySelector('body').appendChild(ctrl.$dropdown[0]);
+
+                 ctrl.$dropdown[0].style.left = '-10000px';
 
                  ctrl.isDropdownAbove = false;
 
