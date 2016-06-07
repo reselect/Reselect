@@ -1,4 +1,5 @@
 Reselect.value('reselectDefaultOptions', {
+
 })
 
 .directive('reselect', ['$compile', function($compile){
@@ -53,6 +54,7 @@ Reselect.value('reselectDefaultOptions', {
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 
             $Reselect.$dropdown = angular.element($element[0].querySelector('.reselect-dropdown')).detach();
+            $Reselect.$dropdown[0].style.top = '-999999px'; //
 
 		},
 		controllerAs: '$reselect',
@@ -245,6 +247,7 @@ Reselect.value('reselectDefaultOptions', {
 
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
                     ctrl._positionDropdown();
+                    ctrl._appendDropdown();
                 });
 
 				$scope.$emit('reselect.search.focus');
@@ -254,7 +257,6 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
-                ctrl.isReady = false;
 
 				// Clear search
 				ctrl.clearSearch();
@@ -301,9 +303,10 @@ Reselect.value('reselectDefaultOptions', {
                   bottom: $window.scrollY + $window.outerHeight
                 };
 
-
                 var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
                 var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
+
+                ctrl.isDropdownAbove = false;
 
                 if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
                   ctrl.isDropdownAbove = true;
@@ -311,36 +314,31 @@ Reselect.value('reselectDefaultOptions', {
                   ctrl.isDropdownAbove = false;
                 }
 
-                console.log('is dropdown abobe ', ctrl.isDropdownAbove, offset.top, dropdownHeight);
-
-                ctrl.$dropdown[0].style.top   = ctrl.isDropdownAbove ? offset.top - dropdownHeight + 'px' : offset.bottom + 'px';
-                ctrl.$dropdown[0].style.left  = offset.left + 'px';
-                ctrl.$dropdown[0].style.width = offset.width + 'px';
+                return offset;
              };
              ctrl._calculateDropdownHeight = function() {
                  var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
                  var listHeight     = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
                  var choicesHeight  = ctrl.$dropdown[0].clientHeight;
 
-                 console.log('client height ', choicesHeight);
-
                  return (choicesHeight >= listHeight) ? listHeight : choicesHeight;
              };
              ctrl._positionDropdown = function() {
                  var animationFrame = ReselectUtils.requstAnimFrame();
 
-                 document.querySelector('body').appendChild(ctrl.$dropdown[0]);
-
-                 ctrl.$dropdown[0].style.left = '-10000px';
-
-                 ctrl.isDropdownAbove = false;
-
                  animationFrame(function() {
                      var dropdownHeight = ctrl._calculateDropdownHeight();
                      $scope.$safeApply(function() {
-                         ctrl._calculateDropdownPosition(dropdownHeight);
+                         var element_offset = ctrl._calculateDropdownPosition(dropdownHeight);
+
+                         ctrl.$dropdown[0].style.width = element_offset.width + 'px';
+                         ctrl.$dropdown[0].style.top   = ctrl.isDropdownAbove ? element_offset.top - dropdownHeight + 'px' : element_offset.bottom + 'px';
+                         ctrl.$dropdown[0].style.left  = element_offset.left + 'px';
                      });
                  });
+             };
+             ctrl._appendDropdown = function() {
+                 return document.querySelector('body').appendChild(ctrl.$dropdown[0]);
              };
 
 			/**
