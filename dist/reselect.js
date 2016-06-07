@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-07T22:28:32.601Z
+ * Version: 0.0.1 - 2016-06-07T23:45:07.704Z
  * License: MIT
  */
 
@@ -870,13 +870,11 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					} else {
 						$Reselect.DataAdapter = new ReselectDataAdapter({}, $Reselect.parsedOptions);
 
-                        $scope.$parent.$search_term = $Reselect.search_term;
-						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope.$parent));
+						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope));
 
 						$Reselect.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
-                                $scope.$parent.$search_term = $Reselect.search_term;
-								return $Reselect.parsedOptions.source($scope.$parent);
+								return $Reselect.parsedOptions.source($scope);
 							}, function(newChoices) {
 								$Reselect.DataAdapter.updateData(newChoices);
 							});
