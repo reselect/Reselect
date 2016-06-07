@@ -64,7 +64,7 @@
                             </div>
                             <div reselect-choices
                                 options="option.id as option in simple.mocks.objects|rsPropsFilter:{skill: $reselect.search_term } track by id">
-                                    <span ng-bind-html="option.first_name | rshighlight : $reselect.search_term"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
+                                    <span ng-bind-html="option.first_name + ' ' + option.last_name + ' - ' + option.skill | rshighlight : $reselect.search_term"></span>
                             </div reselect-choices>
                         </reselect>
 

@@ -302,7 +302,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * An index to simply track the highlighted or selected option
 					 */
 
-					self.activeIndex = null;
+					self.activeIndex = 0;
 					self.selectedIndex = null;
 
 					/**
