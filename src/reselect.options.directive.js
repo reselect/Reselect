@@ -217,11 +217,14 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							self.render();
 						};
 					} else {
-						$Reselect.DataAdapter = new ReselectDataAdapter();
+						$Reselect.DataAdapter = new ReselectDataAdapter({}, $Reselect.parsedOptions);
+
+                        $scope.$parent.$search_term = $Reselect.search_term;
 						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope.$parent));
 
 						$Reselect.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
+                                $scope.$parent.$search_term = $Reselect.search_term;
 								return $Reselect.parsedOptions.source($scope.$parent);
 							}, function(newChoices) {
 								$Reselect.DataAdapter.updateData(newChoices);
