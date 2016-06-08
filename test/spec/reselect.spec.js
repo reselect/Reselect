@@ -2,7 +2,7 @@
 
 describe('Reselect Test', function(){
 
-	var $scope, $rootScope, $compile, $reselect;
+	var $scope, $rootScope, $compile, $reselect, $window;
 
 	var template = '<reselect \
 	                    ng-model="ctrl.value"> \
@@ -14,10 +14,11 @@ describe('Reselect Test', function(){
 
 	beforeEach(module('Reselect'));
 
-	beforeEach(inject(function(_$rootScope_, _$compile_){
+	beforeEach(inject(function(_$rootScope_, _$compile_, _$window_){
 		$rootScope  = _$rootScope_;
 		$scope      = $rootScope.$new();
 		$compile    = _$compile_;
+		$window    = _$window_;
 
 		$scope.ctrl = {};
 	}));
@@ -72,6 +73,7 @@ describe('Reselect Test', function(){
 
         beforeEach(function() {
             $reselect = $compile(template)($scope);
+            angular.element('body').append($reselect);
             $rootScope.$digest();
             ctrl = $reselect.controller('reselect');
             $dropdown = $reselect.find('.reselect-dropdown');
@@ -133,6 +135,7 @@ describe('Reselect Test', function(){
                 expect(isDropdownOpen()).toBe(false);
             });
         });
+
         describe('showDropdown', function() {
             beforeEach(function() {
                 ctrl.showDropdown();
@@ -143,12 +146,51 @@ describe('Reselect Test', function(){
             it('should emit focus seach input event', function() {
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.search.focus');
             });
+            it('should open the dropdown below the input', function() {
+                var hasAboveClass = $dropdown.hasClass('reselect-dropdown--above');
+
+                expect(hasAboveClass).toBe(false);
+            });
+
         });
+        describe('dropdownPosition', function() {
+
+            function setReselectPos(top) {
+                $reselect.css({
+                    'top': top || 0,
+                    position: 'absolute'
+                });
+
+                $rootScope.$digest();
+            };
+            function setWindowHeight(height) {
+                $window.outerHeight = height;
+            }
+
+            it('should open the dropdown above the input if there is not enough room below', function() {
+                setReselectPos(450);
+                setWindowHeight(500);
+
+                ctrl._calculateDropdownPosition(300);
+
+                expect(ctrl.isDropdownAbove).toBe(true);
+            });
+
+            it('should open the dropdown below the input if there is not enough room above and below', function() {
+                setReselectPos(200);
+                setWindowHeight(400);
+
+                ctrl._calculateDropdownPosition(300);
+
+                expect(ctrl.isDropdownAbove).toBe(false);
+            });
+        });
+
         describe('hideDropdown', function() {
             beforeEach(function() {
                 ctrl.hideDropdown();
             });
-            it('should open the dropdown', function() {
+            it('should close the dropdown', function() {
                 expect(isDropdownOpen()).toBe(false);
             });
             it('should emit focus select input event', function() {

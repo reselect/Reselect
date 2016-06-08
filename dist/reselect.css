@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-02T21:16:26.580Z
+ * Version: 0.0.1 - 2016-06-08T00:01:31.319Z
  * License: MIT
  */
 
@@ -108,6 +108,7 @@
 .reselect-container {
   position: relative;
   display: inline-block;
+  outline: none;
   min-width: 200px; }
 
 .reselect-rendered {
@@ -169,22 +170,34 @@
     border-top: 5px solid #ccc; }
 
 .reselect-dropdown {
-  top: 38px;
   position: absolute;
-  -webkit-transform-origin: top center;
-  -moz-transform-origin: top center;
-  -ms-transform-origin: top center;
-  -o-transform-origin: top center;
-  transform-origin: top center;
   -webkit-animation: reselectOptionOpen 0.2s;
   -moz-animation: reselectOptionOpen 0.2s;
   animation: reselectOptionOpen 0.2s;
-  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
   display: none;
   width: 100%; }
   .reselect-dropdown.reselect-dropdown--opened {
     z-index: 10;
     display: block; }
+  .reselect-dropdown.reselect-dropdown--above {
+    bottom: 38px;
+    box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.2);
+    -webkit-transform-origin: bottom center;
+    -moz-transform-origin: bottom center;
+    -ms-transform-origin: bottom center;
+    -o-transform-origin: bottom center;
+    transform-origin: bottom center; }
+    .reselect-dropdown.reselect-dropdown--above .reselect-choices {
+      border-top-color: #ccc;
+      border-bottom-color: #eee; }
+  .reselect-dropdown.reselect-dropdown--below {
+    top: 38px;
+    box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
+    -webkit-transform-origin: top center;
+    -moz-transform-origin: top center;
+    -ms-transform-origin: top center;
+    -o-transform-origin: top center;
+    transform-origin: top center; }
 
 .reselect-clear-button {
   position: absolute;
