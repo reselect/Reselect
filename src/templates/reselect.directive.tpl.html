@@ -27,6 +27,8 @@
 		</div>
 	</div>
 
+    <a href="javascript:;" class="reselect-clear-button" ng-if="$reselect.options.allowClear && $reselect.value" ng-click="$reselect.clearValue()">&times;</a>
+
 	<div class="reselect-dropdown"
 	     ng-class="{'reselect-dropdown--opened' : $reselect.opened, 'reselect-dropdown--above': $reselect.isDropdownAbove, 'reselect-dropdown--below': !$reselect.isDropdownAbove }"></div>
 </div>

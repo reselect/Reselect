@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-03T22:46:14.870Z
+ * Version: 0.0.1 - 2016-06-08T00:01:57.447Z
  * License: MIT
  */
 
@@ -37,6 +37,57 @@
     -ms-transform: scaleY(1);
     -o-transform: scaleY(1);
     transform: scaleY(1); } }
+
+@-webkit-keyframes reselect-loader {
+  0% {
+    width: 0%;
+    left: 0%; }
+  10% {
+    width: 0%;
+    left: 0%; }
+  50% {
+    left: 0%;
+    width: 100%; }
+  90% {
+    width: 0%;
+    left: 100%; }
+  100% {
+    width: 0%;
+    left: 100%; } }
+
+@-moz-keyframes reselect-loader {
+  0% {
+    width: 0%;
+    left: 0%; }
+  10% {
+    width: 0%;
+    left: 0%; }
+  50% {
+    left: 0%;
+    width: 100%; }
+  90% {
+    width: 0%;
+    left: 100%; }
+  100% {
+    width: 0%;
+    left: 100%; } }
+
+@keyframes reselect-loader {
+  0% {
+    width: 0%;
+    left: 0%; }
+  10% {
+    width: 0%;
+    left: 0%; }
+  50% {
+    left: 0%;
+    width: 100%; }
+  90% {
+    width: 0%;
+    left: 100%; }
+  100% {
+    width: 0%;
+    left: 100%; } }
 
 .reselect {
   font-family: Arial, sans-serif;
@@ -148,6 +199,23 @@
     -o-transform-origin: top center;
     transform-origin: top center; }
 
+.reselect-clear-button {
+  position: absolute;
+  right: 18px;
+  top: 0;
+  top: 0;
+  bottom: 0;
+  line-height: 38px;
+  width: 30px;
+  font-size: 20px;
+  text-align: center;
+  color: #ccc;
+  background: none;
+  display: block;
+  font-weight: 300; }
+  .reselect-clear-button:hover, .reselect-clear-button:active {
+    text-decoration: none; }
+
 .reselect-choices {
   border: 1px solid #ccc;
   border-color: #09c;
@@ -184,7 +252,7 @@ input[type="text"].reselect-search-input {
   .reselect-options-container::-webkit-scrollbar-track {
     background: #ddd; }
   .reselect-options-container::-webkit-scrollbar-thumb {
-    background: #666; }
+    background: #999; }
 
 .reselect-options-list {
   margin: 0;
@@ -200,6 +268,27 @@ input[type="text"].reselect-search-input {
 
 .reselect-static-option {
   position: relative; }
+
+.reselect-option-loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  content: ''; }
+  .reselect-option-loader:after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 3px;
+    content: '';
+    width: 20%;
+    display: block;
+    background: #09c;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    -webkit-animation: reselect-loader 1.5s infinite;
+    -moz-animation: reselect-loader 1.5s infinite;
+    animation: reselect-loader 1.5s infinite; }
 
 .reselect-option-choice {
   height: 36px;

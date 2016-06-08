@@ -54,7 +54,7 @@ input[type="text"].reselect-search-input{
 	}
 
 	&::-webkit-scrollbar-thumb {
-	  background: #666;
+	  background: #999;
 	}
 }
 
@@ -78,6 +78,31 @@ input[type="text"].reselect-search-input{
 
 .reselect-static-option{
 	position: relative;
+}
+
+.reselect-option-loader{
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+
+    height: 3px;
+    content: '';
+
+    &:after{
+        position: absolute;
+        left:0;
+        top:0;
+        height: 3px;
+
+        content:'';
+        width: 20%;
+        display:block;
+        background: #09c;
+
+        box-shadow: 0 0 3px rgba(0,0,0,0.2);
+        @include animation(reselect-loader 1.5s infinite);
+    }
 }
 
 .reselect-option-choice{

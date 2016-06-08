@@ -1,4 +1,5 @@
 Reselect.value('reselectDefaultOptions', {
+    allowClear: false
 })
 
 .directive('reselect', ['$compile', function($compile){
@@ -61,6 +62,12 @@ Reselect.value('reselectDefaultOptions', {
 			// Options
 			ctrl.options = angular.extend({}, reselectDefaultOptions, $parse($attrs.reselectOptions)($scope));
 
+            angular.forEach(reselectDefaultOptions, function(v, key){
+                if(angular.isDefined($attrs[key])){
+                    ctrl.options[key] = $parse($attrs[key])($scope);
+                }
+            });
+
 			// Variables
 			ctrl.value = null;
 			ctrl.opened = false;
@@ -97,6 +104,10 @@ Reselect.value('reselectDefaultOptions', {
 			/**
 			 * Controller Methods
 			 */
+
+            ctrl.clearValue = function(){
+                ctrl.selectValue(undefined, undefined);
+            };
 
 			ctrl.selectValue = function(value, $choice){
 				$ngModel.$setViewValue(value);
