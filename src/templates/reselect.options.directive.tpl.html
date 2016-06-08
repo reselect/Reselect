@@ -8,9 +8,13 @@
 			ng-model="$reselect.search_term"
 			ng-change="$options.search()"/>
 	</div>
+
+    <div class="reselect-option-loader" ng-show="$options.is_loading"></div>
+
 	<div class="reselect-options-container"
 		ng-class="{'reselect-options-container--autoheight': !$options.LazyDropdown.choices.length && !$options.is_loading }"
 		trigger-at-bottom="$options.loadMore()">
+
 		<ul class="reselect-options-list" ng-show="$options.LazyDropdown.choices.length"></ul>
 
 		<div class="reselect-static-option reselect-empty-container"
@@ -24,7 +28,7 @@
 
 		<div class="reselect-option reselect-static-option reselect-option-loading"
 			ng-show="$options.is_loading">
-			Loading More
+            Loading More...
 		</div>
 	</div>
 </div>
