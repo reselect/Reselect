@@ -12,6 +12,8 @@ describe('Reselect Test', function(){
 	                    </reselect-choices> \
 	                </reselect>';
 
+    var $body = angular.element('body');
+
 	beforeEach(module('Reselect'));
 
 	beforeEach(inject(function(_$rootScope_, _$compile_, _$window_){
@@ -50,15 +52,24 @@ describe('Reselect Test', function(){
 			];
 
 			$reselect = $compile(template)($scope);
+
 			$rootScope.$digest();
+
+            $reselect.find('.reselect-selection')[0].click();
+
+            $rootScope.$digest();
 		});
+
+        afterEach(function() {
+            $body.find('.reselect-dropdown').remove();
+        });
 
 		it('Replaces the element with the directive template', function(){
 			expect($reselect.hasClass('reselect-container')).toBe(true);
 		});
 
 		it('Replaces options directive with the template', function(){
-			expect($reselect.children('.reselect-dropdown').length).toBe(1);
+			expect($body.find('.reselect-dropdown').length).toBe(1);
 		});
 		//
 		// it('Should have calculated the options list dimensions correctly', function(){
@@ -73,16 +84,21 @@ describe('Reselect Test', function(){
 
         beforeEach(function() {
             $reselect = $compile(template)($scope);
-            angular.element('body').append($reselect);
+            $body.append($reselect);
             $rootScope.$digest();
             ctrl = $reselect.controller('reselect');
-            $dropdown = $reselect.find('.reselect-dropdown');
+            $dropdown = $body.find('.reselect-dropdown');
             spyOn($scope, '$emit');
+        });
+
+        afterEach(function() {
+            $body.find('.reselect-dropdown').remove();
         });
 
         function isDropdownOpen() {
             $rootScope.$digest();
-            return $dropdown.hasClass('reselect-dropdown--opened');
+
+            return $body.find('.reselect-dropdown').eq(0).hasClass('reselect-dropdown--opened');
         };
 
         describe('handleKeyDown', function() {
