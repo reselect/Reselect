@@ -23,21 +23,7 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
         var choices;
         var search_options = {};
 
-        if(search_term){
-
-            // Fuzzy Search
-            var fuse = new Fuse(this.data, search_options);
-
-            choices = fuse.search(search_term);
-
-            if(angular.isDefined(search_options.keys)){
-                choices = choices.map(function(index){
-                    return self.data[index];
-                });
-            }
-        }else{
-            choices = this.data;
-        }
+        choices = this.data;
 
         defer.resolve({
             data: choices

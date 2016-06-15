@@ -216,12 +216,13 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 							self.render();
 						};
 					} else {
-						$Reselect.DataAdapter = new ReselectDataAdapter();
-						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope.$parent));
+						$Reselect.DataAdapter = new ReselectDataAdapter({}, $Reselect.parsedOptions);
+
+						$Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope));
 
 						$Reselect.DataAdapter.observe = function(onChange) {
 							$scope.$watchCollection(function() {
-								return $Reselect.parsedOptions.source($scope.$parent);
+								return $Reselect.parsedOptions.source($scope);
 							}, function(newChoices) {
 								$Reselect.DataAdapter.updateData(newChoices);
 							});
@@ -300,7 +301,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					 * An index to simply track the highlighted or selected option
 					 */
 
-					self.activeIndex = null;
+					self.activeIndex = 0;
 					self.selectedIndex = null;
 
 					/**
