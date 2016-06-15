@@ -67,7 +67,8 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 	LazyScroller.prototype._calculateLazyRender = function(force){
 		var self = this;
 
-		var scrollTop = (force === true) ? self.lastScrollTop : self.$container[0].scrollTop;
+		// var scrollTop = (force === true) ? self.lastScrollTop : self.$container[0].scrollTop;
+		var scrollTop = self.$container[0].scrollTop; //self.lastScrollTop
 
 		self.lastScrollTop = scrollTop;
 
