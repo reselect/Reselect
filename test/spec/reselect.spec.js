@@ -86,6 +86,10 @@ describe('Reselect Test', function(){
             $reselect = $compile(template)($scope);
             $body.append($reselect);
             $rootScope.$digest();
+
+            $reselect.find('.reselect-selection')[0].click();
+            $rootScope.$digest();
+
             ctrl = $reselect.controller('reselect');
             $dropdown = $body.find('.reselect-dropdown');
             spyOn($scope, '$emit');
@@ -167,8 +171,8 @@ describe('Reselect Test', function(){
 
                 expect(hasAboveClass).toBe(false);
             });
-
         });
+
         describe('dropdownPosition', function() {
 
             function setReselectPos(top) {
@@ -211,6 +215,15 @@ describe('Reselect Test', function(){
             });
             it('should emit focus select input event', function() {
                 expect($scope.$emit).toHaveBeenCalledWith('reselect.input.focus');
+            });
+        });
+
+        describe('_removeDropdown', function() {
+            it('should remove the dropdown from the DOM', function() {
+
+                ctrl._removeDropdown();
+
+                expect($body.find('.reselect-dropdown').length).toBe(0);
             });
         });
     })
