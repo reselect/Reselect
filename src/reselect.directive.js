@@ -54,7 +54,8 @@ Reselect.value('reselectDefaultOptions', {
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
 
             $Reselect.$dropdown = angular.element($element[0].querySelector('.reselect-dropdown')).detach();
-            $Reselect.$dropdown[0].style.top = '-999999px'; //
+            $Reselect.$dropdown[0].style.top = '-999999px';
+            $Reselect.$options_container = angular.element($Reselect.$dropdown[0].querySelectorAll('.reselect-options-container'));
 
 		},
 		controllerAs: '$reselect',
@@ -77,12 +78,15 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.DataAdapter = null;
 
 			ctrl.search_term = '';
+            ctrl.isRemote   = false;
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
             ctrl.dropdownBuffer = 50; // Minimum distance between dropdown and viewport
+            ctrl.scrollPos  = 0;
 
             ctrl.$element  = $element[0];
             ctrl.$dropdown = null;
+            ctrl.$options_container  = null;
 
 			/**
 			 * Selection
@@ -103,11 +107,13 @@ Reselect.value('reselectDefaultOptions', {
 			 */
 
 			ctrl.selectValue = function(value, $choice){
+
 				$ngModel.$setViewValue(value);
 
 				ctrl.value = value;
 
 				ctrl.renderSelection(ctrl.value, $choice || value);
+                ctrl._saveScrollPos();
 
                 if(ctrl.opened) {
                     ctrl.hideDropdown();
@@ -248,6 +254,9 @@ Reselect.value('reselectDefaultOptions', {
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
                     ctrl._positionDropdown();
                     ctrl._appendDropdown();
+                    if(!ctrl.isRemote) {
+                        ctrl._setScrollPos();
+                    }
                 });
 
 				$scope.$emit('reselect.search.focus');
@@ -260,6 +269,8 @@ Reselect.value('reselectDefaultOptions', {
 
 				// Clear search
 				ctrl.clearSearch();
+
+                ctrl._removeDropdown();
 
                 if(!blurInput) {
                     $scope.$emit('reselect.input.focus');
@@ -339,6 +350,26 @@ Reselect.value('reselectDefaultOptions', {
              };
              ctrl._appendDropdown = function() {
                  return document.querySelector('body').appendChild(ctrl.$dropdown[0]);
+             };
+             ctrl._removeDropdown = function() {
+                 var $body = document.querySelector('body');
+                 if($body.contains(ctrl.$dropdown[0])) {
+                     return $body.removeChild(ctrl.$dropdown[0]);
+                 }
+             };
+             ctrl._saveScrollPos = function() {
+                 if(ctrl.$options_container.length) {
+                     ctrl.scrollPos = ctrl.$options_container[0].scrollTop;
+                 }
+             };
+             ctrl._setScrollPos = function() {
+                 var animationFrame = ReselectUtils.requstAnimFrame();
+
+                 animationFrame(function() {
+                     if(ctrl.$options_container.length) {
+                        ctrl.$options_container[0].scrollTop = ctrl.scrollPos;
+                     }
+                 });
              };
 
 			/**

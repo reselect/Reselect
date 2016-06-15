@@ -205,6 +205,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					if ($attrs.remote) {
 						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
 
+                        $Reselect.isRemote = true;
+
 						$Reselect.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $Reselect.parsedOptions);
 
 						$Reselect.DataAdapter.prepareGetData = function(){
