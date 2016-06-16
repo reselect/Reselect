@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-15T01:04:18.634Z
+ * Version: 0.0.1 - 2016-06-16T00:46:05.981Z
  * License: MIT
  */
 
@@ -203,7 +203,7 @@ Reselect.value('reselectDefaultOptions', {
 
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', '$document', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, $document, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -448,36 +448,20 @@ Reselect.value('reselectDefaultOptions', {
 			 */
 
              ctrl._calculateDropdownPosition = function(dropdownHeight) {
+                dropdownHeight = angular.isNumber(dropdownHeight) ? dropdownHeight + ctrl.dropdownBuffer : ctrl.dropdownBuffer;
+
                 var $element  = ctrl.$element;
-                var $dropdown = ctrl.$dropdown[0];
+                var $elementBCR = $element.getBoundingClientRect();
 
                 var offset    = {
-                    top: $element.offsetTop,
-                    left: $element.offsetLeft,
-                    bottom: $element.offsetTop + $element.clientHeight,
-                    width: $element.offsetWidth
-                };
-                var input     = {
-                    height: $element.clientHeight
-                };
-                var dropdown  = {
-                    height: dropdownHeight
-                };
-                var viewport  = {
-                  top: $window.scrollY,
-                  bottom: $window.scrollY + $window.outerHeight
+                    width: Math.round(angular.isNumber($elementBCR.width) ? $elementBCR.width : $element.offsetWidth),
+                    height: Math.round(angular.isNumber($elementBCR.height) ? $elementBCR.height : $element.offsetHeight),
+                    top: Math.round($elementBCR.top + ($window.pageYOffset || $document[0].documentElement.scrollTop)),
+                    bottom: Math.round($elementBCR.bottom + ($window.pageYOffset || $document[0].documentElement.scrollTop)),
+                    left: Math.round($elementBCR.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft))
                 };
 
-                var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
-                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
-
-                ctrl.isDropdownAbove = false;
-
-                if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
-                  ctrl.isDropdownAbove = true;
-                } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
-                  ctrl.isDropdownAbove = false;
-                }
+                ctrl.isDropdownAbove = Math.round($elementBCR.top) > ($window.outerHeight - Math.round($elementBCR.bottom));
 
                 return offset;
              };
