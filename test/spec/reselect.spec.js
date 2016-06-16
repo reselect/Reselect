@@ -196,8 +196,8 @@ describe('Reselect Test', function(){
                 expect(ctrl.isDropdownAbove).toBe(true);
             });
 
-            it('should open the dropdown below the input if there is not enough room above and below', function() {
-                setReselectPos(200);
+            it('should open the dropdown below the input if there is enough room below', function() {
+                setReselectPos(0);
                 setWindowHeight(400);
 
                 ctrl._calculateDropdownPosition(300);
