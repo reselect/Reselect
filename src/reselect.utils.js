@@ -1,5 +1,8 @@
 Reselect.run(['$rootScope', '$http', function ($rootScope, $http) {
     $rootScope.$safeApply = function (fn) {
+        if(!this.$root) {
+            return fn();
+        }
         var phase = this.$root.$$phase;
         if (phase == '$apply' || phase == '$digest') {
             if (fn && (typeof(fn) === 'function')) {
