@@ -10,6 +10,7 @@ Reselect.value('reselectDefaultOptions', {
 		transclude  : true,
 		replace     : true,
 		scope		: true,
+        terminal    : true,
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];

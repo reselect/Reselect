@@ -49,12 +49,12 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 	};
 }]);
 
-Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
+Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', '$templateCache',
 	'LazyScroller', 'LazyContainer', 'ReselectUtils', 'reselectChoicesOptions',
-	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
+	function(ChoiceParser, $compile, $templateCache, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
 		return {
 			restrict: 'AE',
-			templateUrl: 'templates/reselect.options.directive.tpl.html',
+			template: $templateCache.get('templates/reselect.options.directive.tpl.html'),
 			require: ['reselectChoices', '?^reselect'],
 			transclude: true,
 			replace: true,
