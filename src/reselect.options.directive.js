@@ -337,7 +337,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', '$templateCac
                             var container_top    = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
-                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                if(self.activeIndex < self.LazyDropdown.choices.length - 1) {
                                     self.activeIndex++;
                                 }
                             } else {

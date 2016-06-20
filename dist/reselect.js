@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-20T19:01:14.972Z
+ * Version: 0.0.1 - 2016-06-20T22:25:22.538Z
  * License: MIT
  */
 
@@ -1080,7 +1080,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', '$templateCac
                             var container_top    = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
-                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                if(self.activeIndex < self.LazyDropdown.choices.length - 1) {
                                     self.activeIndex++;
                                 }
                             } else {
