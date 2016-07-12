@@ -11,14 +11,14 @@
 		ng-click="$reselect.toggleDropdown()">
 
 		<div class="reselect-rendered reselect-rendered-selection"
-			ng-show="$reselect.value">
+			ng-show="$reselect.isValidValue">
             <div class="reselect-selection" reselect-selection>
                 <span ng-bind="$selection"></span>
             </div>
 		</div>
 
 		<div class="reselect-rendered reselect-rendered-placeholder"
-			ng-show="!$reselect.value">
+			ng-show="!$reselect.isValidValue">
             <div class="reselect-placeholder" reselect-placeholder>Please select an option</div>
         </div>
 
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 
-    <a href="javascript:;" class="reselect-clear-button" ng-if="$reselect.options.allowClear && $reselect.value" ng-click="$reselect.clearValue()">&times;</a>
+    <a href="javascript:;" class="reselect-clear-button" ng-if="$reselect.options.allowClear && $reselect.isValidValue" ng-click="$reselect.clearValue()">&times;</a>
 
 	<div class="reselect-dropdown"
 	     ng-class="{'reselect-dropdown--opened' : $reselect.opened, 'reselect-dropdown--above': $reselect.isDropdownAbove, 'reselect-dropdown--below': !$reselect.isDropdownAbove }"></div>

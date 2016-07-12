@@ -122,6 +122,7 @@ Reselect.value('reselectDefaultOptions', {
 				$ngModel.$setViewValue(value);
 
 				ctrl.value = value;
+                ctrl.isValidValue = angular.isDefined(ctrl.value) || null;
 
 				ctrl.renderSelection(ctrl.value, $choice || value);
                 ctrl._saveScrollPos();
@@ -172,7 +173,7 @@ Reselect.value('reselectDefaultOptions', {
 				}
 
 
-				if(valueToBeSelected){
+				if(angular.isDefined(valueToBeSelected)){
 					ctrl.selectValue($ngModel.$viewValue, valueToBeSelected);
 				}else{
 					/**

@@ -140,7 +140,6 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
                         container.scope[self.options.scopeName] = self.choices[i];
                         container.scope.$sticky        = false;
                     }
-
 				}
 			}
 		}

@@ -28,7 +28,7 @@
 
 		self.mocks = {};
 
-		self.value = 'HTML';
+		self.value = 0;
 		self.invalidValue = 50;
 		self.invalidValue2 = 50;
 		self.invalidValue3 = {};
