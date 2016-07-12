@@ -300,9 +300,7 @@ Reselect.value('reselectDefaultOptions', {
                 });
 
                 $scope.$on('$destroy', function(){
-                    $scope.$safeApply(function(){
-                        ctrl.$dropdown.remove();
-                    });
+                    ctrl.$dropdown.remove();
                 });
             };
 
