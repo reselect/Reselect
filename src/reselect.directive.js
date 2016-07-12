@@ -298,6 +298,10 @@ Reselect.value('reselectDefaultOptions', {
     					ctrl.hideDropdown();
     				});
                 });
+
+                $scope.$on('$destroy', function(){
+                    ctrl.$dropdown.remove();
+                });
             };
 
             /**
