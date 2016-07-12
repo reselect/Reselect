@@ -298,6 +298,12 @@ Reselect.value('reselectDefaultOptions', {
     					ctrl.hideDropdown();
     				});
                 });
+
+                $scope.$on('$destroy', function(){
+                    $scope.$safeApply(function(){
+                        ctrl.$dropdown.remove();
+                    });
+                });
             };
 
             /**
