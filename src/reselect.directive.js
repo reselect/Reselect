@@ -262,9 +262,12 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
+                ctrl._positionDropdown();
+                ctrl._appendDropdown();
+
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
                     ctrl._positionDropdown();
-                    ctrl._appendDropdown();
+
                     if(!ctrl.isRemote) {
                         ctrl._setScrollPos();
                     }
