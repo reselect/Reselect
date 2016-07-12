@@ -8,7 +8,7 @@
 
 	<div class="reselect-selection-container"
 		ng-class="{'reselect-selection--active' : $reselect.opened }"
-		ng-click="$reselect.toggleDropdown()">
+		ng-click="$reselect.toggleDropdown($event)">
 
 		<div class="reselect-rendered reselect-rendered-selection"
 			ng-show="$reselect.isValidValue">

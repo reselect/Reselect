@@ -249,7 +249,7 @@ Reselect.value('reselectDefaultOptions', {
 			};
 
 			function hideDropdownOnClick(event){
-				if($element[0].contains(event.target)){
+				if(ctrl.$dropdown[0].contains(event.target)){
 					return;
 				}
 
@@ -272,11 +272,14 @@ Reselect.value('reselectDefaultOptions', {
                     if(!ctrl.isRemote) {
                         ctrl._setScrollPos();
                     }
+
+
+                    setTimeout(function(){
+                        angular.element(document).on('click', hideDropdownOnClick);
+                    });
                 });
 
-				$scope.$emit('reselect.search.focus');
-
-				angular.element(document).on('click', hideDropdownOnClick);
+                $scope.$emit('reselect.search.focus');
 			};
 
 			ctrl.hideDropdown = function(blurInput){
@@ -286,6 +289,8 @@ Reselect.value('reselectDefaultOptions', {
 				ctrl.clearSearch();
 
                 ctrl._removeDropdown();
+
+                angular.element(document).off('click', hideDropdownOnClick);
 
                 if(!blurInput) {
                     $scope.$emit('reselect.input.focus');

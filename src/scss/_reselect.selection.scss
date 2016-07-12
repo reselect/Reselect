@@ -20,6 +20,12 @@
 	display:inline-block;
     outline: none;
     min-width: $reselect-width;
+
+    &:focus, &:active{
+        .reselect-selection-container{
+            border-color: $reselect-border-color-active;
+        }
+    }
 }
 
 .reselect-rendered{
