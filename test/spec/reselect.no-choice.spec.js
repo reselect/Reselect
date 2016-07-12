@@ -2,7 +2,8 @@
 
 describe('Reselect No Choice', function(){
 
-	var $scope, $rootScope, $compile, $timeout;
+	var $scope, $rootScope, $compile, $timeout, $reselect;
+    var $body = angular.element('body');
 
 	beforeEach(module('Reselect'));
 
@@ -15,7 +16,19 @@ describe('Reselect No Choice', function(){
 		$scope.ctrl = {};
 	}));
 
-    var $reselect;
+    afterEach(function() {
+        $body.find('.reselect-dropdown').remove();
+    });
+
+    function compileAndOpen(template) {
+        $reselect = $compile(template)($scope);
+
+        $rootScope.$digest();
+
+        $reselect.find('.reselect-selection')[0].click();
+
+        $rootScope.$digest();
+    }
 
     it('should display default no options text', function(){
 
@@ -26,11 +39,10 @@ describe('Reselect No Choice', function(){
                             </reselect-choices> \
                         </reselect>';
 
-        $reselect = $compile(template)($scope);
+        compileAndOpen(template);
 
-        $rootScope.$digest();
+        expect($body.find('.reselect-empty-container').text().trim()).toBe('No Options');
 
-        expect($reselect.find('.reselect-empty-container').text().trim()).toBe('No Options');
     });
 
     it('should display [no-options-text] value', function(){
@@ -43,11 +55,9 @@ describe('Reselect No Choice', function(){
                             </reselect-choices> \
                         </reselect>';
 
-        $reselect = $compile(template)($scope);
+        compileAndOpen(template);
 
-        $rootScope.$digest();
-
-        expect($reselect.find('.reselect-empty-container').text().trim()).toBe('__NO_OPTION_TEXT__');
+        expect($body.find('.reselect-empty-container').text().trim()).toBe('__NO_OPTION_TEXT__');
     });
 
     it('should display [reselect-no-choice] directive', function(){
@@ -63,11 +73,9 @@ describe('Reselect No Choice', function(){
                             </div>\
                         </reselect>';
 
-        $reselect = $compile(template)($scope);
+        compileAndOpen(template);
 
-        $rootScope.$digest();
-
-        expect($reselect.find('.reselect-no-choice').text().trim()).toBe('__NO_CHOICE_DIRECTIVE__');
+        expect($body.find('.reselect-no-choice').text().trim()).toBe('__NO_CHOICE_DIRECTIVE__');
     });
 
     it('should have access to correct scope', function(){
@@ -85,11 +93,9 @@ describe('Reselect No Choice', function(){
                             </reselect-no-choice>\
                         </reselect>';
 
-        $reselect = $compile(template)($scope);
+        compileAndOpen(template);
 
-        $rootScope.$digest();
-
-        expect($reselect.find('.reselect-empty-container').text().trim()).toBe($scope.ctrl.outer);
+        expect($body.find('.reselect-empty-container').text().trim()).toBe($scope.ctrl.outer);
     });
 
 });

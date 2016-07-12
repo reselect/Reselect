@@ -49,12 +49,12 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 	};
 }]);
 
-Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
+Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', '$templateCache',
 	'LazyScroller', 'LazyContainer', 'ReselectUtils', 'reselectChoicesOptions',
-	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
+	function(ChoiceParser, $compile, $templateCache, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
 		return {
 			restrict: 'AE',
-			templateUrl: 'templates/reselect.options.directive.tpl.html',
+			template: $templateCache.get('templates/reselect.options.directive.tpl.html'),
 			require: ['reselectChoices', '?^reselect'],
 			transclude: true,
 			replace: true,
@@ -205,6 +205,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					if ($attrs.remote) {
 						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
 
+                        $Reselect.isRemote = true;
+
 						$Reselect.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $Reselect.parsedOptions);
 
 						$Reselect.DataAdapter.prepareGetData = function(){
@@ -335,7 +337,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             var container_top    = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
-                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                if(self.activeIndex < self.LazyDropdown.choices.length - 1) {
                                     self.activeIndex++;
                                 }
                             } else {

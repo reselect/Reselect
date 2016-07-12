@@ -4,6 +4,8 @@ describe('Reselect Choices Test', function(){
 
 	var $scope, $rootScope, $compile, $reselect, KEYS;
 
+    var $body = angular.element('body');
+
 	beforeEach(module('Reselect'));
 
 	beforeEach(inject(function(_$rootScope_, _$compile_, _KEYS_){
@@ -70,12 +72,19 @@ describe('Reselect Choices Test', function(){
             $rootScope.$digest();
         });
 
-    	it('should output choices correctly', function(){
-    		expect($regularOption.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfObjects[0].email);
-    		expect($regularOption.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+        afterEach(function() {
+            $body.find('.reselect-dropdown').remove();
+        });
 
-            expect($optionAs.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfObjects[0].email);
-    		expect($optionAs.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+    	it('should output choices correctly', function(){
+            var regOptionDropdown = $body.find('.reselect-dropdown').eq(0);
+            var optionAsDropdown  = $body.find('.reselect-dropdown').eq(1);
+
+    		expect(regOptionDropdown.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfObjects[0].email);
+    		expect(regOptionDropdown.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+
+            expect(optionAsDropdown.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfObjects[0].email);
+    		expect(optionAsDropdown.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
     	});
 	});
 
@@ -101,9 +110,13 @@ describe('Reselect Choices Test', function(){
             $rootScope.$digest();
         });
 
+        afterEach(function() {
+            $body.find('.reselect-dropdown').remove();
+        });
+
     	it('should output choices correctly', function(){
-    		expect($regularOption.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfStrings[0]);
-    		expect($regularOption.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfStrings[4]);
+    		expect($body.find('.reselect-option').eq(0).text().trim()).toBe($scope.ctrl.arrayOfStrings[0]);
+    		expect($body.find('.reselect-option').eq(4).text().trim()).toBe($scope.ctrl.arrayOfStrings[4]);
     	});
 	});
 
@@ -123,7 +136,7 @@ describe('Reselect Choices Test', function(){
 
             $regularOption = $compile(regularTemplate)($scope);
 
-            angular.element('body').append($regularOption);
+            $body.append($regularOption);
 
             $rootScope.$digest();
 
@@ -132,7 +145,11 @@ describe('Reselect Choices Test', function(){
             $rootScope.$digest();
 
             // reselectChoices controller
-            ctrl = $regularOption.find('.reselect-choices').controller('reselectChoices');
+            ctrl = $body.find('.reselect-choices').controller('reselectChoices');
+        });
+
+        afterEach(function() {
+            $body.find('.reselect-dropdown').remove();
         });
 
         describe('_selectChoice', function() {
@@ -142,7 +159,7 @@ describe('Reselect Choices Test', function(){
 
                 $rootScope.$digest();
 
-                expect($regularOption.find('.reselect-rendered-selection').text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
+                expect($body.find('.reselect-rendered-selection').text().trim()).toBe($scope.ctrl.arrayOfObjects[4].email);
             });
         });
 
