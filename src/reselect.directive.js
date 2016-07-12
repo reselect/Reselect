@@ -298,12 +298,12 @@ Reselect.value('reselectDefaultOptions', {
     					ctrl.hideDropdown();
     				});
                 });
-
-                $scope.$on('$destroy', function(){
-                    ctrl.$dropdown.remove();
-                });
             };
 
+            $scope.$on('$destroy', function(){
+                ctrl._removeDropdown();
+                angular.element(document).off('click', hideDropdownOnClick);
+            });
             /**
 			 * Position Dropdown
 			 */
