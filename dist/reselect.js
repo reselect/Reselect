@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-06-08T00:05:56.647Z
+ * Version: 0.0.1 - 2016-07-12T20:11:53.453Z
  * License: MIT
  */
 
@@ -154,6 +154,7 @@ Reselect.value('reselectDefaultOptions', {
 		transclude  : true,
 		replace     : true,
 		scope		: true,
+        terminal    : true,
 		link: function($scope, $element, $attrs, ctrls, transcludeFn){
 
 			var $Reselect = ctrls[0];
@@ -196,9 +197,14 @@ Reselect.value('reselectDefaultOptions', {
             var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
 
             $Reselect.transcludeCtrls.$ReselectChoice.registerChoices($choice);
+
+            $Reselect.$dropdown = angular.element($element[0].querySelector('.reselect-dropdown')).detach();
+            $Reselect.$dropdown[0].style.top = '-999999px';
+            $Reselect.$options_container = angular.element($Reselect.$dropdown[0].querySelectorAll('.reselect-options-container'));
+
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, KEYS){
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectDefaultOptions', '$timeout', '$window', '$document', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectDefaultOptions, $timeout, $window, $document, KEYS){
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -223,13 +229,15 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.DataAdapter = null;
 
 			ctrl.search_term = '';
+            ctrl.isRemote   = false;
 			ctrl.isDisabled = false; // TODO
 			ctrl.isFetching = false; // TODO
             ctrl.dropdownBuffer = 50; // Minimum distance between dropdown and viewport
+            ctrl.scrollPos  = 0;
 
             ctrl.$element  = $element[0];
-            ctrl.$dropdown = angular.element(ctrl.$element.querySelectorAll(
-                '.reselect-dropdown'));
+            ctrl.$dropdown = null;
+            ctrl.$options_container  = null;
 
 			/**
 			 * Selection
@@ -254,11 +262,13 @@ Reselect.value('reselectDefaultOptions', {
             };
 
 			ctrl.selectValue = function(value, $choice){
+
 				$ngModel.$setViewValue(value);
 
 				ctrl.value = value;
 
 				ctrl.renderSelection(ctrl.value, $choice || value);
+                ctrl._saveScrollPos();
 
                 if(ctrl.opened) {
                     ctrl.hideDropdown();
@@ -396,8 +406,15 @@ Reselect.value('reselectDefaultOptions', {
 			ctrl.showDropdown = function(){
 				ctrl.opened = true;
 
+                ctrl._positionDropdown();
+                ctrl._appendDropdown();
+
 				ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function() {
                     ctrl._positionDropdown();
+
+                    if(!ctrl.isRemote) {
+                        ctrl._setScrollPos();
+                    }
                 });
 
 				$scope.$emit('reselect.search.focus');
@@ -407,10 +424,11 @@ Reselect.value('reselectDefaultOptions', {
 
 			ctrl.hideDropdown = function(blurInput){
 				ctrl.opened = false;
-                ctrl.isReady = false;
 
 				// Clear search
 				ctrl.clearSearch();
+
+                ctrl._removeDropdown();
 
                 if(!blurInput) {
                     $scope.$emit('reselect.input.focus');
@@ -429,38 +447,31 @@ Reselect.value('reselectDefaultOptions', {
                 });
             };
 
+            $scope.$on('$destroy', function(){
+                ctrl._removeDropdown();
+                angular.element(document).off('click', hideDropdownOnClick);
+            });
             /**
 			 * Position Dropdown
 			 */
 
              ctrl._calculateDropdownPosition = function(dropdownHeight) {
+                dropdownHeight = angular.isNumber(dropdownHeight) ? dropdownHeight + ctrl.dropdownBuffer : ctrl.dropdownBuffer;
+
                 var $element  = ctrl.$element;
-                var $dropdown = ctrl.$dropdown[0];
+                var $elementBCR = $element.getBoundingClientRect();
 
                 var offset    = {
-                    top: $element.offsetTop,
-                    bottom: $element.offsetTop + $element.clientHeight
-                };
-                var input     = {
-                    height: $element.clientHeight
-                };
-                var dropdown  = {
-                    height: dropdownHeight
-                };
-                var viewport  = {
-                  top: $window.scrollY,
-                  bottom: $window.scrollY + $window.outerHeight
+                    width: Math.round(angular.isNumber($elementBCR.width) ? $elementBCR.width : $element.offsetWidth),
+                    height: Math.round(angular.isNumber($elementBCR.height) ? $elementBCR.height : $element.offsetHeight),
+                    top: Math.round($elementBCR.top + ($window.pageYOffset || $document[0].documentElement.scrollTop)),
+                    bottom: Math.round($elementBCR.bottom + ($window.pageYOffset || $document[0].documentElement.scrollTop)),
+                    left: Math.round($elementBCR.left + ($window.pageXOffset || $document[0].documentElement.scrollLeft))
                 };
 
+                ctrl.isDropdownAbove = Math.round($elementBCR.top) > ($window.outerHeight - Math.round($elementBCR.bottom));
 
-                var enoughRoomAbove = viewport.top < ((offset.top - dropdown.height) + ctrl.dropdownBuffer);
-                var enoughRoomBelow = viewport.bottom > (offset.bottom + dropdown.height + input.height + ctrl.dropdownBuffer);
-
-                if (!enoughRoomBelow && enoughRoomAbove && !ctrl.isDropdownAbove) {
-                  ctrl.isDropdownAbove = true;
-                } else if (!enoughRoomAbove && enoughRoomBelow && ctrl.isDropdownAbove) {
-                  ctrl.isDropdownAbove = false;
-                }
+                return offset;
              };
              ctrl._calculateDropdownHeight = function() {
                  var searchHeight   = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
@@ -472,13 +483,38 @@ Reselect.value('reselectDefaultOptions', {
              ctrl._positionDropdown = function() {
                  var animationFrame = ReselectUtils.requstAnimFrame();
 
-                 ctrl.isDropdownAbove = false;
-
                  animationFrame(function() {
                      var dropdownHeight = ctrl._calculateDropdownHeight();
                      $scope.$safeApply(function() {
-                         ctrl._calculateDropdownPosition(dropdownHeight);
+                         var element_offset = ctrl._calculateDropdownPosition(dropdownHeight);
+
+                         ctrl.$dropdown[0].style.width = element_offset.width + 'px';
+                         ctrl.$dropdown[0].style.top   = ctrl.isDropdownAbove ? element_offset.top - dropdownHeight + 'px' : element_offset.bottom + 'px';
+                         ctrl.$dropdown[0].style.left  = element_offset.left + 'px';
                      });
+                 });
+             };
+             ctrl._appendDropdown = function() {
+                 return document.querySelector('body').appendChild(ctrl.$dropdown[0]);
+             };
+             ctrl._removeDropdown = function() {
+                 var $body = document.querySelector('body');
+                 if($body.contains(ctrl.$dropdown[0])) {
+                     return $body.removeChild(ctrl.$dropdown[0]);
+                 }
+             };
+             ctrl._saveScrollPos = function() {
+                 if(ctrl.$options_container.length) {
+                     ctrl.scrollPos = ctrl.$options_container[0].scrollTop;
+                 }
+             };
+             ctrl._setScrollPos = function() {
+                 var animationFrame = ReselectUtils.requstAnimFrame();
+
+                 animationFrame(function() {
+                     if(ctrl.$options_container.length) {
+                        ctrl.$options_container[0].scrollTop = ctrl.scrollPos;
+                     }
                  });
              };
 
@@ -566,7 +602,8 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 	LazyScroller.prototype._calculateLazyRender = function(force){
 		var self = this;
 
-		var scrollTop = (force === true) ? self.lastScrollTop : self.$container[0].scrollTop;
+		// var scrollTop = (force === true) ? self.lastScrollTop : self.$container[0].scrollTop;
+		var scrollTop = self.$container[0].scrollTop; //self.lastScrollTop
 
 		self.lastScrollTop = scrollTop;
 
@@ -702,14 +739,14 @@ Reselect.service('LazyContainer', [function(){
 
 }]);
 
-Reselect.directive('reselectNoChoice', function(){
+Reselect.directive('reselectNoChoice', ['$templateCache', function($templateCache){
     return {
         restrict: 'AE',
         replace: true,
         transclude: true,
-        templateUrl: 'templates/reselect-no-choice.directive.tpl.html'
+        template: $templateCache.get('templates/reselect-no-choice.directive.tpl.html')
     };
-});
+}]);
 
 Reselect.value('reselectChoicesOptions', {
 	noOptionsText: 'No Options',
@@ -762,12 +799,12 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function($pars
 	};
 }]);
 
-Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
+Reselect.directive('reselectChoices', ['ChoiceParser', '$compile', '$templateCache',
 	'LazyScroller', 'LazyContainer', 'ReselectUtils', 'reselectChoicesOptions',
-	function(ChoiceParser, $compile, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
+	function(ChoiceParser, $compile, $templateCache, LazyScroller, LazyContainer, ReselectUtils, reselectChoicesOptions) {
 		return {
 			restrict: 'AE',
-			templateUrl: 'templates/reselect.options.directive.tpl.html',
+			template: $templateCache.get('templates/reselect.options.directive.tpl.html'),
 			require: ['reselectChoices', '?^reselect'],
 			transclude: true,
 			replace: true,
@@ -918,6 +955,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 					if ($attrs.remote) {
 						self.remoteOptions = $parse($attrs.remote)($scope.$parent);
 
+                        $Reselect.isRemote = true;
+
 						$Reselect.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $Reselect.parsedOptions);
 
 						$Reselect.DataAdapter.prepareGetData = function(){
@@ -1048,7 +1087,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             var container_top    = self.$container[0].scrollTop;
 
                             if(self.activeIndex !== null) {
-                                if(self.activeIndex < $Reselect.DataAdapter.data.length - 1) {
+                                if(self.activeIndex < self.LazyDropdown.choices.length - 1) {
                                     self.activeIndex++;
                                 }
                             } else {
@@ -1129,21 +1168,21 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 	}
 ]);
 
-Reselect.directive('reselectPlaceholder', function(){
+Reselect.directive('reselectPlaceholder', ['$templateCache', function($templateCache){
     return {
         restrict: 'AE',
         replace: true,
         transclude: true,
-        templateUrl: 'templates/reselect.placeholder.tpl.html'
+        template: $templateCache.get('templates/reselect.placeholder.tpl.html')
     };
-});
+}]);
 
-Reselect.directive('reselectSelection', function(){
+Reselect.directive('reselectSelection', ['$templateCache', function($templateCache){
     return {
         restrict: 'AE',
         replace: true,
         transclude: true,
-        templateUrl: 'templates/reselect.selection.tpl.html',
+        template: $templateCache.get('templates/reselect.selection.tpl.html'),
         scope: {},
         link: function($scope, $element, $attrs, ctrls, transclude){
             transclude($scope, function(clone){
@@ -1159,7 +1198,7 @@ Reselect.directive('reselectSelection', function(){
             });
         }]
     };
-});
+}]);
 
 /**
  * Service to parse choice "options" attribute
@@ -1246,8 +1285,17 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 
 }]);
 
+angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
+$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown()\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.value\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.value\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\">Please select an option</div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.value\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
+$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-static-option reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div></div>");
+$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");}]);
 Reselect.run(['$rootScope', '$http', function ($rootScope, $http) {
     $rootScope.$safeApply = function (fn) {
+        if(!this.$root) {
+            return fn();
+        }
         var phase = this.$root.$$phase;
         if (phase == '$apply' || phase == '$digest') {
             if (fn && (typeof(fn) === 'function')) {
@@ -1405,10 +1453,4 @@ Reselect.filter('rsPropsFilter', function() {
     DELETE: 46
  });
 
-angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
-$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown()\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.value\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.value\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\">Please select an option</div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.value\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
-$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-static-option reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div></div>");
-$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");}]);
 }).apply(this);
