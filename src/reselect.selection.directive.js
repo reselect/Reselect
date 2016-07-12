@@ -1,9 +1,9 @@
-Reselect.directive('reselectSelection', function(){
+Reselect.directive('reselectSelection', ['$templateCache', function($templateCache){
     return {
         restrict: 'AE',
         replace: true,
         transclude: true,
-        templateUrl: 'templates/reselect.selection.tpl.html',
+        template: $templateCache.get('templates/reselect.selection.tpl.html'),
         scope: {},
         link: function($scope, $element, $attrs, ctrls, transclude){
             transclude($scope, function(clone){
@@ -19,4 +19,4 @@ Reselect.directive('reselectSelection', function(){
             });
         }]
     };
-});
+}]);

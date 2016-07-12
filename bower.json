@@ -1,7 +1,7 @@
 {
   "name": "angular-reselect",
   "description": "Reselect is a directive built off of Angular's HTML SELECT element.",
-  "version": "0.2.3",
+  "version": "0.2.6",
   "homepage": "https://github.com/alexcheuk/Reselect",
   "keywords": [
     "select",
@@ -23,12 +23,12 @@
     "examples"
   ],
   "dependencies": {
-    "angular": "~1.4.8"
+    "angular": "~1.5.7"
   },
   "devDependencies": {
     "jquery": "~1.11",
-    "angular-sanitize": "~1.4.8",
-    "angular-mocks": "~1.4.8"
+    "angular-sanitize": "~1.5.7",
+    "angular-mocks": "~1.5.7"
   },
   "license": "MIT"
 }
