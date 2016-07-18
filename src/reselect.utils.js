@@ -50,7 +50,7 @@ Reselect.filter('rshighlight', ['$sce', function($sce){
         var match_class = "reselect-text-match";
 
 		re = new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
-		if (!target) {
+		if (!angular.isDefined(target) || target === null) {
 			return;
 		}
 
