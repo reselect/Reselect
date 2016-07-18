@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-07-12T22:48:28.653Z
+ * Version: 0.0.1 - 2016-07-18T21:44:28.992Z
  * License: MIT
  */
 
@@ -1507,11 +1507,11 @@ Reselect.filter('rsPropsFilter', function() {
 
                 var keys = Object.keys(props);
                 for (var i = 0; i < keys.length; i++) {
+                    var prop = keys[i];
                     if(angular.isUndefined(props[prop])){
                         itemMatches = true;
                         break;
                     }
-                    var prop = keys[i];
                     var text = props[prop].toLowerCase();
                     if (item[prop].toString().toLowerCase()
                         .indexOf(text) !== -1) {
