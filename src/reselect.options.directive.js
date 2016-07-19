@@ -243,7 +243,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile','$templateCach
                         return $Reselect.DataAdapter.getData($Reselect.search_term)
                             .then(function(choices) {
                                 if (!$Reselect.search_term) {
-                                    $Reselect.DataAdapter.updateData(choices.data,loadingMore);
+                                    $Reselect.DataAdapter.updateData(choices.data, loadingMore);
                                     self.render();
                                 } else {
                                     self.render(choices.data);
