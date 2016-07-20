@@ -28,7 +28,7 @@
 
 		self.mocks = {};
 
-		self.value = 0;
+		self.value = 'Sticky Two';
 		self.invalidValue = 50;
 		self.invalidValue2 = 50;
 		self.invalidValue3 = {};
