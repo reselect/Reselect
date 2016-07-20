@@ -131,7 +131,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 					});
 
                     if(self.choices[i] && self.choices[i].$sticky === true){
-                        container.scope[self.options.scopeName] = self.choices[i].text;
+                        container.scope[self.options.scopeName] = self.choices[i].value;
                         container.scope.$onClick       = self.choices[i].onClick;
                         container.scope.$sticky        = self.choices[i].$sticky;
                         container.scope.$stickyContent = self.choices[i].$stickyContent;

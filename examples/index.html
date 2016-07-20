@@ -204,6 +204,9 @@
                             <div reselect-selection>
                                 <span ng-bind="$selection"></span>
                             </div>
+                            <reselect-choice class="sticky-class" value="{data:{title:'Sticky Two'}}">
+                                Sticky Two
+                            </reselect-choice>
                             <div reselect-choices
                                 options="option.data.title as option in $remote"
                                 remote="simple.remoteOptions">
