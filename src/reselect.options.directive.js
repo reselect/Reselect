@@ -306,6 +306,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                 } else {
                                     self.render(choices.data);
                                 }
+
+                                $scope.$emit('reselect.choices.render');
                             })
                             .finally(function() {
                                 self.is_loading = false;

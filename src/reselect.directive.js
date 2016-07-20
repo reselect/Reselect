@@ -244,7 +244,7 @@ Reselect.value('reselectDefaultOptions', {
                 if(ctrl.isDisabled){
                     return;
                 }
-                
+
 				if(ctrl.opened){
 					ctrl.hideDropdown();
 				}else{
@@ -277,13 +277,15 @@ Reselect.value('reselectDefaultOptions', {
                         ctrl._setScrollPos();
                     }
 
-
                     setTimeout(function(){
                         angular.element(document).on('click', hideDropdownOnClick);
                     });
                 });
 
                 $scope.$emit('reselect.search.focus');
+
+                // Recalculate on resize
+                angular.element(window).on('resize', ctrl._positionDropdown);
 			};
 
 			ctrl.hideDropdown = function(blurInput){
@@ -299,6 +301,9 @@ Reselect.value('reselectDefaultOptions', {
                 if(!blurInput) {
                     $scope.$emit('reselect.input.focus');
                 }
+
+                // Remove resize Listeners
+                angular.element(window).off('resize', ctrl._positionDropdown);
 			};
 
             /**
@@ -311,11 +316,16 @@ Reselect.value('reselectDefaultOptions', {
     					ctrl.hideDropdown();
     				});
                 });
+
+                $scope.$on('reselect.choices.render', function(){
+                    ctrl._positionDropdown();
+                });
             };
 
             $scope.$on('$destroy', function(){
                 ctrl._removeDropdown();
                 angular.element(document).off('click', hideDropdownOnClick);
+                angular.element(window).off('resize', ctrl._positionDropdown);
             });
 
             $attrs.$observe('disabled', function(val){
