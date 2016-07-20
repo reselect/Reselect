@@ -26,6 +26,13 @@
             border-color: $reselect-border-color-active;
         }
     }
+
+    &[disabled="disabled"]{
+        .reselect-selection-container{
+            cursor: not-allowed;
+            background:#eee;
+        }
+    }
 }
 
 .reselect-rendered{
