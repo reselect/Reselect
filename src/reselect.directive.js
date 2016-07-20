@@ -241,6 +241,10 @@ Reselect.value('reselectDefaultOptions', {
 			 */
 
 			ctrl.toggleDropdown = function(){
+                if(ctrl.isDisabled){
+                    return;
+                }
+                
 				if(ctrl.opened){
 					ctrl.hideDropdown();
 				}else{
@@ -313,6 +317,11 @@ Reselect.value('reselectDefaultOptions', {
                 ctrl._removeDropdown();
                 angular.element(document).off('click', hideDropdownOnClick);
             });
+
+            $attrs.$observe('disabled', function(val){
+                ctrl.isDisabled = val;
+            });
+
             /**
 			 * Position Dropdown
 			 */

@@ -60,6 +60,10 @@
 			}
 		}
 
+        self.submit = function(form){
+            console.log('Submitted', form);
+        }
+
 		self.remoteOptions = {
 			endpoint: function(params, pagination){
 				if(params.search_term){
