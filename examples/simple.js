@@ -28,7 +28,7 @@
 
 		self.mocks = {};
 
-		self.value = 0;
+		self.value = 'Sticky Two';
 		self.invalidValue = 50;
 		self.invalidValue2 = 50;
 		self.invalidValue3 = {};
@@ -59,6 +59,10 @@
 				}, 1000);
 			}
 		}
+
+        self.submit = function(form){
+            console.log('Submitted', form);
+        }
 
 		self.remoteOptions = {
 			endpoint: function(params, pagination){

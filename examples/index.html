@@ -204,6 +204,9 @@
                             <div reselect-selection>
                                 <span ng-bind="$selection"></span>
                             </div>
+                            <reselect-choice class="sticky-class" value="{data:{title:'Sticky Two'}}">
+                                Sticky Two
+                            </reselect-choice>
                             <div reselect-choices
                                 options="option.data.title as option in $remote"
                                 remote="simple.remoteOptions">
@@ -217,7 +220,7 @@
                     -->
                     <h3>Form Validation</h3>
                     <div style="padding-bottom: 20px">
-                        <form name="simple.form1">
+                        <form name="simple.form1" ng-submit="simple.submit(simple.form1)">
                             <reselect
                                 name="form_input1"
                                 ng-required="true"
@@ -231,6 +234,7 @@
                                         <span ng-bind="option.data.title"></span>
                                 </div>
                             </reselect>
+                            <button type="submit" class="btn">SUBMIT</button>
                             <table style="margin-top: 20px">
                                 <tr>
                                     <td>required</td>
@@ -243,6 +247,32 @@
                                 <tr>
                                     <td>$pristine</td>
                                     <td><span ng-bind="simple.form1.form_input1.$pristine"></span></td>
+                                </tr>
+                            </table>
+                            {{simple.form1.$valid}}
+                        </form>
+                    </div>
+                    <div style="padding-bottom: 20px">
+                        <form name="simple.form2" ng-submit="simple.submit()">
+                            <reselect
+                                name="form_input2"
+                                ng-required="true"
+                                ng-disabled="true"
+                                ng-model="simple.form_value2">
+                                <div reselect-selection>
+                                    <span ng-bind="$selection"></span>
+                                </div>
+                                <div reselect-choices
+                                    options="option.data.title as option in $remote"
+                                    remote="simple.remoteOptions">
+                                        <span ng-bind="option.data.title"></span>
+                                </div>
+                            </reselect>
+                            <button type="submit" class="btn">SUBMIT</button>
+                            <table style="margin-top: 20px">
+                                <tr>
+                                    <td>disabled</td>
+                                    <td>true</td>
                                 </tr>
                             </table>
                         </form>

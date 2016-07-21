@@ -36,11 +36,17 @@
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
                         <reselect
                             ng-model="simple.value">
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
-                                <strong>Sticky Option</strong>
+                            <reselect-choice class="sticky-class" value="2" sticky-bottom>
+                                <strong>Sticky Bottom One</strong>
+                            </reselect-choice>
+                            <reselect-choice class="sticky-class" ng-click="simple.click()" sticky-bottom>
+                                <strong>Sticky Bottom Two</strong>
+                            </reselect-choice>
+                            <reselect-choice class="sticky-class" value="'Sticky Two'">
+                                <strong>Sticky Two</strong>
                             </reselect-choice>
                             <reselect-choice class="sticky-class" ng-click="simple.click()">
-                                <strong>Sticky Option</strong>
+                                <strong>Sticky Threee</strong>
                             </reselect-choice>
                             <reselect-choices
                                 options="option in simple.mocks.single">
