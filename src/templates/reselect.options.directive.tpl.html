@@ -5,6 +5,7 @@
 			type="text"
 			focus-on="reselect.search.focus"
 			placeholder="Type to search..."
+            ng-show="$options.options.enableSearch"
 			ng-model="$reselect.search_term"
 			ng-change="$options.search()"/>
 	</div>
@@ -30,5 +31,9 @@
 			ng-show="$options.is_loading">
             Loading More...
 		</div>
+	</div>
+
+	<div class="reselect-sticky-container">
+
 	</div>
 </div>

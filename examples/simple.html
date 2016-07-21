@@ -35,20 +35,18 @@
 
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
                         <reselect
+                            placeholder="Custom placeholder"
                             ng-model="simple.value">
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
-                                <strong>Sticky Option</strong>
-                            </reselect-choice>
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
-                                <strong>Sticky Option</strong>
-                            </reselect-choice>
                             <reselect-choices
-                                options="option in simple.mocks.single">
+                                options="option in simple.mocks.single | limitTo: 10">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
                             </reselect-choices>
+                            <div reselect-sticky ng-click="simple.click()">
+                                Manage Choices {{$reselect.search_term}}
+                            </div>
                         </reselect>
 
-                        <h3>Array of Objects:</h3>
+                        <!--<h3>Array of Objects:</h3>
 
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.objects1"></span></p>
                         <reselect
@@ -56,17 +54,15 @@
                             <div reselect-selection>
                                 <span ng-bind="$choice.first_name"></span>
                             </div>
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
+                            <reselect-choice ng-click="simple.click()">
                                 <strong>Sticky Option</strong>
                             </reselect-choice>
                             <div reselect-choices
                                 options="option.id as option in simple.mocks.objects track by id">
                                     <span ng-bind-html="option.first_name | rshighlight : $reselect.search_term"></span> <span ng-bind="option.last_name"></span> - <span ng-bind="option.skill"></span>
                             </div reselect-choices>
-                        </reselect>
+                        </reselect>-->
                     </div>
-
-
                 </div>
             </div>
 

@@ -3,6 +3,10 @@
 
 	angular.module('simple', ['Reselect', 'ngSanitize'])
 
+	.config(['reselectConfigProvider', function(reselectConfigProvider){
+		// reselectConfigProvider.placeholder = '';
+	}])
+
 	.service('MOCK_DATA', function($q, $http){
 		var defer = $q.defer();
 
@@ -22,13 +26,13 @@
 		return defer.promise;
 	})
 
-	.controller('SimpleCtrl', ['$scope', '$rootScope', '$timeout', 'MOCK_DATA', function($scope, $rootScope, $timeout, MOCK_DATA){
+	.controller('SimpleCtrl', ['$scope', '$rootScope', '$timeout', '$interval', 'MOCK_DATA', function($scope, $rootScope, $timeout, $interval, MOCK_DATA){
 
 		var self = $scope.simple = this;
 
 		self.mocks = {};
 
-		self.value = 0;
+		self.value = 'Sticky Two';
 		self.invalidValue = 50;
 		self.invalidValue2 = 50;
 		self.invalidValue3 = {};
@@ -37,6 +41,12 @@
         self.click = function(){
             console.log('CLICKED');
         };
+
+		self.intervalBool = true;
+
+		$interval(function(){
+			self.intervalBool = !self.intervalBool;
+		}, 2000);
 
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);
@@ -59,6 +69,10 @@
 				}, 1000);
 			}
 		}
+
+        self.submit = function(form){
+            console.log('Submitted', form);
+        }
 
 		self.remoteOptions = {
 			endpoint: function(params, pagination){

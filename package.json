@@ -1,12 +1,12 @@
 {
-  "name": "reselect",
+  "name": "angular-reselect",
   "main": "dist/reselect.js",
   "author": "https://github.com/alexcheuk",
   "homepage": "https://github.com/alexcheuk/Reselect",
   "repository": {
     "url": "https://github.com/alexcheuk/Reselect.git"
   },
-  "version": "0.0.1",
+  "version": "0.4.5",
   "devDependencies": {
     "bower": "^1.7.1",
     "del": "^2.2.0",

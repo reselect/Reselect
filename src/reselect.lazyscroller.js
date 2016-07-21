@@ -67,8 +67,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 	LazyScroller.prototype._calculateLazyRender = function(force){
 		var self = this;
 
-		// var scrollTop = (force === true) ? self.lastScrollTop : self.$container[0].scrollTop;
-		var scrollTop = self.$container[0].scrollTop; //self.lastScrollTop
+		var scrollTop = self.$container[0].scrollTop;
 
 		self.lastScrollTop = scrollTop;
 
@@ -132,7 +131,7 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 					});
 
                     if(self.choices[i] && self.choices[i].$sticky === true){
-                        container.scope[self.options.scopeName] = self.choices[i].text;
+                        container.scope[self.options.scopeName] = self.choices[i].value;
                         container.scope.$onClick       = self.choices[i].onClick;
                         container.scope.$sticky        = self.choices[i].$sticky;
                         container.scope.$stickyContent = self.choices[i].$stickyContent;
@@ -144,7 +143,8 @@ Reselect.service('LazyScroller', ['LazyContainer', '$compile', function(LazyCont
 			}
 		}
 
-		self.lastCheck = Math.floor(scrollTop/self.options.choiceHeight) * self.options.choiceHeight;
+        // self.lastCheck = Math.floor(scrollTop/self.options.choiceHeight) * self.options.choiceHeight || null;
+        self.lastCheck = scrollTop || null;
 	};
 
 	LazyScroller.prototype.initialize = function(tpl){

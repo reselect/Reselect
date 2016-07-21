@@ -26,6 +26,13 @@
             border-color: $reselect-border-color-active;
         }
     }
+
+    &[disabled="disabled"]{
+        .reselect-selection-container{
+            cursor: not-allowed;
+            background:#eee;
+        }
+    }
 }
 
 .reselect-rendered{
@@ -137,8 +144,8 @@
         @include transform-origin(bottom center);
 
         .reselect-choices {
-            border-top-color: $reselect-border-color;
-            border-bottom-color: #eee;
+            border-top-color: $reselect-border-color-active;
+            border-bottom-color: $reselect-border-color;
         }
     }
     &.reselect-dropdown--below{
