@@ -276,16 +276,16 @@ Reselect.value('reselectDefaultOptions', {
 					ctrl._positionDropdown();
 					ctrl._appendDropdown();
 
+                    setTimeout(function () {
+                        angular.element(document).on('click', hideDropdownOnClick);
+                    });
+
 					ctrl.transcludeCtrls.$ReselectChoice.getData(true).then(function () {
 						ctrl._positionDropdown();
 
 						if (!ctrl.isRemote) {
 							ctrl._setScrollPos();
 						}
-
-						setTimeout(function () {
-							angular.element(document).on('click', hideDropdownOnClick);
-						});
 					});
 
 					$scope.$emit('reselect.search.focus');
