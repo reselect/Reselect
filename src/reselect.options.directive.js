@@ -1,4 +1,11 @@
-Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function(
+Reselect.value('reselectChoicesOptions', {
+    enableSearch: true,
+	noOptionsText: 'No Options',
+    choiceHeight: 36,
+    listHeight: 300
+});
+
+Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function (
     $parse, ReselectUtils) {
 
     var height = function(elem) {
@@ -18,7 +25,7 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function(
 
             var triggerFn = ReselectUtils.debounce(function() {
                 $parse($attrs.triggerAtBottom)($scope);
-            }, 150);
+            }, 500);
 
             function checkScrollbarPosition() {
                 if (height($element) + $element[0].scrollTop === 0 && $element[0].scrollHeight === 0) {
