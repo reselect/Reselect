@@ -58,6 +58,11 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 			transcludeAndAppend('reselect-selection', '.reselect-rendered-selection', '$ReselectSelection', 'reselectSelection', true);
 			transcludeAndAppend('reselect-sticky', '.reselect-sticky-container', null, null);
 
+			// TODO - Fix this
+			if(!angular.element($element[0].querySelectorAll('.reselect-sticky-container')).children().length){
+				angular.element($element[0].querySelectorAll('.reselect-sticky-container')).remove();
+			}
+
 			// Transclude [reselect-no-choice] directive
 			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
 
@@ -380,7 +385,8 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 			};
 			ctrl._calculateDropdownHeight = function() {
 				var searchHeight = ctrl.transcludeCtrls.$ReselectChoice.choiceHeight;
-				var listHeight = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight;
+				var stickyHeight = ctrl.$element.querySelectorAll('.reselect-sticky-container').clientHeight;
+				var listHeight = ctrl.transcludeCtrls.$ReselectChoice.listHeight + searchHeight + stickyHeight;
 				var choicesHeight = ctrl.$dropdown[0].clientHeight;
 
 				return (choicesHeight >= listHeight) ? listHeight : choicesHeight;

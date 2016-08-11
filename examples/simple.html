@@ -37,24 +37,12 @@
                         <reselect
                             placeholder="Custom placeholder"
                             ng-model="simple.value">
-                            <reselect-choice value="2" sticky-bottom>
-                                <strong>Sticky Bottom One</strong>
-                            </reselect-choice>
-                            <reselect-choice ng-click="simple.click()" sticky-bottom>
-                                <strong>Sticky Bottom Two</strong>
-                            </reselect-choice>
-                            <reselect-choice value="'Sticky Two'">
-                                <strong>Sticky Two</strong>
-                            </reselect-choice>
-                            <reselect-choice ng-click="simple.click()">
-                                <strong>Sticky Threee</strong>
-                            </reselect-choice>
                             <reselect-choices
-                                options="option in simple.mocks.single">
+                                options="option in simple.mocks.single | limitTo: 10">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
                             </reselect-choices>
                             <reselect-sticky ng-click="simple.click()">
-                                Manage Choices
+                                Manage Choices {{$reselect.search_term}}
                             </reselect-sticky>
                         </reselect>
 
