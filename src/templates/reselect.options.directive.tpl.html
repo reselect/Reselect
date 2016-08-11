@@ -5,6 +5,7 @@
 			type="text"
 			focus-on="reselect.search.focus"
 			placeholder="Type to search..."
+            ng-if="$options.options.enableSearch"
 			ng-model="$reselect.search_term"
 			ng-change="$options.search()"/>
 	</div>
