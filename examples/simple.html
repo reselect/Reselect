@@ -37,22 +37,25 @@
                         <reselect
                             placeholder="Custom placeholder"
                             ng-model="simple.value">
-                            <reselect-choice class="sticky-class" value="2" sticky-bottom>
+                            <reselect-choice value="2" sticky-bottom>
                                 <strong>Sticky Bottom One</strong>
                             </reselect-choice>
-                            <reselect-choice class="sticky-class" ng-click="simple.click()" sticky-bottom>
+                            <reselect-choice ng-click="simple.click()" sticky-bottom>
                                 <strong>Sticky Bottom Two</strong>
                             </reselect-choice>
-                            <reselect-choice class="sticky-class" value="'Sticky Two'">
+                            <reselect-choice value="'Sticky Two'">
                                 <strong>Sticky Two</strong>
                             </reselect-choice>
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
+                            <reselect-choice ng-click="simple.click()">
                                 <strong>Sticky Threee</strong>
                             </reselect-choice>
                             <reselect-choices
                                 options="option in simple.mocks.single">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
                             </reselect-choices>
+                            <reselect-sticky ng-click="simple.click()">
+                                Manage Choices
+                            </reselect-sticky>
                         </reselect>
 
                         <h3>Array of Objects:</h3>
@@ -63,7 +66,7 @@
                             <div reselect-selection>
                                 <span ng-bind="$choice.first_name"></span>
                             </div>
-                            <reselect-choice class="sticky-class" ng-click="simple.click()">
+                            <reselect-choice ng-click="simple.click()">
                                 <strong>Sticky Option</strong>
                             </reselect-choice>
                             <div reselect-choices
@@ -72,8 +75,6 @@
                             </div reselect-choices>
                         </reselect>
                     </div>
-
-
                 </div>
             </div>
 

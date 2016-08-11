@@ -56,6 +56,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 			transcludeAndAppend('reselect-no-choice', '.reselect-empty-container', null, null, true);
 			transcludeAndAppend('reselect-placeholder', '.reselect-rendered-placeholder', '$ReselectPlaceholder', 'reselectPlaceholder', true);
 			transcludeAndAppend('reselect-selection', '.reselect-rendered-selection', '$ReselectSelection', 'reselectSelection', true);
+			transcludeAndAppend('reselect-sticky', '.reselect-sticky-container', null, null);
 
 			// Transclude [reselect-no-choice] directive
 			var $choice = $transcludeElems[0].querySelectorAll('.reselect-choice, [reselect-choice], reselect-choice');
