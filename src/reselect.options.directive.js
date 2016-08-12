@@ -1,10 +1,3 @@
-Reselect.value('reselectChoicesOptions', {
-    enableSearch: true,
-	noOptionsText: 'No Options',
-    choiceHeight: 36,
-    listHeight: 300
-});
-
 Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function (
     $parse, ReselectUtils) {
 
@@ -54,6 +47,7 @@ Reselect.directive('triggerAtBottom', ['$parse', 'ReselectUtils', function (
 Reselect.provider('reselectChoicesConfig', [function() {
 
     angular.extend(this, {
+        enableSearch: true,
         noOptionsText: 'No Options',
         choiceHeight: 36,
         listHeight: 300
