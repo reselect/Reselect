@@ -26,7 +26,7 @@
 		return defer.promise;
 	})
 
-	.controller('SimpleCtrl', ['$scope', '$rootScope', '$timeout', 'MOCK_DATA', function($scope, $rootScope, $timeout, MOCK_DATA){
+	.controller('SimpleCtrl', ['$scope', '$rootScope', '$timeout', '$interval', 'MOCK_DATA', function($scope, $rootScope, $timeout, $interval, MOCK_DATA){
 
 		var self = $scope.simple = this;
 
@@ -41,6 +41,12 @@
         self.click = function(){
             console.log('CLICKED');
         };
+
+		self.intervalBool = true;
+
+		$interval(function(){
+			self.intervalBool = !self.intervalBool;
+		}, 2000);
 
 		MOCK_DATA.then(function(data){
 			angular.extend(self.mocks, data);

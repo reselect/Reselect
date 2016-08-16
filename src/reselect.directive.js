@@ -31,7 +31,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 			function transcludeAndAppend(target, destination, store, ctrl, replace) {
 				var $transcludeElement = $transcludeElems[0].querySelectorAll('.' + target + ',' + '[' + target + '],' + target);
-
+				
 				if ($transcludeElement.length === 1) {
 					if (replace === true) {
 						angular.element($element[0].querySelector('.' + target)).replaceWith($transcludeElement);
@@ -39,7 +39,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 						angular.element($element[0].querySelectorAll(destination)).append($transcludeElement);
 					}
 				} else {
-					$transcludeElement = $element[0].querySelectorAll('.' + target);
+					angular.element($element[0].querySelectorAll(destination)).append($transcludeElement);
 				}
 
 				if (store && ctrl) {
