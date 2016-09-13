@@ -1,5 +1,5 @@
 {
-  "name": "reselect",
+  "name": "angular-reselect",
   "main": "dist/reselect.js",
   "author": "https://github.com/alexcheuk",
   "homepage": "https://github.com/alexcheuk/Reselect",
