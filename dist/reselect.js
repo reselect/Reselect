@@ -1,7 +1,7 @@
 /*!
- * reselect
+ * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-08-16T21:28:30.704Z
+ * Version: 0.0.1 - 2016-09-19T01:22:15.222Z
  * License: MIT
  */
 
@@ -458,7 +458,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 				$scope.$emit('reselect.search.focus');
 
 				// Recalculate on resize
-				angular.element(window).on('resize', ctrl._positionDropdown);
+				angular.element(window).on('resize scroll', ctrl._positionDropdown);
 			};
 
 			ctrl.hideDropdown = function(blurInput) {
@@ -476,7 +476,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 				}
 
 				// Remove resize Listeners
-				angular.element(window).off('resize', ctrl._positionDropdown);
+				angular.element(window).off('resize scroll', ctrl._positionDropdown);
 			};
 
 			/**
@@ -498,7 +498,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 			$scope.$on('$destroy', function() {
 				ctrl._removeDropdown();
 				angular.element(document).off('click', hideDropdownOnClick);
-				angular.element(window).off('resize', ctrl._positionDropdown);
+				angular.element(window).off('resize scroll', ctrl._positionDropdown);
 			});
 
 			$attrs.$observe('disabled', function(val) {
