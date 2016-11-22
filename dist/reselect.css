@@ -1,7 +1,7 @@
 /*!
  * reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-07-19T16:27:08.641Z
+ * Version: 0.0.1 - 2016-11-22T17:20:33.809Z
  * License: MIT
  */
 
@@ -112,6 +112,9 @@
   min-width: 200px; }
   .reselect-container:focus .reselect-selection-container, .reselect-container:active .reselect-selection-container {
     border-color: #09c; }
+  .reselect-container[disabled="disabled"] .reselect-selection-container {
+    cursor: not-allowed;
+    background: #eee; }
 
 .reselect-rendered {
   min-height: 38px;
@@ -189,8 +192,8 @@
     -o-transform-origin: bottom center;
     transform-origin: bottom center; }
     .reselect-dropdown.reselect-dropdown--above .reselect-choices {
-      border-top-color: #ccc;
-      border-bottom-color: #eee; }
+      border-top-color: #09c;
+      border-bottom-color: #ccc; }
   .reselect-dropdown.reselect-dropdown--below {
     box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
     -webkit-transform-origin: top center;
