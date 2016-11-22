@@ -4,7 +4,7 @@ var es       = require('event-stream');
 var del      = require('del');
 var map      = require('map-stream');
 var events   = require('events');
-var emmitter = new events.EventEmitter();
+var emitter = new events.EventEmitter();
 var path     = require('path');
 var karma    = require('karma').server;
 var notifier = require('node-notifier');
@@ -90,7 +90,7 @@ gulp.task('scripts', function() {
                         ];
 
                         // Emit this error event
-                        emmitter.emit('error', new Error(msg.join('\n')));
+                        emitter.emit('error', new Error(msg.join('\n')));
 
                     }
                 });
