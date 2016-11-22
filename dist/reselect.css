@@ -1,7 +1,7 @@
 /*!
- * reselect
+ * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.0.1 - 2016-11-22T17:20:33.809Z
+ * Version: 0.4.5 - 2016-11-22T17:58:56.712Z
  * License: MIT
  */
 
@@ -263,7 +263,7 @@ input[type="text"].reselect-search-input {
   list-style: none;
   position: relative; }
 
-.reselect-option {
+.reselect-option, .reselect-sticky-choice {
   padding: 12px 15px;
   line-height: 1;
   font-size: 11px;
@@ -293,15 +293,17 @@ input[type="text"].reselect-search-input {
     -moz-animation: reselect-loader 1.5s infinite;
     animation: reselect-loader 1.5s infinite; }
 
-.reselect-option-choice {
+.reselect-option-choice, .reselect-sticky-choice {
   height: 36px;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  position: absolute;
   border-bottom: 1px solid #eee;
   cursor: pointer; }
+
+.reselect-option-choice {
+  position: absolute; }
   .reselect-option-choice.reselect-option-choice--highlight {
     background: #f3f3f3;
     color: #111; }
@@ -312,3 +314,6 @@ input[type="text"].reselect-search-input {
     display: none; }
   .reselect-option-choice.reselect-option--static {
     position: relative; }
+
+.reselect-sticky-container {
+  border-top: 1px solid #ccc; }
