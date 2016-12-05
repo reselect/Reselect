@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.1 - 2016-11-23T01:42:05.127Z
+ * Version: 0.5.1 - 2016-12-05T22:45:13.177Z
  * License: MIT
  */
 
@@ -223,7 +223,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectConfig', '$timeout', '$window', '$document', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectConfig, $timeout, $window, $document, KEYS) {
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectConfig', '$timeout', '$window', '$document', 'KEYS', 'safeApply', function($scope, $element, $attrs, $parse, ReselectUtils, reselectConfig, $timeout, $window, $document, KEYS, safeApply) {
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -435,7 +435,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 					return;
 				}
 
-				$scope.$safeApply(function() {
+				safeApply($scope, function() {
 					ctrl.hideDropdown(true);
 				});
 
@@ -490,7 +490,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 			ctrl.bindEventListeners = function() {
 				$scope.$on('reselect.hide', function() {
-					$scope.$safeApply(function() {
+					safeApply($scope, function() {
 						ctrl.hideDropdown();
 					});
 				});
@@ -545,7 +545,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 				animationFrame(function() {
 					var dropdownHeight = ctrl._calculateDropdownHeight();
-					$scope.$safeApply(function() {
+					safeApply($scope, function() {
 						var element_offset = ctrl._calculateDropdownPosition(dropdownHeight);
 
 						ctrl.$dropdown[0].style.width = element_offset.width + 'px';
@@ -1454,6 +1454,13 @@ Reselect.service('ChoiceParser', ['$parse', function($parse) {
 
 }]);
 
+angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
+$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\" ng-disabled=\"$reselect.isDisabled\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown($event)\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.isValidValue\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.isValidValue\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\"><span ng-bind=\"$reselect.options.placeholder\"></span></div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.isValidValue\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
+$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-show=\"$options.options.enableSearch\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-static-option reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div><div class=\"reselect-sticky-container\"></div></div>");
+$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");
+$templateCache.put("templates/reselect.sticky.tpl.html","<div class=\"reselect-sticky reselect-sticky-choice\" ng-transclude=\"\"></div>");}]);
 Reselect.directive('reselectSticky', ['$templateCache', function($templateCache){
     return {
         restrict: 'AE',
@@ -1470,52 +1477,50 @@ Reselect.directive('reselectSticky', ['$templateCache', function($templateCache)
     };
 }]);
 
-angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
-$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\" ng-disabled=\"$reselect.isDisabled\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown($event)\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.isValidValue\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.isValidValue\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\"><span ng-bind=\"$reselect.options.placeholder\"></span></div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.isValidValue\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
-$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-show=\"$options.options.enableSearch\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-static-option reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div><div class=\"reselect-sticky-container\"></div></div>");
-$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");
-$templateCache.put("templates/reselect.sticky.tpl.html","<div class=\"reselect-sticky reselect-sticky-choice\" ng-transclude=\"\"></div>");}]);
-Reselect.run(['$rootScope', '$http', function ($rootScope, $http) {
-    $rootScope.$safeApply = function (fn) {
-        if(!this.$root) {
+Reselect.factory('safeApply', ['$rootScope', function ($rootScope) {
+    return function ($scope, fn) {
+        if(!$scope.$root) {
             return fn();
         }
-        var phase = this.$root.$$phase;
+        var phase = $scope.$root.$$phase;
         if (phase == '$apply' || phase == '$digest') {
-            if (fn && (typeof(fn) === 'function')) {
-                fn();
+            if (fn) {
+                $scope.$eval(fn);
             }
         } else {
-            this.$apply(fn);
+            if (fn) {
+                $scope.$apply(fn);
+            } else {
+                $scope.$apply();
+            }
         }
     };
 }]);
 
-Reselect.factory('ReselectUtils', ['$timeout', function($timeout){
+Reselect.factory('ReselectUtils', ['$timeout', function ($timeout) {
     var ReselectUtils = {
-        debounce: function(func, wait, immediate, immediateFn) {
-    		var timeout;
-    		return function() {
-    			var context = this, args = arguments;
-    			var later = function() {
-    				timeout = null;
-    				if (!immediate) func.apply(context, args);
-    			};
-    			var callNow = immediate && !timeout;
-    			clearTimeout(timeout);
-    			timeout = setTimeout(later, wait);
-    			if (callNow) func.apply(context, args);
+        debounce: function (func, wait, immediate, immediateFn) {
+            var timeout;
+            return function () {
+                var context = this,
+                    args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
                 if (!timeout, immediateFn) immediateFn.apply(context, args);
-    		};
-    	},
-        requstAnimFrame: function() {
-            return  (window.requestAnimationFrame   ||
+            };
+        },
+        requstAnimFrame: function () {
+            return (window.requestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame    ||
-                window.oRequestAnimationFrame      ||
-                window.msRequestAnimationFrame     ||
+                window.mozRequestAnimationFrame ||
+                window.oRequestAnimationFrame ||
+                window.msRequestAnimationFrame ||
                 $timeout);
         }
     };
@@ -1523,40 +1528,40 @@ Reselect.factory('ReselectUtils', ['$timeout', function($timeout){
     return ReselectUtils;
 }]);
 
-Reselect.filter('rshighlight', ['$sce', function($sce){
-    return function(target, str){
+Reselect.filter('rshighlight', ['$sce', function ($sce) {
+    return function (target, str) {
         var result, matches, re;
         var match_class = "reselect-text-match";
 
-		re = new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
-		if (!angular.isDefined(target) || target === null) {
-			return;
-		}
+        re = new RegExp(str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'ig');
+        if (!angular.isDefined(target) || target === null) {
+            return;
+        }
 
-		if (!str) {
-			return target;
-		}
+        if (!str) {
+            return target;
+        }
 
-		if (!target.match || !target.replace) {
-			target = target.toString();
-		}
-		matches = target.match(re);
-		if (matches) {
-			result = target.replace(re, '<span class="' + match_class + '">' + matches[0] + '</span>');
-		} else {
-			result = target;
-		}
+        if (!target.match || !target.replace) {
+            target = target.toString();
+        }
+        matches = target.match(re);
+        if (matches) {
+            result = target.replace(re, '<span class="' + match_class + '">' + matches[0] + '</span>');
+        } else {
+            result = target;
+        }
 
-		return $sce.trustAsHtml(result);
+        return $sce.trustAsHtml(result);
     };
 }]);
 
-Reselect.directive('focusOn', ['$timeout', function($timeout){
+Reselect.directive('focusOn', ['$timeout', function ($timeout) {
     return {
         restrict: 'A',
-        link: function($scope, $elem, $attrs){
-            $scope.$on($attrs.focusOn, function(){
-                $timeout(function(){
+        link: function ($scope, $elem, $attrs) {
+            $scope.$on($attrs.focusOn, function () {
+                $timeout(function () {
                     $elem[0].focus();
                 });
             });
@@ -1564,19 +1569,18 @@ Reselect.directive('focusOn', ['$timeout', function($timeout){
     };
 }]);
 
-Reselect.directive('blurOn', ['$timeout', function($timeout){
+Reselect.directive('blurOn', ['$timeout', function ($timeout) {
     return {
         restrict: 'A',
-        link: function($scope, $elem, $attrs){
-            $scope.$on($attrs.blurOn, function(){
-                $timeout(function(){
+        link: function ($scope, $elem, $attrs) {
+            $scope.$on($attrs.blurOn, function () {
+                $timeout(function () {
                     $elem[0].blur();
                 });
             });
         }
     };
 }]);
-
 /**
  * Filter credited to https://github.com/Rokt33r/
  * https://gist.github.com/Rokt33r/569f518eddcce5e01a4a
