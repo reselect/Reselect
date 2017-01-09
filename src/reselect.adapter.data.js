@@ -3,6 +3,7 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
     var DataAdapter = function(){
         this.data = [];
+        this.groupByFn = null;
     };
 
     DataAdapter.prototype.observe = function(){
@@ -19,21 +20,71 @@ Reselect.service('ReselectDataAdapter', ['$q', function($q){
 
         // This function requires the return of a deferred promise
         var defer = $q.defer();
-
         var choices;
-        var search_options = {};
 
-        choices = this.data;
+        if(self.cached){
+            choices = this.cached;
+        }else{
+            choices = self.groupData(this.data);
+        }
 
         defer.resolve({
             data: choices
         });
 
+        self.cached = choices;
+
         return defer.promise;
     };
 
-    DataAdapter.prototype.updateData = function(newData){
+    DataAdapter.prototype.groupData = function(choices){
+        var self = this;
 
+        // Filter choices by group by function
+        // TODO: Optmize this to run once per unique data collection
+        if(self.groupByFn && typeof self.groupByFn === 'function'){
+            var groupMap = {};
+            var groupedChoices = [];
+            var finalChoices = [];
+
+            angular.forEach(choices, function(choice){
+                if(choice.$$group){
+                    return;
+                }
+                var groupId = self.groupByFn(choice);
+                var groupIndex;
+
+                if(!angular.isDefined(groupMap[groupId])){
+                    groupIndex = groupedChoices.length;
+                    groupMap[groupId] = groupIndex;
+                    groupMap[groupIndex] = groupId;
+
+                    groupedChoices[groupIndex] = [];
+                    groupedChoices[groupIndex].push(choice);
+                }else{
+                    groupIndex = groupMap[groupId];
+                    groupedChoices[groupIndex].push(choice);
+                }
+            });
+
+            angular.forEach(groupedChoices, function(groupedChoice, index){
+                if(groupMap[index] !== undefined){
+                    finalChoices.push({
+                        $$group: groupMap[index]
+                    });
+                }
+
+                finalChoices = finalChoices.concat(groupedChoice);
+            });
+
+            choices = finalChoices;
+        }
+
+        return choices;
+    };
+
+    DataAdapter.prototype.updateData = function(newData){
+        this.cached = false;
         this.data = newData;
 
         return this.data;
@@ -50,6 +101,7 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
 
     var DataAdapter = function(remoteOptions, parsedOptions){
         this.data = [];
+        this.groupByFn = null;
         this.page = 1;
         this.pagination = {};
 
