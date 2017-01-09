@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.5 - 2017-01-09T00:22:26.708Z
+ * Version: 0.5.5 - 2017-01-09T00:23:07.289Z
  * License: MIT
  */
 
