@@ -74,7 +74,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 		},
 		controllerAs: '$reselect',
-		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectConfig', '$timeout', '$window', '$document', 'KEYS', function($scope, $element, $attrs, $parse, ReselectUtils, reselectConfig, $timeout, $window, $document, KEYS) {
+		controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectConfig', '$timeout', '$window', '$document', 'KEYS', 'safeApply', function($scope, $element, $attrs, $parse, ReselectUtils, reselectConfig, $timeout, $window, $document, KEYS, safeApply) {
 
 			var ctrl = this;
 			var $ngModel = $element.controller('ngModel');
@@ -286,7 +286,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 					return;
 				}
 
-				$scope.$safeApply(function() {
+				safeApply($scope, function() {
 					ctrl.hideDropdown(true);
 				});
 
@@ -341,7 +341,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 			ctrl.bindEventListeners = function() {
 				$scope.$on('reselect.hide', function() {
-					$scope.$safeApply(function() {
+					safeApply($scope, function() {
 						ctrl.hideDropdown();
 					});
 				});
@@ -396,7 +396,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
 				animationFrame(function() {
 					var dropdownHeight = ctrl._calculateDropdownHeight();
-					$scope.$safeApply(function() {
+					safeApply($scope, function() {
 						var element_offset = ctrl._calculateDropdownPosition(dropdownHeight);
 
 						ctrl.$dropdown[0].style.width = element_offset.width + 'px';

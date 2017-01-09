@@ -1,0 +1,164 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'D:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@3.10.9
+3 info using node@v6.9.2
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   escapedName: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: 'D:\\Development\\Reselect',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package.tgz not in flight; packing
+9 verbose correctMkdir C:\Users\cheuk\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+10 info lifecycle angular-reselect@0.5.2~prepublish: angular-reselect@0.5.2
+11 silly lifecycle angular-reselect@0.5.2~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ 'C:\\Users\\cheuk\\AppData\\Roaming\\npm-cache\\angular-reselect\\0.5.2\\package.tgz',
+12 verbose tar pack   'D:\\Development\\Reselect' ]
+13 verbose tarball C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package.tgz
+14 verbose folder D:\Development\Reselect
+15 verbose addLocalTarball adding from inside cache C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package.tgz
+16 verbose correctMkdir C:\Users\cheuk\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+17 silly cache afterAdd angular-reselect@0.5.2
+18 verbose afterAdd C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package\package.json not in flight; writing
+19 verbose correctMkdir C:\Users\cheuk\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+20 verbose afterAdd C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package\package.json written
+21 silly publish { name: 'angular-reselect',
+21 silly publish   main: 'dist/reselect.js',
+21 silly publish   author: { name: 'https://github.com/alexcheuk' },
+21 silly publish   homepage: 'https://github.com/alexcheuk/Reselect',
+21 silly publish   repository: { url: 'git+https://github.com/alexcheuk/Reselect.git' },
+21 silly publish   version: '0.5.2',
+21 silly publish   devDependencies:
+21 silly publish    { autoprefixer: '^6.3.6',
+21 silly publish      'babel-core': '^6.9.1',
+21 silly publish      'babel-eslint': '^6.1.2',
+21 silly publish      'babel-loader': '^6.2.5',
+21 silly publish      'babel-plugin-transform-runtime': '^6.15.0',
+21 silly publish      'babel-polyfill': '^6.9.1',
+21 silly publish      'babel-preset-es2015': '^6.14.0',
+21 silly publish      'babel-preset-stage-2': '^6.18.0',
+21 silly publish      bower: '^1.7.1',
+21 silly publish      del: '^2.2.0',
+21 silly publish      eslint: '^3.13.0',
+21 silly publish      'eslint-config-standard': '^6.2.1',
+21 silly publish      'eslint-friendly-formatter': '^2.0.7',
+21 silly publish      'eslint-loader': '^1.6.1',
+21 silly publish      'eslint-plugin-flow-vars': '^0.5.0',
+21 silly publish      'eslint-plugin-promise': '^3.4.0',
+21 silly publish      'eslint-plugin-standard': '^2.0.1',
+21 silly publish      'event-stream': '^3.3.2',
+21 silly publish      events: '^1.1.0',
+21 silly publish      'extract-text-webpack-plugin': '^1.0.1',
+21 silly publish      gulp: '^3.9.0',
+21 silly publish      'gulp-angular-templatecache': '^1.8.0',
+21 silly publish      'gulp-concat': '~2.1.7',
+21 silly publish      'gulp-connect': '^2.2.0',
+21 silly publish      'gulp-footer': '~1.0.5',
+21 silly publish      'gulp-header': '~1.0.2',
+21 silly publish      'gulp-jshint': '^2.0.0',
+21 silly publish      'gulp-livereload': '^3.8.1',
+21 silly publish      'gulp-load-plugins': '^1.1.0',
+21 silly publish      'gulp-minify-css': '~0.3.6',
+21 silly publish      'gulp-minify-html': '~0.1.0',
+21 silly publish      'gulp-notify': '^2.2.0',
+21 silly publish      'gulp-plumber': '^0.6.3',
+21 silly publish      'gulp-rename': '~0.2.2',
+21 silly publish      'gulp-sass': '^2.1.1',
+21 silly publish      'gulp-uglify': '~0.3.1',
+21 silly publish      'gulp-util': '^3.0.7',
+21 silly publish      jshint: '^2.8.0',
+21 silly publish      'jshint-stylish': '^2.1.0',
+21 silly publish      karma: '^0.12.16',
+21 silly publish      'karma-chrome-launcher': '^0.1.3',
+21 silly publish      'karma-coverage': '~0.2',
+21 silly publish      'karma-firefox-launcher': '~0.1',
+21 silly publish      'karma-jasmine': '~0.2',
+21 silly publish      'karma-jasmine-html-reporter-livereload': '^1.0.0',
+21 silly publish      'karma-ng-html2js-preprocessor': '^0.1.0',
+21 silly publish      'karma-notify-reporter': '^0.1.1',
+21 silly publish      'karma-phantomjs-launcher': '~0.1.4',
+21 silly publish      'karma-spec-reporter': '0.0.23',
+21 silly publish      'map-stream': '0.0.6',
+21 silly publish      'node-bourbon': '^4.2.8',
+21 silly publish      'node-notifier': '^4.4.0',
+21 silly publish      webpack: '^1.14.0',
+21 silly publish      'webpack-dev-server': '^1.16.2',
+21 silly publish      'webpack-merge': '^2.3.1' },
+21 silly publish   scripts:
+21 silly publish    { test: 'gulp test',
+21 silly publish      dev: 'webpack-dev-server --config build/webpack.dev.config.js --progress --watch' },
+21 silly publish   license: 'MIT',
+21 silly publish   readme: '# Reselect [![Build Status](https://travis-ci.org/reselect/Reselect.svg?branch=master)](https://travis-ci.org/reselect/Reselect)\n\nReselect is a directive built off of [Angular\'s HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. Reselect features searching, ability to use remote data sets, infinite scrolling of results, and handling of invalid choices.\n\n## Features\n1. Lazy rendered options list\n2. Remote data source\n3. Infinite scroll\n4. Invalid choice handlers\n\n## Installation\n\n1. Download [Reselect](https://github.com/reselect/Reselect)\n2. Run `npm install` and `bower install`\n3. To use Reselect in your project refer to [Usage](#usage)\n4. To contribute to Reselect refer to [Contributing](#contributing)\n\n## Usage\nDownload [Reselect](https://github.com/reselect/Reselect) and use the production version within the `dist/` folder. Once downloaded, add the `Reselect` dependency to your AngularJS module.\n\n```js\nangular.module(\'myModule\', [\'Reselect\']);\n```\n\nThen use the directive in your application:\n````html\n\n<reselect\n    ng-model="">\n    <div reselect-selection>\n        <span ng-bind=""></span>\n    </div>\n    <reselect-choice ng-click="onClick()">Static Option</reselect-choice>\n    <reselect-choices\n        options=""\n        remote="">\n            <span ng-bind=""></span>\n    </reselect-choices>\n</reselect>\n\n````\n\nCheck out more in-depth examples on the [demo](http://reselect.github.io/Reselect/) page.\n\n\n## Found a bug?\n\nPlease check the [CONTRIBUTING.md](CONTRIBUTING.md) and submit your issue [here](https://github.com/reselect/Reselect/issues/new).\n\n## Contributing\n\n1. Fork it!\n2. Create your feature branch: `git checkout -b my-new-feature`\n3. Commit your changes: `git commit -am \'feat(reselect): Adding an awesome feature\'`\n4. Push to the branch: `git push origin my-new-feature`\n5. Submit a pull request :rocket:\n\nQuality contributions are always welcome! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) for more details on the contribution guidelines.\n',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: '78cf62208cd31bf64cf523afe1848d904ddef217',
+21 silly publish   description: 'Reselect is a directive built off of [Angular\'s HTML SELECT](https://docs.angularjs.org/api/ng/directive/select) element. Reselect features searching, ability to use remote data sets, infinite scrolling of results, and handling of invalid choices.',
+21 silly publish   bugs: { url: 'https://github.com/alexcheuk/Reselect/issues' },
+21 silly publish   _id: 'angular-reselect@0.5.2',
+21 silly publish   _shasum: 'e0787620067cea145b1fba26074c74c248223b87',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name angular-reselect
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: 'angular-reselect',
+26 silly mapToRegistry   scope: null,
+26 silly mapToRegistry   escapedName: 'angular-reselect',
+26 silly mapToRegistry   name: 'angular-reselect',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/angular-reselect
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading C:\Users\cheuk\AppData\Roaming\npm-cache\angular-reselect\0.5.2\package.tgz
+30 verbose request uri https://registry.npmjs.org/angular-reselect
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 4:16:18 PM
+33 verbose request using bearer token for auth
+34 verbose request id 79175425fd81dfa6
+35 http request PUT https://registry.npmjs.org/angular-reselect
+36 http 403 https://registry.npmjs.org/angular-reselect
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=300',
+37 verbose headers   'content-length': '95',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Mon, 09 Jan 2017 00:16:16 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-sea1924-SEA',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1483920976.117278,VS0,VE549',
+37 verbose headers   vary: 'Accept-Encoding' }
+38 verbose request invalidating C:\Users\cheuk\AppData\Roaming\npm-cache\registry.npmjs.org\angular-reselect on PUT
+39 error publish Failed PUT 403
+40 verbose stack Error: "You cannot publish over the previously published version 0.5.2." : angular-reselect
+40 verbose stack     at makeError (D:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:302:12)
+40 verbose stack     at CachingRegistryClient.<anonymous> (D:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:290:14)
+40 verbose stack     at Request._callback (D:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:210:14)
+40 verbose stack     at Request.self.callback (D:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:187:22)
+40 verbose stack     at emitTwo (events.js:106:13)
+40 verbose stack     at Request.emit (events.js:191:7)
+40 verbose stack     at Request.<anonymous> (D:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1048:10)
+40 verbose stack     at emitOne (events.js:96:13)
+40 verbose stack     at Request.emit (events.js:188:7)
+40 verbose stack     at IncomingMessage.<anonymous> (D:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:969:12)
+41 verbose statusCode 403
+42 verbose pkgid angular-reselect
+43 verbose cwd D:\Development\Reselect
+44 error Windows_NT 10.0.14393
+45 error argv "D:\\Program Files\\nodejs\\node.exe" "D:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+46 error node v6.9.2
+47 error npm  v3.10.9
+48 error code E403
+49 error "You cannot publish over the previously published version 0.5.2." : angular-reselect
+50 error If you need help, you may report this error at:
+50 error     <https://github.com/npm/npm/issues>
+51 verbose exit [ 1, true ]
