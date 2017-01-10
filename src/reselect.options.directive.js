@@ -1,4 +1,5 @@
 Reselect.value('reselectChoicesOptions', {
+    enableSearch: true,
     noOptionsText: 'No Options',
     choiceHeight: 36,
     listHeight: 300
@@ -61,8 +62,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
         LazyContainer, ReselectUtils, reselectChoicesOptions) {
         return {
             restrict: 'AE',
-            template: $templateCache.get(
-                'templates/reselect.options.directive.tpl.html'),
+            template: $templateCache.get('templates/reselect.options.directive.tpl.html'),
             require: ['reselectChoices', '?^reselect'],
             transclude: true,
             replace: true,
@@ -139,22 +139,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
                     self.haveChoices = false;
 
-                    self.CHOICE_TEMPLATE = angular.element(
-                        '<li class="reselect-option reselect-option-choice" style="height: {{$options.choiceHeight}}px" ng-click="$options._selectChoice($index, $onClick)"></li>'
-                    );
-                    self.CHOICE_TEMPLATE.append(
-                        '<div class="reselect-option-choice-sticky" ng-show="$sticky === true" ng-bind-html="$stickyContent"></div>'
-                    );
-                    self.CHOICE_TEMPLATE.append(
-                        '<div class="reselect-option-choice-container" ng-show="!$sticky"></div>'
-                    );
-                    self.CHOICE_TEMPLATE.attr('ng-class',
-                        '[{\'reselect-option-choice--highlight\' : $options.activeIndex === $index, \'reselect-option-choice--selected\' : $options.selectedIndex === $index }, cssClass]'
-                    );
-                    self.CHOICE_TEMPLATE.attr('ng-mouseenter',
-                        '$options.activeIndex = $index');
-                    self.CHOICE_TEMPLATE.attr('ng-mouseleave',
-                        '$options.activeIndex = null');
+                    self.CHOICE_TEMPLATE = angular.element($templateCache.get('templates/reselect.choice.tpl.html'));
 
                     /**
                      * Single Choice - Sticky Choices
@@ -254,40 +239,45 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                      * Choices Functionalities
                      */
 
-                    $Reselect.parsedOptions = ChoiceParser.parse(
-                        $attrs.options);
+                    $Reselect.parsedOptions = ChoiceParser.parse($attrs.options);
+
+                    if($attrs.groupBy){
+                        $Reselect.parsedGroupBy = $parse($attrs.groupBy)($scope);
+
+                        if(typeof $Reselect.parsedGroupBy === 'string'){
+                            self.groupByFn = function(choice){
+                                return choice[$Reselect.parsedGroupBy];
+                            };
+                        }else if(typeof $Reselect.parsedGroupBy === 'function'){
+                            self.groupByFn = $Reselect.parsedGroupBy;
+                        }
+                    }
 
                     if ($attrs.remote) {
-                        self.remoteOptions = $parse($attrs.remote)(
-                            $scope.$parent);
+                        self.remoteOptions = $parse($attrs.remote)($scope.$parent);
 
                         $Reselect.isRemote = true;
 
-                        $Reselect.DataAdapter = new ReselectAjaxDataAdapter(
-                            self.remoteOptions, $Reselect.parsedOptions
-                        );
+                        $Reselect.DataAdapter = new ReselectAjaxDataAdapter(self.remoteOptions, $Reselect.parsedOptions);
+                        $Reselect.DataAdapter.groupByFn = $Reselect.parsedGroupBy;
 
-                        $Reselect.DataAdapter.prepareGetData =
-                            function () {
-                                $Reselect.DataAdapter.page = 1;
-                                $Reselect.DataAdapter.pagination = {};
-                                $Reselect.DataAdapter.updateData([]);
-                                self.render();
-                            };
+                        $Reselect.DataAdapter.prepareGetData = function () {
+                            $Reselect.DataAdapter.page = 1;
+                            $Reselect.DataAdapter.pagination = {};
+                            $Reselect.DataAdapter.updateData([]);
+                            self.render();
+                        };
                     } else {
                         $Reselect.DataAdapter = new ReselectDataAdapter();
+                        $Reselect.DataAdapter.groupByFn = $Reselect.parsedGroupBy;
 
-                        $Reselect.DataAdapter.updateData($Reselect.parsedOptions
-                            .source($scope));
+                        $Reselect.DataAdapter.updateData($Reselect.parsedOptions.source($scope));
 
-                        $Reselect.DataAdapter.observe = function (
-                            onChange) {
+                        $Reselect.DataAdapter.observe = function (onChange) {
                             $scope.$watchCollection(function () {
-                                return $Reselect.parsedOptions
-                                    .source($scope);
+                                return $Reselect.parsedOptions.source($scope);
                             }, function (newChoices) {
-                                $Reselect.DataAdapter.updateData(
-                                    newChoices);
+                                $Reselect.DataAdapter.updateData(newChoices);
                             });
                         };
 
@@ -302,13 +292,10 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
 
                         self.is_loading = true;
 
-                        return $Reselect.DataAdapter.getData(
-                            $Reselect.search_term)
+                        return $Reselect.DataAdapter.getData($Reselect.search_term)
                             .then(function (choices) {
                                 if (!$Reselect.search_term) {
-                                    $Reselect.DataAdapter.updateData(
-                                        choices.data,
-                                        loadingMore);
+                                    $Reselect.DataAdapter.updateData(choices.data, loadingMore);
                                     self.render();
                                 } else {
                                     self.render(choices.data);

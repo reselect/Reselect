@@ -44,6 +44,10 @@
 
 		self.intervalBool = true;
 
+		self.groupBy = function(choice){
+			return 'Group By -' + choice[0];
+		}
+
 		$interval(function(){
 			self.intervalBool = !self.intervalBool;
 		}, 2000);

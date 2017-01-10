@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.2 - 2016-12-05T23:08:20.686Z
+ * Version: 0.5.5 - 2017-01-09T00:23:07.336Z
  * License: MIT
  */
 
@@ -264,10 +264,18 @@ input[type="text"].reselect-search-input {
   position: relative; }
 
 .reselect-option, .reselect-sticky-choice {
-  padding: 12px 15px;
   line-height: 1;
   font-size: 11px;
   font-weight: 400; }
+
+.reselect-option {
+  position: absolute;
+  overflow: hidden;
+  width: 100%; }
+  .reselect-option.inactive {
+    display: none; }
+  .reselect-option.reselect-option--static {
+    position: relative; }
 
 .reselect-static-option {
   position: relative; }
@@ -293,27 +301,32 @@ input[type="text"].reselect-search-input {
     -moz-animation: reselect-loader 1.5s infinite;
     animation: reselect-loader 1.5s infinite; }
 
-.reselect-option-choice, .reselect-sticky-choice {
+.reselect-option-choice, .reselect-option-optgroup, .reselect-sticky-choice {
+  padding: 12px 15px;
   height: 36px;
   width: 100%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  border-bottom: 1px solid #eee;
+  color: #333;
   cursor: pointer; }
 
-.reselect-option-choice {
-  position: absolute; }
-  .reselect-option-choice.reselect-option-choice--highlight {
-    background: #f3f3f3;
-    color: #111; }
-  .reselect-option-choice.reselect-option-choice--selected {
-    background: #f9f9f9;
-    color: #111; }
-  .reselect-option-choice.inactive {
-    display: none; }
-  .reselect-option-choice.reselect-option--static {
-    position: relative; }
+.reselect-option-choice.reselect-option-choice--highlight {
+  background: #00ace6;
+  color: #fff; }
+
+.reselect-option-choice.reselect-option-choice--selected {
+  background: #09c;
+  color: #fff; }
+
+.reselect-option-optgroup {
+  font-size: 10px;
+  background: #fcfcfc;
+  color: #999;
+  padding-left: 10px;
+  cursor: default;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee; }
 
 .reselect-sticky-container {
   border-top: 1px solid #ccc; }

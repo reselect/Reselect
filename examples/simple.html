@@ -38,7 +38,8 @@
                             placeholder="Custom placeholder"
                             ng-model="simple.value">
                             <reselect-choices
-                                options="option in simple.mocks.single | limitTo: 10">
+                                group-by="simple.groupBy"
+                                options="option in simple.mocks.single | limitTo: 10 | filter: $reselect.search_term">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
                             </reselect-choices>
                             <div reselect-sticky ng-click="simple.click()">

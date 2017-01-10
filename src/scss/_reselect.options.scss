@@ -69,15 +69,24 @@ input[type="text"].reselect-search-input{
 }
 
 %reselectOptionStyle{
-	padding: 12px 15px;
-
     line-height: 1;
 	font-size: 11px;
-	font-weight: 400;
+	font-weight: 400;    
 }
 
 .reselect-option{
+	position: absolute;
+	overflow: hidden;
+	width: 100%;
 	@extend %reselectOptionStyle;
+
+	&.inactive{
+		display: none;
+	}
+
+	&.reselect-option--static{
+		position: relative;
+	}
 }
 
 .reselect-static-option{
@@ -110,39 +119,42 @@ input[type="text"].reselect-search-input{
 }
 
 %reselectChoiceStyle{
+	padding: 12px 15px;
 	height: 36px;
 	width: 100%;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 
-	border-bottom: 1px solid #eee;
-
+	// border-bottom: 1px solid #eee;
+	color:#333;
 	cursor:pointer;
 }
 
 .reselect-option-choice{
-
-	position: absolute;
 	@extend %reselectChoiceStyle;
 
 	&.reselect-option-choice--highlight{
-		background: #f3f3f3;
-		color:#111;
+		background: lighten(#09c,5);
+		color:#fff;
 	}
 
     &.reselect-option-choice--selected{
-        background:#f9f9f9;
-		color:#111;
+		background: #09c;
+		color:#fff;
 	}
+}
 
-	&.inactive{
-		display: none;
-	}
-
-	&.reselect-option--static{
-		position: relative;
-	}
+.reselect-option-optgroup{
+	@extend %reselectChoiceStyle;
+	font-size: 10px;
+	background:#fcfcfc;
+	color:#999;
+	padding-left: 10px;
+	// font-weight: bold;
+	cursor: default;
+	border-top: 1px solid #eee;
+	border-bottom: 1px solid #eee;
 }
 
 .reselect-sticky-container{
