@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.5 - 2017-01-09T00:23:07.289Z
+ * Version: 0.5.5 - 2017-01-17T20:23:19.064Z
  * License: MIT
  */
 
@@ -492,6 +492,8 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);
+
+				event.stopPropagation();
 			}
 
 			ctrl.showDropdown = function() {
