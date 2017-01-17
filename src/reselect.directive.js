@@ -291,6 +291,8 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 				});
 
 				angular.element(document).off('click', hideDropdownOnClick);
+
+				event.stopPropagation();
 			}
 
 			ctrl.showDropdown = function() {
