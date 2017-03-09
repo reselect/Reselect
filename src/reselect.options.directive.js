@@ -67,7 +67,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
             transclude: true,
             replace: true,
             compile: function (element, attrs) {
-
                 if (!attrs.options) {
                     console.warn(
                         '[reselect-options] directive requires the [options] attribute.'

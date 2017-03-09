@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.5 - 2017-01-17T20:23:19.616Z
+ * Version: 0.5.6 - 2017-03-09T23:53:10.823Z
  * License: MIT
  */
 
@@ -275,7 +275,8 @@ input[type="text"].reselect-search-input {
   .reselect-option.inactive {
     display: none; }
   .reselect-option.reselect-option--static {
-    position: relative; }
+    position: relative;
+    cursor: default; }
 
 .reselect-static-option {
   position: relative; }
