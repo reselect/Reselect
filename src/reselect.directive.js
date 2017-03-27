@@ -411,7 +411,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 			ctrl._getContainer = function () {
 				var container;
 				if (typeof ctrl.options.container === 'function') {
-					container = ctrl.options.container();
+					container = ctrl.options.container($element);
 
 					if (container && typeof container.style === 'object') {
 						container = container; //
