@@ -2,7 +2,8 @@ Reselect.provider('reselectConfig', [function(){
 
     angular.extend(this, {
         allowClear: false,
-		placeholder: 'Please select an option'
+		placeholder: 'Please select an option',
+		container: 'body'
     });
     
     this.$get = function(){
@@ -407,11 +408,29 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 					});
 				});
 			};
+			ctrl._getContainer = function () {
+				var container;
+				if (typeof ctrl.options.container === 'function') {
+					container = ctrl.options.container();
+
+					if (container && typeof container.style === 'object') {
+						container = container; //
+					} else if (container && typeof container.style === 'string') {
+						container = document.querySelector(container);
+					} else {
+						container = document.querySelector('body');
+					}
+				} else if (typeof ctrl.options.container === 'string') {
+					container = document.querySelector(ctrl.options.container);	
+				}
+
+				return container;
+			};
 			ctrl._appendDropdown = function() {
-				return document.querySelector('body').appendChild(ctrl.$dropdown[0]);
+				return ctrl._getContainer().appendChild(ctrl.$dropdown[0]);
 			};
 			ctrl._removeDropdown = function() {
-				var $body = document.querySelector('body');
+				var $body = ctrl._getContainer();
 				if ($body.contains(ctrl.$dropdown[0])) {
 					return $body.removeChild(ctrl.$dropdown[0]);
 				}
