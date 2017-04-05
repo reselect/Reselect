@@ -3,7 +3,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
     entry: {
-        'reselect': path.resolve(__dirname, '../src/reselect'),
+        'reselect': path.resolve(__dirname, '../src/reselect')
     },
     output: {
         path: path.resolve(__dirname, '../dist'),
