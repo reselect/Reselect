@@ -148,7 +148,9 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
                     '$remote': res.data
                 });
             })
-            .then(this.options.onData)
+            .then(function (choices) {
+                return self.options.onData(choices, params);
+            })
             .then(function(choices){
                 if(choices.pagination){
                     self.pagination = choices.pagination;
