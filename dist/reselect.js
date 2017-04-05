@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.5.9 - 2017-03-28T00:13:03.991Z
+ * Version: 0.6.0 - 2017-04-05T02:00:26.664Z
  * License: MIT
  */
 
@@ -15,7 +15,7 @@
 var Reselect = angular.module('Reselect', ['reselect.templates']);
 
 if (typeof exports !== 'undefined') {
-    module.exports = 'Reselect';
+    module.exports = Reselect;
 }
 
 
@@ -168,7 +168,9 @@ Reselect.service('ReselectAjaxDataAdapter', ['$http', function($http){
                     '$remote': res.data
                 });
             })
-            .then(this.options.onData)
+            .then(function (choices) {
+                return self.options.onData(choices, params);
+            })
             .then(function(choices){
                 if(choices.pagination){
                     self.pagination = choices.pagination;
@@ -1638,6 +1640,14 @@ Reselect.directive('blurOn', ['$timeout', function ($timeout) {
         }
     };
 }]);
+angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
+$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.choice.tpl.html","<li class=\"reselect-option\"><div class=\"reselect-option-choice\" style=\"height: {{$options.choiceHeight}}px\" ng-class=\"[{\'reselect-option-choice--highlight\' : $options.activeIndex === $index, \'reselect-option-choice--selected\' : $options.selectedIndex === $index }, cssClass]\" ng-mouseenter=\"$options.activeIndex = $index\" ng-mouseleave=\"$options.activeIndex = null\" ng-click=\"$options._selectChoice($index, $onClick)\" ng-if=\"$sticky || !$group\"><div class=\"reselect-option-sticky\" ng-if=\"$sticky === true\" ng-bind-html=\"$stickyContent\"></div><div class=\"reselect-option-choice-container\" ng-if=\"!$sticky && !$group\"></div></div><div class=\"reselect-option-optgroup\" style=\"height: {{$options.choiceHeight}}px\" ng-if=\"$group === true\" ng-bind=\"$groupContent\"></div></li>");
+$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\" ng-disabled=\"$reselect.isDisabled\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown($event)\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.isValidValue\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.isValidValue\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\"><span ng-bind=\"$reselect.options.placeholder\"></span></div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.isValidValue\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
+$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-show=\"$options.options.enableSearch\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-option--static reselect-option-choice reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div><div class=\"reselect-sticky-container\"></div></div>");
+$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
+$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");
+$templateCache.put("templates/reselect.sticky.tpl.html","<div class=\"reselect-sticky reselect-sticky-choice\" ng-transclude=\"\"></div>");}]);
 /**
  * Filter credited to https://github.com/Rokt33r/
  * https://gist.github.com/Rokt33r/569f518eddcce5e01a4a
@@ -1678,14 +1688,6 @@ Reselect.filter('rsPropsFilter', function() {
     };
 });
 
-angular.module("reselect.templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("templates/lazy-container.tpl.html","<div class=\"reselect-dropdown\"><div class=\"reselect-options-container\"><div class=\"reselect-option reselect-option-choice\" ng-show=\"!$reselect.choices.length\">No Options</div><ul class=\"reselect-options-list\"></ul></div></div>");
-$templateCache.put("templates/reselect-no-choice.directive.tpl.html","<div class=\"reselect-no-choice\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.choice.tpl.html","<li class=\"reselect-option\"><div class=\"reselect-option-choice\" style=\"height: {{$options.choiceHeight}}px\" ng-class=\"[{\'reselect-option-choice--highlight\' : $options.activeIndex === $index, \'reselect-option-choice--selected\' : $options.selectedIndex === $index }, cssClass]\" ng-mouseenter=\"$options.activeIndex = $index\" ng-mouseleave=\"$options.activeIndex = null\" ng-click=\"$options._selectChoice($index, $onClick)\" ng-if=\"$sticky || !$group\"><div class=\"reselect-option-sticky\" ng-if=\"$sticky === true\" ng-bind-html=\"$stickyContent\"></div><div class=\"reselect-option-choice-container\" ng-if=\"!$sticky && !$group\"></div></div><div class=\"reselect-option-optgroup\" style=\"height: {{$options.choiceHeight}}px\" ng-if=\"$group === true\" ng-bind=\"$groupContent\"></div></li>");
-$templateCache.put("templates/reselect.directive.tpl.html","<div class=\"reselect-container reselect\" tabindex=\"0\" focus-on=\"reselect.input.focus\" blur-on=\"reselect.input.blur\" ng-keydown=\"$reselect.handleKeyDown($event)\"><input type=\"hidden\" value=\"{{ngModel}}\" ng-disabled=\"$reselect.isDisabled\"><div class=\"reselect-selection-container\" ng-class=\"{\'reselect-selection--active\' : $reselect.opened }\" ng-click=\"$reselect.toggleDropdown($event)\"><div class=\"reselect-rendered reselect-rendered-selection\" ng-show=\"$reselect.isValidValue\"><div class=\"reselect-selection\" reselect-selection=\"\"><span ng-bind=\"$selection\"></span></div></div><div class=\"reselect-rendered reselect-rendered-placeholder\" ng-show=\"!$reselect.isValidValue\"><div class=\"reselect-placeholder\" reselect-placeholder=\"\"><span ng-bind=\"$reselect.options.placeholder\"></span></div></div><div class=\"reselect-arrow-container\"><div class=\"reselect-arrow\"></div></div></div><a href=\"javascript:;\" class=\"reselect-clear-button\" ng-if=\"$reselect.options.allowClear && $reselect.isValidValue\" ng-click=\"$reselect.clearValue()\">&times;</a><div class=\"reselect-dropdown\" ng-class=\"{\'reselect-dropdown--opened\' : $reselect.opened, \'reselect-dropdown--above\': $reselect.isDropdownAbove, \'reselect-dropdown--below\': !$reselect.isDropdownAbove }\"></div></div>");
-$templateCache.put("templates/reselect.options.directive.tpl.html","<div class=\"reselect-choices\" ng-keydown=\"$options.keydown($event)\"><div class=\"reselect-search-container\"><input class=\"reselect-search-input\" tabindex=\"-1\" type=\"text\" focus-on=\"reselect.search.focus\" placeholder=\"Type to search...\" ng-show=\"$options.options.enableSearch\" ng-model=\"$reselect.search_term\" ng-change=\"$options.search()\"></div><div class=\"reselect-option-loader\" ng-show=\"$options.is_loading\"></div><div class=\"reselect-options-container\" ng-class=\"{\'reselect-options-container--autoheight\': !$options.LazyDropdown.choices.length && !$options.is_loading }\" trigger-at-bottom=\"$options.loadMore()\"><ul class=\"reselect-options-list\" ng-show=\"$options.LazyDropdown.choices.length\"></ul><div class=\"reselect-static-option reselect-empty-container\" ng-show=\"!$options.haveChoices && !$options.is_loading\"><div class=\"reselect-no-choice\" reselect-no-choice=\"\"><div class=\"reselect-option reselect-option--static reselect-option-choice\">{{$options.options.noOptionsText}}</div></div></div><div class=\"reselect-option reselect-option--static reselect-option-choice reselect-option-loading\" ng-show=\"$options.is_loading\">Loading More...</div></div><div class=\"reselect-sticky-container\"></div></div>");
-$templateCache.put("templates/reselect.placeholder.tpl.html","<div class=\"reselect-placeholder\" ng-transclude=\"\"></div>");
-$templateCache.put("templates/reselect.selection.tpl.html","<div class=\"reselect-selection\"></div>");
-$templateCache.put("templates/reselect.sticky.tpl.html","<div class=\"reselect-sticky reselect-sticky-choice\" ng-transclude=\"\"></div>");}]);
 /**
  * Common shared functionalities
  */
