@@ -3,9 +3,9 @@
 
 	angular.module('simple', ['Reselect', 'ngSanitize'])
 
-	.config(['reselectConfigProvider', function(reselectConfigProvider){
-		// reselectConfigProvider.placeholder = '';
-	}])
+	// .config(['reselectConfigProvider', function(reselectConfigProvider){
+	// 	// reselectConfigProvider.placeholder = '';
+	// }])
 
 	.service('MOCK_DATA', function($q, $http){
 		var defer = $q.defer();
