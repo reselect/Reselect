@@ -19,7 +19,7 @@
 	position: relative;
 	display:inline-block;
     outline: none;
-    min-width: $reselect-width;
+    min-width: 80px;
 
     &:focus, &:active{
         .reselect-selection-container{
