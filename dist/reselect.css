@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.6.1 - 2017-04-05T22:38:11.250Z
+ * Version: 0.6.2 - 2017-04-15T23:00:19.033Z
  * License: MIT
  */
 
@@ -109,7 +109,7 @@
   position: relative;
   display: inline-block;
   outline: none;
-  min-width: 200px; }
+  min-width: 80px; }
   .reselect-container:focus .reselect-selection-container, .reselect-container:active .reselect-selection-container {
     border-color: #09c; }
   .reselect-container[disabled="disabled"] .reselect-selection-container {
