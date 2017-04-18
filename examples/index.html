@@ -34,14 +34,17 @@
                         <h3>Array of Strings:</h3>
 
                         <p><strong>Selected Value:</strong> <span ng-bind="simple.value"></span></p>
-                        <reselect
-                            placeholder="Custom placeholder"
-                            ng-model="simple.value">
-                            <div reselect-choices
-                                options="option in simple.mocks.single">
-                                    <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
-                            </div>
-                        </reselect>
+
+                        <div style="width: 100px">
+                            <reselect
+                                placeholder="Custom placeholder"
+                                ng-model="simple.value">
+                                <div reselect-choices
+                                    options="option in simple.mocks.single">
+                                        <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
+                                </div>
+                            </reselect>
+                        </div>
 
                         <reselect
                             allow-clear="true"

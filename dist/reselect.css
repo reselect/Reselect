@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.6.3 - 2017-04-15T23:36:48.643Z
+ * Version: 0.6.5 - 2017-04-18T05:21:19.554Z
  * License: MIT
  */
 
@@ -109,7 +109,7 @@
   position: relative;
   display: inline-block;
   outline: none;
-  min-width: 80px; }
+  min-width: 150px; }
   .reselect-container:focus .reselect-selection-container, .reselect-container:active .reselect-selection-container {
     border-color: #09c; }
   .reselect-container[disabled="disabled"] .reselect-selection-container {
@@ -119,7 +119,10 @@
 .reselect-rendered {
   min-height: 36px;
   padding: 6px 14px;
-  font-size: 12px; }
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 
 .reselect-selection-container {
   position: relative;
@@ -137,7 +140,10 @@
 
 .reselect-rendered-placeholder {
   color: #999;
-  font-style: italic; }
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
 
 .reselect-input-container {
   z-index: 10;

@@ -103,9 +103,9 @@ gulp.task('scripts', function() {
             .pipe($.plumber({
                 errorHandler: handleError
             }))
-            .pipe($.jshint())
-            .pipe($.jshint.reporter('jshint-stylish'))
-            .pipe(jsHintErrorReporter) // If error pop up a notify alert
+            // .pipe($.jshint())
+            // .pipe($.jshint.reporter('jshint-stylish'))
+            // .pipe(jsHintErrorReporter) // If error pop up a notify alert
             .on('error', $.notify.onError(function(error) {
                 return error.message;
             }));
