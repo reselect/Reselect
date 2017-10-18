@@ -146,6 +146,10 @@ input[type="text"].reselect-search-input{
 	}
 }
 
+.reselect-option-choice-container {
+	display: inline-block;
+}
+
 .reselect-option-optgroup{
 	@extend %reselectChoiceStyle;
 	font-size: 10px;
