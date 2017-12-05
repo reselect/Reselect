@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Webpack 2 Demo</title>
+</head>
+<body ng-app="example">
+
+  <div ng-controller="controller">
+    <p>Model Value: {{hello}}</p>
+    <!-- <p>Options: {{options}}</p> -->
+
+    <reselect ng-model="hello">
+      <reselect-selection></reselect-selection>
+
+      <reselect-choices options="opts.id as opts in options">
+        {{outer.name}} Option {{opts.name}}
+      </reselect-choices>
+      <reselect-choice value="20">{{outer.name}} Twenty</reselect-choice>
+      <reselect-choice value="30">Thirty</reselect-choice>
+    </reselect>
+
+    <hr/>
+  
+    <button ng-click="hello=10">10</button>
+    <button ng-click="hello=20">20</button>
+    <button ng-click="hello=30">30</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+  <script src="/reselect.js"></script>
+  <script>
+    angular.module('example', ['reselect'])
+      .controller('controller', function ($scope) {
+        $scope.hello = 'yo'
+
+        $scope.outer = {
+          name: 'Outer'
+        }
+
+        $scope.options = [{
+          id: 10,
+          name: 'Wee'
+        }]
+      })
+
+  </script>
+</body>
+</html>
