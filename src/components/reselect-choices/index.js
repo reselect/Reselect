@@ -40,8 +40,14 @@ class ReselectChoicesDirective {
         $choices.attr('rs-transclude', '')
         $choices.attr('ng-click', `$reselect.select(${parsedChoice.itemName})`)
 
-        return function link ($scope, element, attrs, $reselect) {
+        return function link ($scope, element, attrs, $reselect, transcludeFn) {
             $reselect.parseOptions(attrs.options)
+
+            transcludeFn($scope, function (clone) {
+                // console.log('transpile inner?')
+                // console.log(element[0].innerHTML)
+                // element.append(clone)
+            })
         }
     }
 

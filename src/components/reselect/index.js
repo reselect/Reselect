@@ -86,7 +86,12 @@ class ReselectDirective {
             }
 
             transcludeFn(scope, function (clone) {
-                element.append(clone)
+                let $clone = angular.element('<div>').append(clone)
+                let $choiceContainer = angular.element(element[0].querySelectorAll('.reselect-choices-container'))
+
+                $choiceContainer.append($clone[0].querySelectorAll('.reselect-choices'))
+
+                element.append($clone)
             })
         }
     }
