@@ -144,7 +144,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
             ctrl.selectValue = function(value, $choice) {
                 if(value === undefined && $choice === undefined){
-                $scope.$broadcast('reselect.resetIndex');					
+                    $scope.$broadcast('reselect.resetIndex');					
                 }
                 $ngModel.$setViewValue(value);
 
