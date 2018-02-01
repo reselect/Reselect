@@ -382,10 +382,15 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             $Reselect.selectValue(value, selectedScope[$Reselect.parsedOptions.itemName])
                         }
                     }
-
+                    
                     self.bindEventListeners = function () {
                         $scope.$on('reselect.select', function () {
                             self._selectChoice(self.activeIndex)
+                        })
+
+                        $scope.$on('reselect.resetIndex', function () {
+                            self.selectedIndex = null;
+                            self.activeIndex = null;
                         })
 
                         $scope.$on('reselect.next', function () {
