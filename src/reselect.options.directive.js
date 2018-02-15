@@ -294,6 +294,15 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                     self.render(choices.data)
                                 }
 
+                                if (self.selectedIndex === null) {
+                                    var selectedChoice = $Reselect.findSelectedChoice()
+
+                                    if (typeof selectedChoice.index === 'number') {
+                                        self.activeIndex = null
+                                        self.selectedIndex = selectedChoice.index
+                                    }
+                                }
+
                                 $scope.$emit('reselect.choices.render')
                             })
                             .finally(function () {

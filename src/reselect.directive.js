@@ -163,48 +163,60 @@ Reselect.directive('reselect', ['$compile', function($compile) {
                 ctrl.search_term = '';
             };
 
-            // Override ng-model render function
-            $ngModel.$render = function() {
+            ctrl.mapModelValue = function (value) {
+                var scp = {};
+                scp[ctrl.parsedOptions.itemName] = value;
+
+                return ctrl.parsedOptions.modelMapper(scp);
+            }
+            
+            ctrl.findSelectedChoice = function () {
                 var valueSelected = $ngModel.$viewValue;
                 var valueToBeSelected;
+                var index;
 
-                function mapModelValue(value) {
-                    var scp = {};
-                    scp[ctrl.parsedOptions.itemName] = value;
+                var choices = ctrl.transcludeCtrls.$ReselectChoice.stickyChoices.filter(function(choice) {
+                    return angular.isDefined(choice.value);
+                }).map(function(choice) {
+                    return choice.value;
+                }).concat(ctrl.DataAdapter.data);
 
-                    return ctrl.parsedOptions.modelMapper(scp);
-                }
+                var trackBy = ctrl.parsedOptions.trackByExp;
 
-                if (angular.isDefined(valueSelected)) {
+                var choiceMatch, valueSelectedMatch;
 
-                    var choices = ctrl.transcludeCtrls.$ReselectChoice.stickyChoices.filter(function(choice) {
-                        return angular.isDefined(choice.value);
-                    }).map(function(choice) {
-                        return choice.value;
-                    }).concat(ctrl.DataAdapter.data);
+                if (choices && choices.length >= 0) {
+                    for (var i = 0; i < choices.length; i++) {
+                        if (!angular.isDefined(choices[i])) {
+                            continue;
+                        }
 
-                    var trackBy = ctrl.parsedOptions.trackByExp;
+                        choiceMatch = ctrl.mapModelValue(choices[i]);
 
-                    var choiceMatch, valueSelectedMatch;
+                        valueSelectedMatch = valueSelected;
 
-                    if (choices && choices.length >= 0) {
-                        for (var i = 0; i < choices.length; i++) {
-                            if (!angular.isDefined(choices[i])) {
-                                continue;
-                            }
-
-                            choiceMatch = mapModelValue(choices[i]);
-
-                            valueSelectedMatch = valueSelected;
-
-                            if (choiceMatch === valueSelectedMatch) {
-                                valueToBeSelected = choices[i];
-                                break;
-                            }
+                        if (choiceMatch === valueSelectedMatch) {
+                            index = i;
+                            valueToBeSelected = choices[i];
+                            break;
                         }
                     }
                 }
 
+                return {
+                    value: valueToBeSelected,
+                    index
+                }
+            }
+
+            // Override ng-model render function
+            $ngModel.$render = function() {
+                var valueSelected = $ngModel.$viewValue;
+				var valueToBeSelected;
+
+				if (angular.isDefined(valueSelected)) {
+                    valueToBeSelected = ctrl.findSelectedChoice(valueSelected).value
+				}
 
                 if (angular.isDefined(valueToBeSelected)) {
                     ctrl.selectValue($ngModel.$viewValue, valueToBeSelected);
@@ -220,7 +232,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
                     } else if (ctrl.options.allowInvalid && typeof ctrl.options.allowInvalid === 'function') {
                         var validateDone = function(value) {
                             if (value !== undefined) {
-                                ctrl.selectValue(mapModelValue(value), value);
+                                ctrl.selectValue(ctrl.mapModelValue(value), value);
                             } else {
                                 ctrl.selectValue(undefined);
                             }
