@@ -205,7 +205,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
                 return {
                     value: valueToBeSelected,
-                    index
+                    index: index
                 }
             }
 
