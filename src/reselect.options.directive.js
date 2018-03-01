@@ -283,6 +283,10 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             $Reselect.DataAdapter.prepareGetData()
                         }
 
+                        if (self.is_loading) {
+                            return
+                        }
+
                         self.is_loading = true
 
                         return $Reselect.DataAdapter.getData($Reselect.search_term)
