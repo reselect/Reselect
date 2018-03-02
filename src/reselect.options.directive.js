@@ -99,10 +99,10 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
             controller: ['$scope', '$element', '$attrs', '$parse',
                 '$http', '$timeout',
                 'ReselectDataAdapter', 'ReselectAjaxDataAdapter',
-                'KEYS',
+                'KEYS', '$q',
                 function ($scope, $element, $attrs, $parse, $http,
                     $timeout, ReselectDataAdapter,
-                    ReselectAjaxDataAdapter, KEYS) {
+                    ReselectAjaxDataAdapter, KEYS, $q) {
                     var $Reselect = $element.controller('reselect')
 
                     var self = this
@@ -283,8 +283,8 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                             $Reselect.DataAdapter.prepareGetData()
                         }
 
-                        if (self.is_loading) {
-                            return
+                        if (self.is_loading && loadingMore) {
+                            return $q.resolve()
                         }
 
                         self.is_loading = true
