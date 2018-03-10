@@ -1,0 +1,15 @@
+.reselect {
+    display: inline-block;
+}
+
+.reselect-choice {
+    padding: 12px;
+}
+
+.reselect-choice + .reselect-choice, .reselect-choices + .reselect-choice {
+    border-top: 1px solid #ccc;
+}
+
+.reselect-rendered-selection {
+    border:1px solid #ccc;
+}

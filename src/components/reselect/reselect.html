@@ -1,8 +1,16 @@
 <div class="reselect" tabindex="0">
-    <div class="reselect-selection-container">
-        <reselect-selection>
-            Selected: {{$selection}}
-        </reselect-selection>
+    <div class="reselect-rendered-selection">
+        <div class="reselect-selection-container">
+            <reselect-selection>
+                Selected: {{$selection}}
+            </reselect-selection>
+        </div>
+        <div class="reselect-placeholder-container">
+            <reselect-placeholder>
+                Select an option
+            </reselect-placeholder>
+        </div>
     </div>
+
     <div class="reselect-choices-container"></div>
 </div>

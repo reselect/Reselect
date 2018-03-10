@@ -1,3 +1,5 @@
+import './styles.scss'
+
 import components from './components'
 import factories from './factories'
 import services from './services'

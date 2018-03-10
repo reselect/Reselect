@@ -1,4 +1,4 @@
-import template from './reselect-selection.html'
+import template from './reselect-placeholder.html'
 
 class Controller {
     static get $inject () {
@@ -8,18 +8,14 @@ class Controller {
     constructor ($scope) {
         this.$scope = $scope
     }
-
-    $onInit () {
-        this.$scope.$selection = this.$reselect.$selected
-    }
 }
 
 class Directive {
     constructor ($rsDebug) {
-        this.restrict = 'AE'
+        this.restrict = 'E'
         this.scope = true
         this.require = {
-            $reselect: '^^reselect'
+            // $reselect: '^^reselect'
         }
         this.replace = true
         this.template = template
@@ -34,7 +30,7 @@ class Directive {
 
     link ($scope, $elem, $attrs, $reselect, transcludeFn) {
         transcludeFn($scope, function (clone) {
-            $elem[0].querySelectorAll('.reselect-selection-content')[0].appendChild(clone[0])
+            $elem[0].querySelectorAll('.reselect-placeholder-content')[0].appendChild(clone[0])
         })
     }
 

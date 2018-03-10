@@ -2,6 +2,7 @@
 
 const webpack = require('webpack')
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
 const env = require('yargs').argv.env // use --env with webpack 2
 
@@ -16,6 +17,7 @@ if (env === 'build') {
     }))
     outputFile = libraryName + '.min.js'
 } else {
+    // plugins.push(new ExtractTextPlugin('[name].css'))
     outputFile = libraryName + '.js'
 }
 
@@ -48,6 +50,21 @@ const config = {
         {
             test: /(\.html)$/,
             loader: 'raw-loader'
+        },
+        {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]',
+            exclude: /node_modules/
+        },
+        {
+            test: /\.scss$/,
+            use: [{
+                loader: 'style-loader'
+            }, {
+                loader: 'css-loader'
+            }, {
+                loader: 'sass-loader'
+            }]
         }
         ]
     },

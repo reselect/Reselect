@@ -89,13 +89,17 @@ class ReselectDirective {
                 let $clone = angular.element('<div>').append(clone)
                 let $choiceContainer = angular.element(element[0].querySelectorAll('.reselect-choices-container'))
                 let $selectionContainer = angular.element(element[0].querySelectorAll('.reselect-selection-container'))
+                let $placeholderContainer = angular.element(element[0].querySelectorAll('.reselect-placeholder-container'))
 
                 $choiceContainer.append($clone[0].querySelectorAll('.reselect-choices'))
+                $choiceContainer.append($clone[0].querySelectorAll('.reselect-choice'))
 
                 if ($clone[0].querySelectorAll('.reselect-selection').length === 1) {
-                    $selectionContainer.replaceWith($clone[0].querySelectorAll('.reselect-selection'))
-                } else {
-                    $selectionContainer.append($clone[0].querySelectorAll('.reselect-selection'))
+                    angular.element($selectionContainer[0].querySelectorAll('.reselect-selection')).replaceWith($clone[0].querySelectorAll('.reselect-selection'))
+                }
+
+                if ($clone[0].querySelectorAll('.reselect-placeholder').length === 1) {
+                    angular.element($placeholderContainer[0].querySelectorAll('.reselect-placeholder')).replaceWith($clone[0].querySelectorAll('.reselect-placeholder'))
                 }
 
                 element.append($clone)

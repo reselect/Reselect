@@ -7,21 +7,26 @@
 
   <div ng-controller="controller">
     <p>Model Value: {{model.value}}</p>
+
+
     <!-- <p>Options: {{options}}</p> -->
-    {{outer.name}}
     <reselect ng-model="model.value">
       <reselect-selection>
-        Selection {{$selection}} {{outer.name}}
+        Custom Selection {{$selection}} {{outer.name}}
       </reselect-selection>
 
       <reselect-choices options="opts.id as opts in options">
         {{outer.name}} Option {{opts.name}}
       </reselect-choices>
+
       <reselect-choice value="20">{{outer.name}} Twenty</reselect-choice>
       <reselect-choice value="30">Thirty</reselect-choice>
     </reselect>
 
     <reselect ng-model="model.value2">
+      <reselect-placeholder>
+        Custom Placeholder {{outer.name}}
+      </reselect-placeholder>
       <reselect-choices options="opts.id as opts in options">
         {{outer.name}} Option {{opts.name}}
       </reselect-choices>
