@@ -2,10 +2,12 @@ import template from './reselect-choice.html'
 
 class ReselectChoiceController {
     static get $inject () {
-        return ['$scope', '$attrs']
+        return ['$scope', '$attrs', '$rsDebug']
     }
 
-    constructor ($scope, $attrs) {
+    constructor ($scope, $attrs, $rsDebug) {
+        this.$rsDebug = $rsDebug
+
         this.value = $attrs.value
 
         $attrs.$observe('value', (val) => {
@@ -14,13 +16,13 @@ class ReselectChoiceController {
     }
 
     onClick (value = this.value) {
-        console.log('rs-choice', 'onClick', value)
+        this.$rsDebug.log('rs-choice', 'onClick', value)
         this.$reselect.setValue(value)
     }
 }
 
 class ReselectChoiceDirective {
-    constructor () {
+    constructor ($rsDebug) {
         this.restrict = 'AE'
         this.scope = true
         this.require = '^^reselect'
@@ -30,6 +32,8 @@ class ReselectChoiceDirective {
 
         this.controller = ReselectChoiceController
         this.controllerAs = '$choice'
+
+        this.$rsDebug = $rsDebug
     }
 
     link ($scope, $elem, $attrs, $reselect) {
@@ -41,5 +45,7 @@ class ReselectChoiceDirective {
         return new ReselectChoiceDirective(...arguments)
     }
 }
+
+ReselectChoiceDirective.directive.$inject = ['$rsDebug']
 
 export default ReselectChoiceDirective

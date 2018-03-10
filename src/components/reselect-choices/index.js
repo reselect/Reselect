@@ -12,7 +12,7 @@ class ReselectChoicesController {
 }
 
 class ReselectChoicesDirective {
-    constructor (ChoiceParser) {
+    constructor ($rsDebug, ChoiceParser) {
         this.restrict = 'AE'
         this.require = '^^reselect'
         this.replace = true
@@ -22,6 +22,7 @@ class ReselectChoicesDirective {
         this.controller = ReselectChoicesController
         this.controllerAs = '$ctrl'
 
+        this.$rsDebug = $rsDebug
         this.ChoiceParser = ChoiceParser
     }
 
@@ -32,7 +33,7 @@ class ReselectChoicesDirective {
         }
 
         var parsedChoice = this.ChoiceParser.parse(attrs.options)
-        console.log('rs-choices', 'compile: parsedChoice', parsedChoice)
+        this.$rsDebug.log('rs-choices', 'compile: parsedChoice', parsedChoice)
 
         let $choices = angular.element(elem[0].querySelectorAll('.reselect-choice'))
 
@@ -44,8 +45,8 @@ class ReselectChoicesDirective {
             $reselect.parseOptions(attrs.options)
 
             transcludeFn($scope, function (clone) {
-                // console.log('transpile inner?')
-                // console.log(element[0].innerHTML)
+                // this.$rsDebug.log('transpile inner?')
+                // this.$rsDebug.log(element[0].innerHTML)
                 // element.append(clone)
             })
         }
@@ -56,6 +57,6 @@ class ReselectChoicesDirective {
     }
 }
 
-ReselectChoicesDirective.directive.$inject = ['ChoiceParser']
+ReselectChoicesDirective.directive.$inject = ['$rsDebug', 'ChoiceParser']
 
 export default ReselectChoicesDirective

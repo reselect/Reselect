@@ -6,12 +6,22 @@
 <body ng-app="example">
 
   <div ng-controller="controller">
-    <p>Model Value: {{hello}}</p>
+    <p>Model Value: {{model.value}}</p>
     <!-- <p>Options: {{options}}</p> -->
+    {{outer.name}}
+    <reselect ng-model="model.value">
+      <reselect-selection>
+        Selection {{$selection}} {{outer.name}}
+      </reselect-selection>
 
-    <reselect ng-model="hello">
-      <reselect-selection></reselect-selection>
+      <reselect-choices options="opts.id as opts in options">
+        {{outer.name}} Option {{opts.name}}
+      </reselect-choices>
+      <reselect-choice value="20">{{outer.name}} Twenty</reselect-choice>
+      <reselect-choice value="30">Thirty</reselect-choice>
+    </reselect>
 
+    <reselect ng-model="model.value2">
       <reselect-choices options="opts.id as opts in options">
         {{outer.name}} Option {{opts.name}}
       </reselect-choices>
@@ -24,14 +34,21 @@
     <button ng-click="hello=10">10</button>
     <button ng-click="hello=20">20</button>
     <button ng-click="hello=30">30</button>
+    <button ng-click="hello=null">null</button>
+    <button ng-click="hello=undefined">undefined</button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
   <script src="/reselect.js"></script>
   <script>
+    Reselect.debug = true
     angular.module('example', ['reselect'])
       .controller('controller', function ($scope) {
         $scope.hello = 'yo'
+
+        $scope.model = {
+          value: 'yo'
+        }
 
         $scope.outer = {
           name: 'Outer'
@@ -39,7 +56,10 @@
 
         $scope.options = [{
           id: 10,
-          name: 'Wee'
+          name: 'Ten'
+        }, {
+          id: 20,
+          name: 'Twenty'
         }]
       })
 
