@@ -36,9 +36,6 @@
 }
 
 .reselect-rendered{
-	min-height: $reselect-height;
-
-	padding: 6px 14px;
 	font-size: $reselect-text-size;
 
 	white-space: nowrap;
@@ -68,7 +65,13 @@
 
     [reselect-selection]{
         display:block;
-    }
+	}
+	
+	.reselect-selection {
+		min-height: $reselect-height;
+
+		padding: 6px 14px;
+	}
 }
 
 .reselect-rendered-placeholder{
@@ -78,6 +81,10 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+
+	min-height: $reselect-height;
+
+	padding: 6px 14px;
 }
 
 .reselect-input-container{
