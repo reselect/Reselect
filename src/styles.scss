@@ -1,15 +1,98 @@
+$base-font-size: 12;
+
+$text-color: #414141;
+$placeholder-color: #BEBEBE;
+
+$border-color: #E3E3E3;
+$border-color-active: #26BCB9;
+
+$choice-active-color: rgba(0,0,0,0.03);
+$choice-hover-color: rgba(0,0,0,0.05);
+
+
 .reselect {
+    position: relative;
+    color: $text-color;
+    font-size: $base-font-size + px;
+    line-height: 1 + em;
+
+    background: #fff;
+    
+    outline: 0;
+    word-wrap: break-word;
+
+    min-width: 14em;
+    min-height: (38/$base-font-size) + em;
+
+    border:1px solid $border-color;
+    border-radius: 0.25em;
+
     display: inline-block;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    cursor: pointer;
+
+    &:hover, &.reselect--active {
+        border-color: $border-color-active;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &.reselect--active {
+        border-bottom: 0;
+
+        .reselect-choices-container {
+            border-top: none;
+        }
+
+        .reselect-selected-container {
+            border-bottom: 1px solid $choice-active-color;
+        }
+    }
+
+    *:focus {
+        border: none;
+        outline: none;
+    }
+}
+
+.reselect-selected-value {
+    outline: 0;
+
+    font-size: 1em;
+    padding: 1em;
+}
+
+.reselect-placeholder {
+    color: $placeholder-color;
+}
+
+.reselect-choices-container {
+    position: absolute;
+    left: -1px;
+    right: -1px;
+
+    border: 1px solid $border-color-active;
+
+    background: #fff;
 }
 
 .reselect-choice {
     padding: 12px;
+
+    &:hover {
+        background-color: $choice-hover-color;
+    }
 }
 
 .reselect-choice + .reselect-choice, .reselect-choices + .reselect-choice {
-    border-top: 1px solid #ccc;
+    // border-top: 1px solid $border-color;
 }
 
 .reselect-rendered-selection {
-    border:1px solid #ccc;
+    // border:1px solid $border-color;
 }

@@ -37,18 +37,14 @@ class ReselectChoicesDirective {
 
         let $choices = angular.element(elem[0].querySelectorAll('.reselect-choice'))
 
-        $choices.attr('ng-repeat', parsedChoice.repeatExpression())
+        $choices.attr('ng-repeat', parsedChoice.repeatExpression() + ' track by $index')
         $choices.attr('rs-transclude', '')
         $choices.attr('ng-click', `$reselect.select(${parsedChoice.itemName})`)
 
         return function link ($scope, element, attrs, $reselect, transcludeFn) {
             $reselect.parseOptions(attrs.options)
 
-            transcludeFn($scope, function (clone) {
-                // this.$rsDebug.log('transpile inner?')
-                // this.$rsDebug.log(element[0].innerHTML)
-                // element.append(clone)
-            })
+            transcludeFn($scope, function (clone) {})
         }
     }
 

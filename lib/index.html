@@ -2,6 +2,16 @@
 <html>
 <head>
   <title>Webpack 2 Demo</title>
+  <style>
+    html {
+      font-size: 12px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+  </style>
 </head>
 <body ng-app="example">
 
@@ -16,23 +26,20 @@
       </reselect-selection>
 
       <reselect-choices options="opts.id as opts in options">
-        {{outer.name}} Option {{opts.name}}
+        Option {{opts.name}}
       </reselect-choices>
 
-      <reselect-choice value="20">{{outer.name}} Twenty</reselect-choice>
-      <reselect-choice value="30">Thirty</reselect-choice>
+      <reselect-choice value="{{30}}">Single Thirty</reselect-choice>
+      <reselect-choice value="40">Single Forty</reselect-choice>
     </reselect>
 
-    <reselect ng-model="model.value2">
-      <reselect-placeholder>
-        Custom Placeholder {{outer.name}}
-      </reselect-placeholder>
+    <!-- <reselect ng-model="model.value2">
       <reselect-choices options="opts.id as opts in options">
         {{outer.name}} Option {{opts.name}}
       </reselect-choices>
-      <reselect-choice value="20">{{outer.name}} Twenty</reselect-choice>
+      <reselect-choice value="{{20}}">{{outer.name}} Twenty</reselect-choice>
       <reselect-choice value="30">Thirty</reselect-choice>
-    </reselect>
+    </reselect> -->
 
     <hr/>
   
@@ -41,6 +48,7 @@
     <button ng-click="hello=30">30</button>
     <button ng-click="hello=null">null</button>
     <button ng-click="hello=undefined">undefined</button>
+    <button ng-click="log()">undefined</button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
@@ -66,6 +74,10 @@
           id: 20,
           name: 'Twenty'
         }]
+
+        $scope.log = function () {
+          console.log($scope)
+        }
       })
 
   </script>

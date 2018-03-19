@@ -1,11 +1,19 @@
 import template from './reselect.html'
 
+let state = {
+    is_opened: false
+}
+
 class ReselectController {
     static get $inject () {
         return ['$scope', '$rsDebug', 'ChoiceParser']
     }
 
     constructor ($scope, $rsDebug, ChoiceParser) {
+        this.state = {
+            ...state
+        }
+
         this.$selected = {
             $source: null,
             $value: null
@@ -14,6 +22,10 @@ class ReselectController {
         this.$scope = $scope
         this.$rsDebug = $rsDebug
         this.ChoiceParser = ChoiceParser
+    }
+
+    toggleDropdown () {
+        this.state.is_opened = !this.state.is_opened
     }
 
     parseOptions (expression) {
@@ -30,7 +42,6 @@ class ReselectController {
         })
 
         this.setSelected(choice, $selectedChoice)
-        this.setValue($selectedChoice)
     }
 
     setSelected (source = null, value = source) {
@@ -38,6 +49,8 @@ class ReselectController {
         this.$selected.$value = value
 
         this.$rsDebug.log('$selected', this.$selected)
+
+        this.setValue(this.$selected.$value)
     }
 
     setValue (value) {
@@ -92,7 +105,6 @@ class ReselectDirective {
                 let $placeholderContainer = angular.element(element[0].querySelectorAll('.reselect-placeholder-container'))
 
                 $choiceContainer.append($clone[0].querySelectorAll('.reselect-choices'))
-                $choiceContainer.append($clone[0].querySelectorAll('.reselect-choice'))
 
                 if ($clone[0].querySelectorAll('.reselect-selection').length === 1) {
                     angular.element($selectionContainer[0].querySelectorAll('.reselect-selection')).replaceWith($clone[0].querySelectorAll('.reselect-selection'))
