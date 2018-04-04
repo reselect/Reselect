@@ -1,11 +1,10 @@
 <div class="reselect-choices" ng-keydown="$options.keydown($event)">
-	<div class="reselect-search-container">
+	<div class="reselect-search-container" ng-show="$options.options.enableSearch">
 		<input class="reselect-search-input"
             tabindex="-1"
 			type="text"
 			focus-on="reselect.search.focus"
 			placeholder="Type to search..."
-            ng-show="$options.options.enableSearch"
 			ng-model="$reselect.search_term"
 			ng-change="$options.search()"/>
 	</div>

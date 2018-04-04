@@ -52,7 +52,7 @@
                             <div reselect-choice ng-click="simple.click()">
                                 Static Option
                             </div>
-                            <div reselect-choices
+                            <div reselect-choices="{enableSearch: false, minWidth: 200}"
                                 options="option in simple.mocks.single">
                                     <span ng-bind-html="option | rshighlight : $reselect.search_term"></span>
                             </div>

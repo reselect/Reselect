@@ -416,8 +416,13 @@ Reselect.directive('reselect', ['$compile', function($compile) {
                     var dropdownHeight = ctrl._calculateDropdownHeight();
                     safeApply($scope, function() {
                         var element_offset = ctrl._calculateDropdownPosition(dropdownHeight);
+                        var width = element_offset.width
 
-                        ctrl.$dropdown[0].style.width = element_offset.width + 'px';
+                        if (ctrl.transcludeCtrls.$ReselectChoice.options && ctrl.transcludeCtrls.$ReselectChoice.options.minWidth >= 0 && element_offset.width < ctrl.transcludeCtrls.$ReselectChoice.options.minWidth) {
+                            width = ctrl.transcludeCtrls.$ReselectChoice.options.minWidth
+                        }
+
+                        ctrl.$dropdown[0].style.width = width + 'px';
                         ctrl.$dropdown[0].style.top = ctrl.isDropdownAbove ? element_offset.top - dropdownHeight + 'px' : element_offset.bottom + 'px';
                         ctrl.$dropdown[0].style.left = element_offset.left + 'px';
                     });

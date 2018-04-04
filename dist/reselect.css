@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.6.14 - 2018-04-04T18:36:00.771Z
+ * Version: 0.6.15 - 2018-04-04T20:42:40.152Z
  * License: MIT
  */
 
@@ -112,6 +112,14 @@
   min-width: 150px; }
   .reselect-container:focus .reselect-selection-container, .reselect-container:active .reselect-selection-container {
     border-color: #26BCB9; }
+  .reselect-container.reselect--opened .reselect-selection-container {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0; }
+  .reselect-container.reselect--opened.reselect--dropdown-above .reselect-selection-container {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px; }
   .reselect-container[disabled="disabled"] .reselect-selection-container {
     cursor: not-allowed;
     background: #eee; }
@@ -189,7 +197,8 @@
   -moz-animation: reselectOptionOpen 0.2s;
   animation: reselectOptionOpen 0.2s;
   display: none;
-  width: 100%; }
+  width: 100%;
+  margin-top: -1px; }
   .reselect-dropdown.reselect-dropdown--opened {
     z-index: 10;
     display: block; }
@@ -199,7 +208,8 @@
     -moz-transform-origin: bottom center;
     -ms-transform-origin: bottom center;
     -o-transform-origin: bottom center;
-    transform-origin: bottom center; }
+    transform-origin: bottom center;
+    margin-top: 1px; }
     .reselect-dropdown.reselect-dropdown--above .reselect-choices {
       border-top-color: #26BCB9;
       border-bottom-color: #E3E3E3; }

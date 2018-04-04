@@ -1,7 +1,11 @@
 <div class="reselect-container reselect"
      tabindex="0"
      focus-on="reselect.input.focus"
-     blur-on="reselect.input.blur"
+	 blur-on="reselect.input.blur"
+	 ng-class="{
+		'reselect--opened': $reselect.opened,
+		'reselect--dropdown-above': $reselect.isDropdownAbove
+	 }"
      ng-keydown="$reselect.handleKeyDown($event)">
 
 	<input type="hidden" value="{{ngModel}}" ng-disabled="$reselect.isDisabled"/>

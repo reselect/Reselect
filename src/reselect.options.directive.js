@@ -503,10 +503,7 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                              * the next page
                              */
 
-                            if (self.LazyDropdown.choices &&
-                                self.LazyDropdown.choices.length &&
-                                (dimensions.containerHeight >=
-                                    dimensions.choiceHeight)) {
+                            if (self.LazyDropdown.choices && self.LazyDropdown.choices.length && (dimensions.containerHeight >= dimensions.choiceHeight)) {
                                 self.loadMore()
                             }
                         } else {

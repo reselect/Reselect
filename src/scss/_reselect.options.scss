@@ -2,17 +2,16 @@
 	@include reselect-border();
 	border-color: $reselect-border-color-active;
 	border-top-color: #eee;
-
+	
 	// min-width: $reselect-width;
 	width: 100%;
-
+	
 	background: white;
 }
 
 .reselect-search-container{
 	background:#f9f9f9;
 	border-bottom:1px solid #eee;
-
 }
 
 input[type="text"].reselect-search-input{
