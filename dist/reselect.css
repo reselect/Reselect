@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.6.13 - 2018-03-19T06:52:44.573Z
+ * Version: 0.6.14 - 2018-04-04T18:36:00.771Z
  * License: MIT
  */
 
@@ -111,7 +111,7 @@
   outline: none;
   min-width: 150px; }
   .reselect-container:focus .reselect-selection-container, .reselect-container:active .reselect-selection-container {
-    border-color: #09c; }
+    border-color: #26BCB9; }
   .reselect-container[disabled="disabled"] .reselect-selection-container {
     cursor: not-allowed;
     background: #eee; }
@@ -130,9 +130,9 @@
   min-height: 36px;
   border-radius: 3px;
   padding-right: 18px;
-  border: 1px solid #ccc; }
+  border: 1px solid #E3E3E3; }
   .reselect-selection-container:hover, .reselect-selection-container.reselect-selection--active {
-    border-color: #09c; }
+    border-color: #26BCB9; }
   .reselect-selection-container [reselect-selection] {
     display: block; }
   .reselect-selection-container .reselect-selection {
@@ -169,7 +169,7 @@
   top: 0;
   bottom: 0;
   width: 18px;
-  border-left: 1px solid #ccc; }
+  border-left: 1px solid #E3E3E3; }
   .reselect-arrow-container::after {
     content: '';
     position: absolute;
@@ -201,8 +201,8 @@
     -o-transform-origin: bottom center;
     transform-origin: bottom center; }
     .reselect-dropdown.reselect-dropdown--above .reselect-choices {
-      border-top-color: #09c;
-      border-bottom-color: #ccc; }
+      border-top-color: #26BCB9;
+      border-bottom-color: #E3E3E3; }
   .reselect-dropdown.reselect-dropdown--below {
     box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.2);
     -webkit-transform-origin: top center;
@@ -229,8 +229,8 @@
     text-decoration: none; }
 
 .reselect-choices {
-  border: 1px solid #ccc;
-  border-color: #09c;
+  border: 1px solid #E3E3E3;
+  border-color: #26BCB9;
   border-top-color: #eee;
   width: 100%;
   background: white; }
@@ -342,4 +342,4 @@ input[type="text"].reselect-search-input {
   border-bottom: 1px solid #eee; }
 
 .reselect-sticky-container {
-  border-top: 1px solid #ccc; }
+  border-top: 1px solid #E3E3E3; }
