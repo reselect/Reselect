@@ -1,7 +1,7 @@
 /*!
  * angular-reselect
  * https://github.com/alexcheuk/Reselect
- * Version: 0.6.15 - 2018-04-04T21:02:16.475Z
+ * Version: 0.6.15 - 2018-04-23T02:09:09.318Z
  * License: MIT
  */
 
@@ -134,8 +134,8 @@
   position: relative;
   cursor: pointer;
   background: #fff;
-  line-height: 24px;
-  min-height: 36px;
+  line-height: 22px;
+  min-height: 34px;
   border-radius: 3px;
   padding-right: 18px;
   border: 1px solid #E3E3E3; }
@@ -144,7 +144,7 @@
   .reselect-selection-container [reselect-selection] {
     display: block; }
   .reselect-selection-container .reselect-selection {
-    min-height: 36px;
+    min-height: 34px;
     padding: 6px 14px; }
 
 .reselect-rendered-placeholder {
@@ -153,7 +153,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 36px;
+  min-height: 34px;
   padding: 6px 14px; }
 
 .reselect-input-container {
@@ -165,7 +165,7 @@
 
 .reselect-text-input {
   font-size: 12px;
-  height: 36px;
+  height: 34px;
   width: 100%;
   padding: 6px;
   border: none;
@@ -227,7 +227,7 @@
   top: 0;
   top: 0;
   bottom: 0;
-  line-height: 36px;
+  line-height: 34px;
   width: 30px;
   font-size: 20px;
   text-align: center;
