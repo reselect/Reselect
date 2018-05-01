@@ -78,7 +78,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
         controller: ['$scope', '$element', '$attrs', '$parse', 'ReselectUtils', 'reselectConfig', '$timeout', '$window', '$document', 'KEYS', 'safeApply', function($scope, $element, $attrs, $parse, ReselectUtils, reselectConfig, $timeout, $window, $document, KEYS, safeApply) {
 
             var ctrl = this;
-            var $ngModel = $element.controller('ngModel');
+            var $ngModel = ctrl.$ngModel = $element.controller('ngModel');
 
             // Options
             ctrl.options = angular.extend({}, reselectConfig, $parse($attrs.reselect)($scope), $parse($attrs.reselectOptions)($scope));

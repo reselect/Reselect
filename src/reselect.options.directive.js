@@ -270,8 +270,12 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                         $Reselect.DataAdapter.observe = function (onChange) {
                             $scope.$watchCollection(function () {
                                 return $Reselect.parsedOptions.source($scope)
-                            }, function (newChoices) {
+                            }, function (newChoices, oldChoices) {
                                 $Reselect.DataAdapter.updateData(newChoices)
+
+                                if ($Reselect.$ngModel.$modelValue && oldChoices !== newChoices) {
+                                    $Reselect.$ngModel.$render()
+                                }
                             })
                         }
                     }
