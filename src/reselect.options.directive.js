@@ -272,10 +272,6 @@ Reselect.directive('reselectChoices', ['ChoiceParser', '$compile',
                                 return $Reselect.parsedOptions.source($scope)
                             }, function (newChoices, oldChoices) {
                                 $Reselect.DataAdapter.updateData(newChoices)
-
-                                if ($Reselect.$ngModel.$modelValue && oldChoices !== newChoices) {
-                                    $Reselect.$ngModel.$render()
-                                }
                             })
                         }
                     }
