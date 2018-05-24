@@ -195,7 +195,25 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
                         valueSelectedMatch = valueSelected;
 
-                        if (choiceMatch === valueSelectedMatch) {
+                        if (typeof choiceMatch === 'object' && typeof valueSelectedMatch === 'object') {
+                            let objectMatched = true
+
+                            for(let key in valueSelectedMatch) {
+                                if (!valueSelectedMatch.hasOwnProperty(key) || key === '$$reselectAllow') break
+
+                                if (valueSelectedMatch[key] !== choiceMatch[key]) {
+                                    objectMatched = false
+                                    break
+                                }
+                            }
+
+                            if (objectMatched) {
+                                index = i;
+                                valueToBeSelected = choices[i];
+                                break;
+                            }
+
+                        } else if (choiceMatch === valueSelectedMatch) {
                             index = i;
                             valueToBeSelected = choices[i];
                             break;
