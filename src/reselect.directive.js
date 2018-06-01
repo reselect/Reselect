@@ -195,7 +195,7 @@ Reselect.directive('reselect', ['$compile', function($compile) {
 
                         valueSelectedMatch = valueSelected;
 
-                        if (typeof choiceMatch === 'object' && typeof valueSelectedMatch === 'object') {
+                        if (typeof choiceMatch === 'object' && typeof valueSelectedMatch === 'object' && choiceMatch !== null && valueSelectedMatch !== null) {
                             var objectMatched = true
 
                             for(var key in valueSelectedMatch) {
