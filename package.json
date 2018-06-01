@@ -66,7 +66,9 @@
   },
   "scripts": {
     "test": "gulp test",
-    "dev": "webpack-dev-server --config build/webpack.dev.config.js --progress --watch"
+    "dev": "webpack-dev-server --config build/webpack.dev.config.js --progress --watch",
+    "prepatch-release": "npm version patch && gulp build && git add . && git commit -m \"Compile for publish\"",
+    "patch-release": "npm publish && git push"
   },
   "license": "MIT"
 }
